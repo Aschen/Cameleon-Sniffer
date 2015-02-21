@@ -10,18 +10,23 @@ using namespace Tins;
 class Mitm : public AModule
 {
 private:
-    bool                    _run;
-    Addresses               _gateway;
-    Addresses               _victim;
+    bool                        _run;
+    Addresses                   _gateway;
+    Addresses                   _victim;
 
 public:
     Mitm(Core &core, const std::string &victimIp, const std::string &gatewayIp);
     virtual ~Mitm(void) { }
 
+public:
+    void                        poison(void);
+
     // AModule
 public:
-    void                    start(void);
-    void                    stop(void);
+    void                        start(void);
+    void                        stop(void);
+    std::string                 info(void);
+    static std::string          help(void);
 };
 
 #endif // MITM_HH

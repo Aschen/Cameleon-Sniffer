@@ -7,19 +7,20 @@
 class AModule
 {
 protected:
-    Core                &_core;
-    const std::string   _name;
+    Core                        &_core;
+    const std::string           _name;
 
 public:
     AModule(Core &core, const std::string &name);
     virtual ~AModule(void) { }
 
 public:
-    const std::string   &name(void) const;
+    const std::string           &name(void) const;
 
 public:
-    virtual void        start(void) = 0;
-    virtual void        stop(void) = 0;
+    virtual void                start(void) = 0;
+    virtual void                stop(void) = 0;
+    virtual std::string         info(void) = 0;
 };
 
 #endif // AMODULE_HH

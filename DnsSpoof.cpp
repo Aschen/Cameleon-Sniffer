@@ -38,6 +38,15 @@ void DnsSpoof::stop(void)
     _sniffer->stop_sniff();
 }
 
+std::string DnsSpoof::help(void)
+{
+    std::string rep;
+
+    rep += "Starting DNS spoofing\n";
+
+    return rep;
+}
+
 bool DnsSpoof::dumpQuery(PDU &pdu)
 {
     // EthernetII / IP / UDP / RawPDU
@@ -78,12 +87,6 @@ bool DnsSpoof::dumpQuery(PDU &pdu)
                                 dns;
             // Send it!
             _sender->send(pkt, _iface);
-        }
-    }
-    else if (dns.type() == DNS::RESPONSE)
-    {
-        for (const DNS::Query &query : dns.queries())
-        {
         }
     }
     return true;

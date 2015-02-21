@@ -19,9 +19,14 @@ private:
 public:
     DnsSpoof(const std::string &file);
 
+    bool                dumpQuery(PDU &pdu);
+
+    // AModule
+public:
     void                start(void);
     void                stop(void);
-    bool                dumpQuery(PDU &pdu);
+    static std::string  help(void);
+
 
 private:
     void                sniff(void);
