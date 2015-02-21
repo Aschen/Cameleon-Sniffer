@@ -1,6 +1,6 @@
 #include "Mitm.hh"
-#include "DnsSpoof.hh"
 #include "Core.hh"
+#include "DnsSpoof.hh"
 
 using namespace Tins;
 
@@ -13,23 +13,20 @@ void    toto(void)
     }
 }
 
-int main(int ac, char *av[])
+int main(int ac, char **av)
 {
-    (void)ac;
-    (void)av;
     std::string tot;
+    Core    core;
+    Mitm    mitm(core, av[1], "192.168.1.1");
+    DnsSpoof    dnsSpoof("hosts.txt");
 
+    std::thread   t(&Mitm::start, mitm);
+    t.detach();
 
-//    Mitm        mitm(av[1], "192.168.1.254");
-//    DnsSpoof    spoof("hosts.txt");
+    dnsSpoof.start();
 
-//    mitm.start();
-//    spoof.start();
-    NetworkInterface::Info  info = NetworkInterface("wlan0").addresses();
-    Addresses    me(info.hw_addr, info.ip_addr);
+    std::cin >> tot;
 
-    std::cout << me.ip() << " " << me.mac() << std::endl;
-//    core.stop();
-//    spoof.stop();
-//    mitm.stop();
+    dnsSpoof.stop();
+    mitm.stop();
 }

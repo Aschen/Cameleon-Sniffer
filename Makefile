@@ -15,6 +15,8 @@ SRCS	=	ReflectedFlood.cpp \
 		Addresses.cpp\
 		DnsSpoof.cpp \
 		Core.cpp \
+		AModule.cpp \
+		Prompt.cpp \
 		main.cpp
 
 CXXFLAGS=	-Wall -W -Wextra -std=c++11

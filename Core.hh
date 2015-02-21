@@ -33,6 +33,10 @@ public:
     void                    arpReply(const IPv4Address &senderIp, const HWAddress<6> &senderMac, const IPv4Address &targetIp, const HWAddress<6> &targetMac);
 
 
+public:
+    const HWAddress<6>      mac(void) const;
+    const IPv4Address       ip(void) const;
+
 private:
     void                    startSender(void);
 };

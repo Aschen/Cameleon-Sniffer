@@ -54,14 +54,12 @@ bool DnsSpoof::dumpQuery(PDU &pdu)
         // Let's see if there's any query for an "A" record.
         for(const DNS::Query &query : dns.queries())
         {
-            std::cout << query.dname() << std::endl;
             if ((it = _spoofedHosts.find(query.dname())) != _spoofedHosts.end())
             {
                 if(query.type() == DNS::A)
                 {
                     std::cout << query.dname() << " -> " << it->second << std::endl;
                     dns.add_answer(DNS::Resource(query.dname(), it->second, DNS::A, query.query_class(), 111));
- //                   ip.src_addr(IPv4Address("192.168.1.254"));
                 }
             }
         }
