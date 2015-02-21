@@ -5,6 +5,7 @@
 #include <fstream>
 #include <thread>
 #include "Sniff.hh"
+#include "AModule.hh"
 
 using namespace Tins;
 
@@ -25,8 +26,8 @@ public:
 public:
     void                start(void);
     void                stop(void);
+    std::string         info(void);
     static std::string  help(void);
-
 
 private:
     void                sniff(void);
