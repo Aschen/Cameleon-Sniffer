@@ -16,6 +16,8 @@ void    toto(void)
 
 int main(int ac, char **av)
 {
+    (void)ac;
+    (void)av;
     std::string tot;
 //    Core    core;
 //    Mitm    mitm(core, av[1], "192.168.1.1");
@@ -28,9 +30,6 @@ int main(int ac, char **av)
 
 //    mitm.stop();
     Prompt  pr;
-    DnsSpoof    dnsSpoof("hosts.txt");
 
-    dnsSpoof.start();
     pr.launch();
-    dnsSpoof.stop();
 }

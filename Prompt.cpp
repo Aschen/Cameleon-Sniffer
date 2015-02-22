@@ -6,6 +6,7 @@ Prompt::Prompt(void) : _run(false)
     _commands["quit"] = &Prompt::quit;
     _commands["start"] = &Prompt::start;
     _commands["startmitm"] = &Prompt::startMitm;
+    _commands["startdnsspoof"] = &Prompt::startDnsSpoof;
     _commands["stop"] = &Prompt::stop;
     _commands["list"] = &Prompt::list;
     _commands["ps"] = &Prompt::ps;
@@ -117,7 +118,7 @@ void Prompt::stop(std::istringstream &iss)
 void Prompt::list(std::istringstream &iss)
 {
     (void)iss;
-    std::cout << "Availables modules : mitm" << std::endl;
+    std::cout << "Availables modules : mitm dnsspoof" << std::endl;
 }
 
 void Prompt::ps(std::istringstream &iss)
@@ -151,6 +152,33 @@ void Prompt::startMitm(std::istringstream &iss)
         if (it == _modules.end())
         {
             _modules[name] = new Mitm(_core, victimIp, gatewayIp);
+            _modules[name]->start();
+        }
+        else
+        {
+            std::cout << "Module " << name << " already exist !" << std::endl;
+        }
+    }
+}
+
+void Prompt::startDnsSpoof(std::istringstream &iss)
+{
+    std::map<std::string, AModule*>::iterator    it;
+    std::string     name;
+    std::string     filename;
+
+    iss >> name;
+    iss >> filename;
+    if (!name.length())
+        help(iss);
+    else if (!filename.length())
+        std::cout << "Bad parameters." << std::endl << DnsSpoof::help();
+    else
+    {
+        it = _modules.find(name);
+        if (it == _modules.end())
+        {
+            _modules[name] = new DnsSpoof(_core, filename, _core.interface().name());
             _modules[name]->start();
         }
         else

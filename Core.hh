@@ -14,6 +14,7 @@ class Core
 private:
     NetworkInterface        _iface;
     Addresses               _attacker;
+    // Sender
     PacketSender            _sender;
     bool                    _senderRun;
     std::thread             _senderThread;
@@ -36,6 +37,7 @@ public:
 public:
     const HWAddress<6>      mac(void) const;
     const IPv4Address       ip(void) const;
+    const NetworkInterface  &interface(void) const;
 
 private:
     void                    startSender(void);

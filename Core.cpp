@@ -27,6 +27,8 @@ const HWAddress<6> Core::mac(void) const { return _attacker.mac(); }
 
 const IPv4Address Core::ip(void) const { return _attacker.ip(); }
 
+const NetworkInterface  &Core::interface(void) const { return _iface; }
+
 
 /* PUBLIC MEMBERS */
 const HWAddress<6> Core::arpRequest(const IPv4Address &targetIp, const IPv4Address &senderIp, const HWAddress<6> &senderMac)
@@ -75,6 +77,7 @@ void Core::send(const EthernetII &pkt)
 /* PRIVATE MEMBERS */
 void Core::startSender(void)
 {
+    _sender.open_l2_socket(_iface);
     while (_senderRun)
     {
         // Wait available packets

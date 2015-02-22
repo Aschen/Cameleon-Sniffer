@@ -7,20 +7,20 @@
 #include "Sniff.hh"
 #include "AModule.hh"
 
+
 using namespace Tins;
 
-class DnsSpoof
+class DnsSpoof : public AModule
 {
 private:
-    NetworkInterface    _iface;
-    PacketSender        *_sender;
-    Sniffer             *_sniffer;
+    std::string                         _file;
+    Sniffer                             _sniffer;
     std::map<std::string, std::string>  _spoofedHosts;
 
 public:
-    DnsSpoof(const std::string &file);
+    DnsSpoof(Core &core, const std::string &file, const std::string &interface);
 
-    bool                dumpQuery(PDU &pdu);
+    bool                spoofQuery(PDU &pdu);
 
     // AModule
 public:

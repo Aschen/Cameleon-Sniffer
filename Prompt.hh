@@ -36,6 +36,7 @@ public:
 
 public:
     void                startMitm(std::istringstream &iss);
+    void                startDnsSpoof(std::istringstream &iss);
 
 private:
     void                stopModules(void);
