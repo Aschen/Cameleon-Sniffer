@@ -24,16 +24,8 @@ int main(int ac, char **av)
         std::cout << "Must be root." << std::endl;
         return 1;
     }
-    std::string tot;
-    Core    core;
-    DnsDump dump(core);
+    Prompt  pr;
 
-    dump.start();
-    std::cin >> tot;
-
-    dump.stop();
-//    Prompt  pr;
-
-//    pr.launch();
+    pr.launch();
     return 0;
 }

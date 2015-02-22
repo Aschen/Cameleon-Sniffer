@@ -6,7 +6,7 @@
 #include "AModule.hh"
 #include "Mitm.hh"
 #include "DnsSpoof.hh"
-
+#include "DnsDump.hh"
 
 class Prompt
 {
@@ -37,6 +37,7 @@ public:
 public:
     void                startMitm(std::istringstream &iss);
     void                startDnsSpoof(std::istringstream &iss);
+    void                startDnsDump(std::istringstream &iss);
 
 private:
     void                stopModules(void);

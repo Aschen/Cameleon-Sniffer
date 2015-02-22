@@ -2,14 +2,17 @@
 
 Prompt::Prompt(void) : _run(false)
 {
+    // Commands
     _commands["help"] = &Prompt::help;
     _commands["quit"] = &Prompt::quit;
     _commands["start"] = &Prompt::start;
-    _commands["startmitm"] = &Prompt::startMitm;
-    _commands["startdnsspoof"] = &Prompt::startDnsSpoof;
     _commands["stop"] = &Prompt::stop;
     _commands["list"] = &Prompt::list;
     _commands["ps"] = &Prompt::ps;
+    // Modules
+    _commands["startmitm"] = &Prompt::startMitm;
+    _commands["startdnsspoof"] = &Prompt::startDnsSpoof;
+    _commands["startdnsdump"] = &Prompt::startDnsDump;
 }
 
 Prompt::~Prompt(void)
@@ -46,6 +49,8 @@ void Prompt::launch(void)
     }
 }
 
+
+/* COMMANDS */
 void Prompt::help(std::istringstream &iss)
 {
     (void)iss;
@@ -118,7 +123,7 @@ void Prompt::stop(std::istringstream &iss)
 void Prompt::list(std::istringstream &iss)
 {
     (void)iss;
-    std::cout << "Availables modules : mitm dnsspoof" << std::endl;
+    std::cout << "Availables modules : mitm dnsspoof dnsdump" << std::endl;
 }
 
 void Prompt::ps(std::istringstream &iss)
@@ -127,6 +132,15 @@ void Prompt::ps(std::istringstream &iss)
     for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
     {
         std::cout << (*it).second->name() << " '" << (*it).first << "' Options : " << (*it).second->info() << std::endl;
+    }
+}
+
+void Prompt::stopModules(void)
+{
+    for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
+    {
+        std::cout << "Stopping module " << (*it).first << std::endl;
+        (*it).second->stop();
     }
 }
 
@@ -188,12 +202,26 @@ void Prompt::startDnsSpoof(std::istringstream &iss)
     }
 }
 
-void Prompt::stopModules(void)
+void Prompt::startDnsDump(std::istringstream &iss)
 {
-    for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
+    std::map<std::string, AModule*>::iterator    it;
+    std::string     name;
+
+    iss >> name;
+    if (!name.length())
+        help(iss);
+    else
     {
-        std::cout << "Stopping module " << (*it).first << std::endl;
-        (*it).second->stop();
+        it = _modules.find(name);
+        if (it == _modules.end())
+        {
+            _modules[name] = new DnsDump(_core);
+            _modules[name]->start();
+        }
+        else
+        {
+            std::cout << "Module " << name << " already exist !" << std::endl;
+        }
     }
 }
 
