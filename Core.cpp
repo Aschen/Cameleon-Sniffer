@@ -77,7 +77,6 @@ void Core::send(const EthernetII &pkt)
 /* PRIVATE MEMBERS */
 void Core::startSender(void)
 {
-    _sender.open_l2_socket(_iface);
     while (_senderRun)
     {
         // Wait available packets

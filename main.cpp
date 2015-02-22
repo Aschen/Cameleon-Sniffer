@@ -1,6 +1,7 @@
 #include "Mitm.hh"
 #include "Core.hh"
 #include "DnsSpoof.hh"
+#include "DnsDump.hh"
 #include "Prompt.hh"
 
 using namespace Tins;
@@ -15,21 +16,24 @@ void    toto(void)
 }
 
 int main(int ac, char **av)
-{
+{    
     (void)ac;
     (void)av;
+    if (getuid() != 0)
+    {
+        std::cout << "Must be root." << std::endl;
+        return 1;
+    }
     std::string tot;
-//    Core    core;
-//    Mitm    mitm(core, av[1], "192.168.1.1");
+    Core    core;
+    DnsDump dump(core);
 
-//    std::thread   t(&Mitm::start, mitm);
-//    t.detach();
+    dump.start();
+    std::cin >> tot;
 
+    dump.stop();
+//    Prompt  pr;
 
-//    std::cin >> tot;
-
-//    mitm.stop();
-    Prompt  pr;
-
-    pr.launch();
+//    pr.launch();
+    return 0;
 }

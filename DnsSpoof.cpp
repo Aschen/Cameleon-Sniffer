@@ -69,9 +69,9 @@ bool DnsSpoof::spoofQuery(PDU &pdu)
         // Let's see if there's any query for an "A" record.
         for(const DNS::Query &query : dns.queries())
         {
-            if ((it = _spoofedHosts.find(query.dname())) != _spoofedHosts.end())
+            if(query.type() == DNS::A)
             {
-                if(query.type() == DNS::A)
+                if ((it = _spoofedHosts.find(query.dname())) != _spoofedHosts.end())
                 {
                     std::cout << query.dname() << " -> " << it->second << std::endl;
                     dns.add_answer(DNS::Resource(query.dname(), it->second, DNS::A, query.query_class(), 111));
@@ -95,6 +95,5 @@ bool DnsSpoof::spoofQuery(PDU &pdu)
             _core.send(pkt);
         }
     }
-    // Drop packet if return false ?
     return true;
 }

@@ -16,6 +16,8 @@ SRCS	=	ReflectedFlood.cpp \
 		DnsSpoof.cpp \
 		Core.cpp \
 		AModule.cpp \
+		ASniffer.cpp \
+		DnsDump.cpp \
 		Prompt.cpp \
 		main.cpp
 
