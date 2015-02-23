@@ -5,48 +5,28 @@ Sender::Sender(const std::string &path, const std::string &msg)
 {
     if (_local.isRunning())
     {
-        _local.sendMsg(msg);
-        std::cout << _local.recvMsg() << std::endl;
+        try
+        {
+            _local.sendMsg(msg);
+            std::cout << msg << " : Sended to server !" << std::endl;
+        }
+        catch (std::runtime_error &e)
+        {
+            std::cout << e.what() << std::endl;
+        }
     }
 }
 
-//void Sender::echo(const std::string &msg)
-//{
-//    char    buf[100];
-
-//    memset(buf, '\0', 100);
-//    if (send(_fd, msg.c_str(), msg.length(), 0) == -1)
-//    {
-//        std::cout << "Send error" << std::endl;
-//    }
-
-//    if (recv(_fd, buf, 100, 0) == -1)
-//    {
-//        std::cout << "Recv error" << std::endl;
-//    }
-//    else
-//    {
-//        std::string out(buf);
-//        std::cout << out << std::endl;
-//    }
-//}
-
-//bool Sender::connection(const std::string &path)
-//{
-//    _socket.sun_family = AF_UNIX;
-//    strncpy(_socket.sun_path, path.c_str(), path.length());
-
-//    if (connect(_fd, (struct sockaddr*)&_socket, path.length() + sizeof(_socket.sun_family)) == -1)
-//    {
-//        std::cout << "Connect error" << std::endl;
-//        return false;
-//    }
-//    return true;
-//}
-
 int main(int ac, char **av)
 {
-    Sender      s(av[1], av[2]);
+    try
+    {
+        Sender      s(av[1], av[2]);
+    }
+    catch (std::runtime_error &e)
+    {
+        std::cout << e.what() << std::endl;
+    }
 
     return 0;
 }

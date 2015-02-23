@@ -7,7 +7,7 @@ DomainSocket::DomainSocket(const std::string &path, DomainSocket::TYPE type) : _
 
     if ((_fd = ::socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
     {
-        std::cout << "Can't open socket : " << ::strerror(errno) << std::endl;
+        throw std::runtime_error(strerror(errno));
     }
 
     // Server Socket
@@ -16,13 +16,13 @@ DomainSocket::DomainSocket(const std::string &path, DomainSocket::TYPE type) : _
         ::unlink(path.c_str());
         if (::bind(_fd, (struct sockaddr*)&_socket, path.length() + sizeof(_socket.sun_family)) == -1)
         {
-            std::cout << "Can't bind socket" << ::strerror(errno) << std::endl;
+            throw std::runtime_error(strerror(errno));
         }
         else if (::listen(_fd, 5) == -1)
         {
-            std::cout << "Can't listening socket" << ::strerror(errno) << std::endl;
+            throw std::runtime_error(strerror(errno));
         }
-        else // Success, TODO: throw exception if fail
+        else
         {
             _run = true;
         }
@@ -31,7 +31,7 @@ DomainSocket::DomainSocket(const std::string &path, DomainSocket::TYPE type) : _
     {
         if (::connect(_fd, (struct sockaddr*)&_socket, path.length() + sizeof(_socket.sun_family)) == -1)
         {
-            std::cout << "Can't connect socket" << ::strerror(errno) << std::endl;
+            throw std::runtime_error(strerror(errno));
         }
         else
         {
@@ -40,7 +40,7 @@ DomainSocket::DomainSocket(const std::string &path, DomainSocket::TYPE type) : _
     }
     else
     {
-        std::cout << "Wrong constructor for a Server_Client socket" << std::endl;
+        throw std::runtime_error("Wrong constructor for a Server_Client socket.");
     }
 }
 
@@ -63,51 +63,48 @@ DomainSocket *DomainSocket::acceptClient(void)
 
     if (_type != DomainSocket::SERVER)
     {
-        std::cout << "This is not a server socket" << std::endl;
-        return NULL; // TODO: Throw exception
+        throw std::runtime_error("This is not a server socket");
     }
 
     if ((remoteFd = ::accept(_fd, (struct sockaddr*)&remoteSocket, &size)) == -1)
     {
-        std::cout << "Can't accept client" << ::strerror(errno) << std::endl;
-        return NULL; // TODO: Throw exception
+        throw std::runtime_error(strerror(errno));
     }
     return new DomainSocket(remoteFd, &remoteSocket);
 }
 
 
-bool DomainSocket::sendMsg(const std::string &msg)
+void DomainSocket::sendMsg(const std::string &msg)
 {
     if (_type == DomainSocket::SERVER)
     {
-        std::cout << "This is a server socket" << std::endl;
-        return false;
+        throw std::runtime_error("This is a server socket");
     }
 
     if (send(_fd, msg.c_str(), msg.size(), 0) == -1)
     {
-        std::cout << "Can't send msg" << ::strerror(errno) << std::endl;
-        return false;
+        throw std::runtime_error(strerror(errno));
     }
-    return true;
 }
 
 std::string DomainSocket::recvMsg(void)
 {
     char        buf[BUF_SIZE] = {0};
-    std::string ret = "";
+    std::string ret;
     int         len;
 
     if (_type == DomainSocket::SERVER)
     {
-        std::cout << "This is a server socket" << std::endl;
-        return ret;
+        throw std::runtime_error("This is a server socket");
     }
 
     if ((len = recv(_fd, buf, BUF_SIZE, 0)) == -1)
     {
-        std::cout << "Can't recv msg" << ::strerror(errno) << std::endl;
-        return ret; // throw exception
+        throw std::runtime_error(strerror(errno));
+    }
+    else if (len == 0) // Client disconnected
+    {
+        throw DomainSocket::Disconnected();
     }
 
     ret.assign(buf, len);

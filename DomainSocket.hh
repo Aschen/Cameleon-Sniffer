@@ -10,11 +10,20 @@
 #include <sys/un.h>
 #include <string>
 #include <iostream>
+#include <stdexcept>
 
 # define BUF_SIZE 512
 
 class DomainSocket
 {
+public:
+    class Disconnected : public std::exception
+    {
+    public:
+        Disconnected(void) { }
+        ~Disconnected(void) throw() { }
+    };
+
 public:
     typedef enum e_type
     {
@@ -38,7 +47,7 @@ public:
     ~DomainSocket(void);
 
     DomainSocket                *acceptClient(void);
-    bool                        sendMsg(const std::string &msg);
+    void                        sendMsg(const std::string &msg);
     std::string                 recvMsg(void);
     void                        closeSocket(void);
 

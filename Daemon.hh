@@ -11,6 +11,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 
 #include "DomainSocket.hh"
 
@@ -18,12 +19,21 @@ class Daemon
 {
 private:
     DomainSocket                _local;
-    DomainSocket                *_remote;
+    bool                        _run;
+    std::vector<DomainSocket*>  _clients;
 
 public:
     Daemon(const std::string &path);
     ~Daemon(void);
 
+    void                        start(void);
+
+private:
+    int                         initSelect(struct timeval *tv, fd_set *readfds, fd_set *writefds);
+    void                        handleSockets(void);
+    void                        eventTerminal(void);
+    void                        eventServer(void);
+    void                        eventClients(fd_set *readfds, fd_set *writefds);
 };
 
 #endif // DAEMON_HH

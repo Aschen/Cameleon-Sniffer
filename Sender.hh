@@ -20,10 +20,6 @@ private:
 
 public:
     Sender(const std::string &path, const std::string &msg);
-
-//    void                    echo(const std::string &msg);
-//private:
-//    bool                    connection(const std::string &path);
 };
 
 #endif // SENDER_HH
