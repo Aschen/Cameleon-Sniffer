@@ -1,22 +1,22 @@
-#include "Prompt.hh"
+#include "Launcher.hh"
 
-Prompt::Prompt(void) : _run(false), _core("wlan0")
+Launcher::Launcher(void) : _run(false), _core("wlan0")
 {
     // Commands
-    _commands["help"] = &Prompt::help;
-    _commands["exit"] = &Prompt::exit;
-    _commands["start"] = &Prompt::start;
-    _commands["stop"] = &Prompt::stop;
-    _commands["list"] = &Prompt::list;
-    _commands["ps"] = &Prompt::ps;
+    _commands["help"] = &Launcher::help;
+    _commands["exit"] = &Launcher::exit;
+    _commands["start"] = &Launcher::start;
+    _commands["stop"] = &Launcher::stop;
+    _commands["list"] = &Launcher::list;
+    _commands["ps"] = &Launcher::ps;
 
     // Modules
-    _commands["startmitm"] = &Prompt::startMitm;
-    _commands["startdnsspoof"] = &Prompt::startDnsSpoof;
-    _commands["startdnsdump"] = &Prompt::startDnsDump;
+    _commands["startmitm"] = &Launcher::startMitm;
+    _commands["startdnsspoof"] = &Launcher::startDnsSpoof;
+    _commands["startdnsdump"] = &Launcher::startDnsDump;
 }
 
-Prompt::~Prompt(void)
+Launcher::~Launcher(void)
 {
     for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
     {
@@ -24,20 +24,7 @@ Prompt::~Prompt(void)
     }
 }
 
-void Prompt::launch(void)
-{
-
-    // Getline from istream ? (file or std::cin)
-    _run = true;
-    std::cout << " #  ";
-    for (std::string line; _run && std::getline(std::cin, line, '\n');)
-    {
-        readCmdLine(line);
-        std::cout << " #  ";
-    }
-}
-
-const std::string Prompt::readCmdLine(const std::string &line)
+const std::string Launcher::readCmdLine(const std::string &line)
 {
     std::map<std::string, Command>::iterator    it;
     std::string             cmd;
@@ -60,7 +47,7 @@ const std::string Prompt::readCmdLine(const std::string &line)
 
 
 /* COMMANDS */
-void Prompt::help(std::istringstream &iss)
+void Launcher::help(std::istringstream &iss)
 {
     (void)iss;
     _rep << "Available commands : " << std::endl;
@@ -72,15 +59,15 @@ void Prompt::help(std::istringstream &iss)
     _rep << "\tquit : Exit";
 }
 
-void Prompt::exit(std::istringstream &iss)
+void Launcher::exit(std::istringstream &iss)
 {
     (void)iss;
     stopModules();
     _run = false;
-    throw Prompt::Stop();
+    throw Launcher::Stop();
 }
 
-void Prompt::start(std::istringstream &iss)
+void Launcher::start(std::istringstream &iss)
 {
     std::map<std::string, Command>::iterator    it;
     std::string     module;
@@ -105,7 +92,7 @@ void Prompt::start(std::istringstream &iss)
         help(iss);
 }
 
-void Prompt::stop(std::istringstream &iss)
+void Launcher::stop(std::istringstream &iss)
 {
     std::map<std::string, AModule*>::iterator    it;
     std::string     name;
@@ -129,20 +116,20 @@ void Prompt::stop(std::istringstream &iss)
     }
 }
 
-void Prompt::list(std::istringstream &iss)
+void Launcher::list(std::istringstream &iss)
 {
     (void)iss;
     _rep << "Availables modules : mitm dnsspoof dnsdump";
 }
 
-void Prompt::ps(std::istringstream &iss)
+void Launcher::ps(std::istringstream &iss)
 {
     (void)iss;
     if (_modules.size())
     {
         for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
         {
-            _rep << "[" << (*it).second->name() << "]" << " '" << (*it).first << "'  : " << (*it).second->info() << std::endl;
+            _rep << "[" << (*it).second->name() << "]" << "\t'" << (*it).first << "'\t: " << (*it).second->info() << std::endl;
         }
     }
     else
@@ -151,7 +138,7 @@ void Prompt::ps(std::istringstream &iss)
     }
 }
 
-void Prompt::stopModules(void)
+void Launcher::stopModules(void)
 {
     for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
     {
@@ -162,7 +149,7 @@ void Prompt::stopModules(void)
 
 
 /* MODULES STARTER */
-void Prompt::startMitm(std::istringstream &iss)
+void Launcher::startMitm(std::istringstream &iss)
 {
     std::map<std::string, AModule*>::iterator    it;
     std::string     name;
@@ -191,25 +178,26 @@ void Prompt::startMitm(std::istringstream &iss)
     }
 }
 
-void Prompt::startDnsSpoof(std::istringstream &iss)
+void Launcher::startDnsSpoof(std::istringstream &iss)
 {
     std::map<std::string, AModule*>::iterator    it;
     std::string     name;
-    std::string     filename;
+    std::string     hostfile;
 
     iss >> name;
-    iss >> filename;
+    iss >> hostfile;
     if (!name.length())
         help(iss);
-    else if (!filename.length())
+    else if (!hostfile.length())
         _rep << "Bad parameters." << std::endl << DnsSpoof::help();
     else
     {
         it = _modules.find(name);
         if (it == _modules.end())
         {
-            _modules[name] = new DnsSpoof(_core, &_rep, filename, _core.interface().name());
+            _modules[name] = new DnsSpoof(_core, &_rep, hostfile, _core.interface().name());
             _modules[name]->start();
+            _rep << "DnsSpoof started : hostfile=" + hostfile;
         }
         else
         {
@@ -218,7 +206,7 @@ void Prompt::startDnsSpoof(std::istringstream &iss)
     }
 }
 
-void Prompt::startDnsDump(std::istringstream &iss)
+void Launcher::startDnsDump(std::istringstream &iss)
 {
     std::map<std::string, AModule*>::iterator    it;
     std::string     name;

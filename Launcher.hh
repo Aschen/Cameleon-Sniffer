@@ -1,5 +1,5 @@
-#ifndef PROMPT_HH
-#define PROMPT_HH
+#ifndef LAUNCHER_HH
+#define LAUNCHER_HH
 
 #include <sstream>
 #include "Sniff.hh"
@@ -8,7 +8,7 @@
 #include "DnsSpoof.hh"
 #include "DnsDump.hh"
 
-class Prompt // CHANGE CLASSNAME !!
+class Launcher
 {
 public:
     class       Stop : public std::exception
@@ -19,7 +19,7 @@ public:
     };
 
 private:
-    typedef void    (Prompt::*Command)(std::istringstream &iss);
+    typedef void    (Launcher::*Command)(std::istringstream &iss);
 
 private:
     bool                            _run;
@@ -30,11 +30,9 @@ private:
 
 public:
     // Add interface choice for Core creation ?
-    Prompt(void);
-    ~Prompt(void);
+    Launcher(void);
+    ~Launcher(void);
 
-    // TODO : Read and launch commands from a file
-    void                launch(void);
     const std::string   readCmdLine(const std::string &line);
 
 public:
@@ -54,4 +52,4 @@ private:
     void                stopModules(void);
 };
 
-#endif // PROMPT_HH
+#endif // Launcher_HH

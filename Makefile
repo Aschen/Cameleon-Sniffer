@@ -13,7 +13,7 @@ CXX		=	clang++
 CXXFLAGS	=	-Wall -W -Wextra -std=c++11
 
 SRCS_DAEMON	=	Core.cpp \
-			Prompt.cpp \
+			Launcher.cpp \
 			DomainSocket.cpp \
 			Daemon.cpp \
 			Addresses.cpp\

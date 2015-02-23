@@ -9,3 +9,4 @@
 * Improve Mitm for attack all hosts on network
 * Add local hostname resolving (eg: 127.0.0.1 -> gordon)
 * Add live mode for modules (involve passing socket to module /!\)
+* Improve sniffer ps display (use std::cout column modificator instead of \t)

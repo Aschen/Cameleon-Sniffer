@@ -130,7 +130,7 @@ void Daemon::eventClients(fd_set *readfds, fd_set *writefds)
             {
                 (*it)->recvMsg();
                 msg = (*it)->getMsg();                
-                (*it)->addMsg(_prompt.readCmdLine(msg));
+                (*it)->addMsg(_launcher.readCmdLine(msg));
             }
             catch (DomainSocket::Disconnected &e)
             {
@@ -138,7 +138,7 @@ void Daemon::eventClients(fd_set *readfds, fd_set *writefds)
                 _clients.erase(it);
                 it = _clients.begin();
             }
-            catch (Prompt::Stop &e)
+            catch (Launcher::Stop &e)
             {
                 _run = false;
                 (*it)->addMsg("Stop sniffer daemon");

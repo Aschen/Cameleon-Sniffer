@@ -14,14 +14,14 @@
 #include <stdexcept>
 
 #include "DomainSocket.hh"
-#include "Prompt.hh"
+#include "Launcher.hh"
 
 class Daemon
 {
 private:
     DomainSocket                _local;
     bool                        _run;
-    Prompt                      _prompt;
+    Launcher                    _launcher;
     std::vector<DomainSocket*>  _clients;
 
 public:
