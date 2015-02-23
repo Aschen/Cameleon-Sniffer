@@ -15,10 +15,16 @@ public:
     ASniffer(Core &core, const std::string &name, const std::string &filter);
     virtual ~ASniffer(void) { }
 
+protected:
+    void                            sniff(void);
+
+protected:
+    virtual bool                    handler(PDU &pdu) = 0;
+
     // AModule
 public:
-    virtual void                    start(void) = 0;
-    virtual void                    stop(void) = 0;
+    void                            start(void);
+    void                            stop(void);
     virtual std::string             info(void) = 0;
 };
 

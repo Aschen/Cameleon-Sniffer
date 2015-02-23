@@ -1,6 +1,6 @@
 #include "Prompt.hh"
 
-Prompt::Prompt(void) : _run(false)
+Prompt::Prompt(void) : _run(false), _core("wlan0")
 {
     // Commands
     _commands["help"] = &Prompt::help;

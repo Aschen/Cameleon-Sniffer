@@ -10,15 +10,15 @@
 
 CXX	=	clang++
 
-SRCS	=	ReflectedFlood.cpp \
-		Mitm.cpp \
+SRCS	=	Core.cpp \
+		Prompt.cpp \
 		Addresses.cpp\
-		DnsSpoof.cpp \
-		Core.cpp \
 		AModule.cpp \
 		ASniffer.cpp \
+		Mitm.cpp \
+		DnsSpoof.cpp \
 		DnsDump.cpp \
-		Prompt.cpp \
+		ReflectedFlood.cpp \
 		main.cpp
 
 CXXFLAGS=	-Wall -W -Wextra -std=c++11

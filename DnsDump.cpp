@@ -5,7 +5,7 @@ DnsDump::DnsDump(Core &core)
 {
 }
 
-bool DnsDump::dumpQuery(PDU &pdu)
+bool DnsDump::handler(PDU &pdu)
 {
     // EthernetII / IP / UDP / RawPDU
     EthernetII eth = pdu.rfind_pdu<EthernetII>();
@@ -18,32 +18,10 @@ bool DnsDump::dumpQuery(PDU &pdu)
     {
         // Let's see if there's any query for an "A" record.
         for(const DNS::Query &query : dns.queries())
-        {
             if(query.type() == DNS::A)
-            {
                 std::cout << ip.src_addr() << " query " << query.dname() << std::endl;
-            }
-        }
     }
     return true;
-}
-
-void DnsDump::sniff(void)
-{
-    _sniffer.sniff_loop(make_sniffer_handler(this, &DnsDump::dumpQuery));
-}
-
-void DnsDump::start(void)
-{
-    std::cout << "Start DNS dumping" << std::endl;
-    std::thread     t(&DnsDump::sniff, this);
-
-    t.detach();
-}
-
-void DnsDump::stop(void)
-{
-    _sniffer.stop_sniff();
 }
 
 std::string DnsDump::info(void)

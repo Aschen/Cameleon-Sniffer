@@ -11,13 +11,12 @@ public:
 
     // AModule
 public:
-    void                        start(void);
-    void                        stop(void);
     std::string                 info(void);
 
-private:
-    bool                        dumpQuery(PDU &pdu);
-    void                        sniff(void);
+    // ASniffer
+protected:
+    bool                        handler(PDU &pdu);
+
 };
 
 #endif // DNSDUMP_HH
