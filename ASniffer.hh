@@ -12,7 +12,7 @@ protected:
     Sniffer                         _sniffer;
 
 public:
-    ASniffer(Core &core, const std::string &name, const std::string &filter);
+    ASniffer(Core &core, const std::string &name, const std::string &filter, std::ostream *out);
     virtual ~ASniffer(void) { }
 
 protected:

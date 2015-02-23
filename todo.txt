@@ -1,0 +1,11 @@
+
+* Create logging class
+* Create AHttpSniffer for sniff http POST/GET request with filter on login/password fields
+* Create TcpKill module for reseting tcp connexions
+* Create FtpSniffer for sniffinf ftp credentials
+* Create AHttpModifier for modify webpage on the fly
+* Create CookieSniffer for sniffing cookies from specific website
+* Create PcapDumper for passiv sniffing with filter on specific port (eg: ssh)
+* Improve Mitm for attack all hosts on network
+* Add local hostname resolving (eg: 127.0.0.1 -> gordon)
+* Add live mode for modules (involve passing socket to module /!\)

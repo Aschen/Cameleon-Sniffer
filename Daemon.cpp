@@ -23,7 +23,6 @@ void Daemon::start(void)
     {
         handleSockets();
     }
-    std::cout << "Server shutdown" << std::endl;
 }
 
 void Daemon::handleSockets(void)

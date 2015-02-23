@@ -18,7 +18,7 @@ private:
     std::map<std::string, std::string>  _spoofedHosts;
 
 public:
-    DnsSpoof(Core &core, const std::string &file, const std::string &interface);
+    DnsSpoof(Core &core, std::ostream *out, const std::string &file, const std::string &interface);
 
     bool                spoofQuery(PDU &pdu);
 

@@ -1,7 +1,7 @@
 #include "DnsSpoof.hh"
 
-DnsSpoof::DnsSpoof(Core &core, const std::string &file, const std::string &interface)
-    : AModule(core, "DnsSpoof"), _file(file), _sniffer(interface, Sniffer::PROMISC)
+DnsSpoof::DnsSpoof(Core &core, std::ostream *out, const std::string &file, const std::string &interface)
+    : AModule(core, "DnsSpoof", out), _file(file), _sniffer(interface, Sniffer::PROMISC)
 {
     readHosts(file);
 }
@@ -12,7 +12,6 @@ void DnsSpoof::start(void)
     _sniffer.set_filter("udp and dst port 53");
 
     // Start the capture
-    std::cout << "Starting dns spoofing" << std::endl;
     std::thread     t(&DnsSpoof::sniff, this);
 
     t.detach();
@@ -48,7 +47,7 @@ std::string DnsSpoof::help(void)
 
     rep += "Start DNS spoofing attack for domains in file.\n";
     rep += "Host file must have the form : domain ip_adress\n";
-    rep += "\tOptions : <file>\n";
+    rep += "\tOptions : <file>";
 
     return rep;
 }

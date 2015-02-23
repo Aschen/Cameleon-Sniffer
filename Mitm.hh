@@ -15,7 +15,7 @@ private:
     Addresses                   _victim;
 
 public:
-    Mitm(Core &core, const std::string &victimIp, const std::string &gatewayIp);
+    Mitm(Core &core, std::ostream *out, const std::string &victimIp, const std::string &gatewayIp);
     virtual ~Mitm(void) { }
 
 public:

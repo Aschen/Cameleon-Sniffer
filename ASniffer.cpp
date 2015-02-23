@@ -1,7 +1,7 @@
 #include "ASniffer.hh"
 
-ASniffer::ASniffer(Core &core, const std::string &name, const std::string &filter)
-    : AModule(core, name), _sniffer(_core.interface().name(), Sniffer::PROMISC, filter)
+ASniffer::ASniffer(Core &core, const std::string &name, const std::string &filter, std::ostream *out)
+    : AModule(core, name, out), _sniffer(_core.interface().name(), Sniffer::PROMISC, filter)
 {
 }
 
@@ -12,7 +12,6 @@ void ASniffer::sniff(void)
 
 void ASniffer::start(void)
 {
-    std::cout << "Start " << _name << std::endl;
     std::thread     t(&ASniffer::sniff, this);
 
     t.detach();

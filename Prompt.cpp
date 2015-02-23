@@ -142,7 +142,7 @@ void Prompt::ps(std::istringstream &iss)
     {
         for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
         {
-            _rep << (*it).second->name() << " '" << (*it).first << "' Options : " << (*it).second->info() << std::endl;
+            _rep << "[" << (*it).second->name() << "]" << " '" << (*it).first << "'  : " << (*it).second->info() << std::endl;
         }
     }
     else
@@ -181,7 +181,7 @@ void Prompt::startMitm(std::istringstream &iss)
         it = _modules.find(name);
         if (it == _modules.end())
         {
-            _modules[name] = new Mitm(_core, victimIp, gatewayIp);
+            _modules[name] = new Mitm(_core, &_rep, victimIp, gatewayIp);
             _modules[name]->start();
         }
         else
@@ -208,7 +208,7 @@ void Prompt::startDnsSpoof(std::istringstream &iss)
         it = _modules.find(name);
         if (it == _modules.end())
         {
-            _modules[name] = new DnsSpoof(_core, filename, _core.interface().name());
+            _modules[name] = new DnsSpoof(_core, &_rep, filename, _core.interface().name());
             _modules[name]->start();
         }
         else
@@ -222,17 +222,25 @@ void Prompt::startDnsDump(std::istringstream &iss)
 {
     std::map<std::string, AModule*>::iterator    it;
     std::string     name;
+    std::string     file;
 
     iss >> name;
+    iss >> file;
     if (!name.length())
         help(iss);
+    else if (!file.length())
+        _rep << "Bad parameters." << std::endl << DnsDump::help();
     else
     {
         it = _modules.find(name);
         if (it == _modules.end())
         {
-            _modules[name] = new DnsDump(_core);
+            std::ofstream    *fd = new std::ofstream();
+
+            fd->open(file);
+            _modules[name] = new DnsDump(_core, fd, file);
             _modules[name]->start();
+            _rep << "DnsDump started : file=" + file;
         }
         else
         {

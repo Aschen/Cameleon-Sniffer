@@ -9,9 +9,10 @@ class AModule
 protected:
     Core                        &_core;
     const std::string           _name;
+    std::ostream                *_out;
 
 public:
-    AModule(Core &core, const std::string &name);
+    AModule(Core &core, const std::string &name, std::ostream *out);
     virtual ~AModule(void) { }
 
 public:

@@ -23,13 +23,13 @@ int main(int ac, char **av)
 {
     std::string     cmd;
 
-    if (ac < 3)
+    if (ac < 2)
     {
-        std::cout << "Usage : " << av[0] << " <socket> [commands]" << std::endl;
+        std::cout << "Usage : " << av[0] << " [commands]" << std::endl;
         return 1;
     }
 
-    for (int i = 2; i < ac; i++)
+    for (int i = 1; i < ac; i++)
     {
         cmd += av[i];
         cmd += " ";
@@ -37,7 +37,7 @@ int main(int ac, char **av)
 
     try
     {
-        Sender      s(av[1], cmd);
+        Sender      s("/etc/sniffer/sniffer.sock", cmd);
     }
     catch (std::runtime_error &e)
     {
