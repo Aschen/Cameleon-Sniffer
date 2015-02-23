@@ -112,15 +112,24 @@ void Daemon::eventClients(fd_set *readfds, fd_set *writefds)
         // Something to write on client socket
         if (FD_ISSET((*it)->fd(), writefds))
         {
-            // Send msg
+            try
+            {
+                (*it)->sendMsg();
+            }
+            catch (std::runtime_error &e)
+            {
+                // No message to send
+            }
         }
         // Something to read on client socket
         if (FD_ISSET((*it)->fd(), readfds))
         {
             try
             {
-                msg = (*it)->recvMsg();
+                (*it)->recvMsg();
+                msg = (*it)->getMsg();
                 _prompt.readCmdLine(msg);
+                (*it)->addMsg("OK :)");
             }
             catch (DomainSocket::Disconnected &e)
             {

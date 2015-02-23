@@ -7,8 +7,11 @@ Sender::Sender(const std::string &path, const std::string &msg)
     {
         try
         {
-            _local.sendMsg(msg);
+            _local.addMsg(msg);
+            _local.sendMsg();
             std::cout << msg << " : Sended to server !" << std::endl;
+            _local.recvMsg();
+            std::cout << _local.getMsg() << std::endl;
         }
         catch (std::runtime_error &e)
         {

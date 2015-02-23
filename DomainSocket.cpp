@@ -74,23 +74,32 @@ DomainSocket *DomainSocket::acceptClient(void)
 }
 
 
-void DomainSocket::sendMsg(const std::string &msg)
+void DomainSocket::sendMsg(void)
 {
+    std::string     msg;
+
     if (_type == DomainSocket::SERVER)
     {
         throw std::runtime_error("This is a server socket");
     }
 
+    if (_sendQueue.size() == 0)
+    {
+        throw std::runtime_error("No message in send queue");
+    }
+
+    msg = _sendQueue.front();
     if (send(_fd, msg.c_str(), msg.size(), 0) == -1)
     {
         throw std::runtime_error(strerror(errno));
     }
+    _sendQueue.pop();
 }
 
-std::string DomainSocket::recvMsg(void)
+void DomainSocket::recvMsg(void)
 {
     char        buf[BUF_SIZE] = {0};
-    std::string ret;
+    std::string msg;
     int         len;
 
     if (_type == DomainSocket::SERVER)
@@ -107,8 +116,26 @@ std::string DomainSocket::recvMsg(void)
         throw DomainSocket::Disconnected();
     }
 
-    ret.assign(buf, len);
-    return ret;
+    msg.assign(buf, len);
+    _recvQueue.push(msg);
+}
+
+void DomainSocket::addMsg(const std::string &msg)
+{
+    _sendQueue.push(msg);
+}
+
+const std::string DomainSocket::getMsg(void)
+{
+    std::string     msg;
+
+    if (_recvQueue.size() == 0)
+    {
+        throw std::runtime_error("No message in recv queue");
+    }
+    msg = _recvQueue.front();
+    _recvQueue.pop();
+    return msg;
 }
 
 void DomainSocket::closeSocket(void)
