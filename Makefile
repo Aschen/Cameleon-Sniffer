@@ -8,36 +8,48 @@
 ## Started on  19/02/2014 15:26
 ##
 
-CXX	=	clang++
+CXX		=	clang++
 
-SRCS	=	Core.cpp \
-		Prompt.cpp \
-		DomainSocket.cpp \
-		Daemon.cpp \
-		Addresses.cpp\
-		AModule.cpp \
-		ASniffer.cpp \
-		Mitm.cpp \
-		DnsSpoof.cpp \
-		DnsDump.cpp \
-		ReflectedFlood.cpp \
-		main.cpp
+CXXFLAGS	=	-Wall -W -Wextra -std=c++11
 
-CXXFLAGS=	-Wall -W -Wextra -std=c++11
+SRCS_DAEMON	=	Core.cpp \
+			Prompt.cpp \
+			DomainSocket.cpp \
+			Daemon.cpp \
+			Addresses.cpp\
+			AModule.cpp \
+			ASniffer.cpp \
+			Mitm.cpp \
+			DnsSpoof.cpp \
+			DnsDump.cpp \
+			ReflectedFlood.cpp \
+			main.cpp
 
-OBJS	=	$(SRCS:.cpp=.o)
+SRCS_SENDER	=	DomainSocket.cpp \
+			Sender.cpp
 
-NAME	=	sniff
+OBJS_DAEMON	=	$(SRCS_DAEMON:.cpp=.o)
 
-all:	$(NAME)
+OBJS_SENDER	=	$(SRCS_SENDER:.cpp=.o)
 
-$(NAME):	$(OBJS)
-	$(CXX) -o $(NAME) $(OBJS) -ltins -lpthread
+DAEMON		=	sniffer-daemon
+
+SENDER		=	sniffer
+
+all:		$(DAEMON) $(SENDER)
+
+$(DAEMON):	$(OBJS_DAEMON)
+		$(CXX) -o $(DAEMON) $(OBJS_DAEMON) -ltins -lpthread
+
+$(SENDER):	$(OBJS_SENDER)
+		$(CXX) -o $(SENDER) $(OBJS_SENDER)
 
 clean:
-	rm -f $(OBJS)
+		rm -f $(OBJS_DAEMON)
+		rm -f $(OBJS_SENDER)
 
-fclean:	clean
-	rm -f $(NAME)
+fclean:		clean
+		rm -f $(DAEMON)
+		rm -f $(SENDER)
 
-re: fclean all
+re:	 	fclean all

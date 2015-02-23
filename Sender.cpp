@@ -21,9 +21,23 @@ Sender::Sender(const std::string &path, const std::string &msg)
 
 int main(int ac, char **av)
 {
+    std::string     cmd;
+
+    if (ac < 3)
+    {
+        std::cout << "Usage : " << av[0] << " <socket> [commands]" << std::endl;
+        return 1;
+    }
+
+    for (int i = 2; i < ac; i++)
+    {
+        cmd += av[i];
+        cmd += " ";
+    }
+
     try
     {
-        Sender      s(av[1], av[2]);
+        Sender      s(av[1], cmd);
     }
     catch (std::runtime_error &e)
     {
