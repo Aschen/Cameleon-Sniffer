@@ -8,7 +8,7 @@
 #include "DnsSpoof.hh"
 #include "DnsDump.hh"
 
-class Prompt
+class Prompt // CHANGE CLASSNAME !!
 {
     typedef void    (Prompt::*Command)(std::istringstream &iss);
 
@@ -25,6 +25,7 @@ public:
 
     // TODO : Read and launch commands from a file
     void                launch(void);
+    void                readCmdLine(const std::string &line);
 
 public:
     void                help(std::istringstream &iss);

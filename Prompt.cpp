@@ -9,6 +9,7 @@ Prompt::Prompt(void) : _run(false), _core("wlan0")
     _commands["stop"] = &Prompt::stop;
     _commands["list"] = &Prompt::list;
     _commands["ps"] = &Prompt::ps;
+
     // Modules
     _commands["startmitm"] = &Prompt::startMitm;
     _commands["startdnsspoof"] = &Prompt::startDnsSpoof;
@@ -25,27 +26,33 @@ Prompt::~Prompt(void)
 
 void Prompt::launch(void)
 {
-    std::map<std::string, Command>::iterator    it;
-    std::string     cmd;
-    Command         fptr;
 
     // Getline from istream ? (file or std::cin)
     _run = true;
     std::cout << " #  ";
     for (std::string line; _run && std::getline(std::cin, line, '\n');)
     {
-        std::istringstream      iss(line);
-
-        iss >> cmd;
-        it = _commands.find(cmd);
-        if (it == _commands.end())
-            help(iss);
-        else
-        {
-            fptr = (*it).second;
-            (this->*fptr)(iss);
-        }
+        readCmdLine(line);
         std::cout << " #  ";
+    }
+}
+
+void Prompt::readCmdLine(const std::string &line)
+{
+    std::map<std::string, Command>::iterator    it;
+    std::string             cmd;
+    Command                 fptr;
+    std::istringstream      iss(line);
+
+//    std::cout << line << std::endl;
+    iss >> cmd;
+    it = _commands.find(cmd);
+    if (it == _commands.end())
+        help(iss);
+    else
+    {
+        fptr = (*it).second;
+        (this->*fptr)(iss);
     }
 }
 

@@ -12,6 +12,8 @@ CXX	=	clang++
 
 SRCS	=	Core.cpp \
 		Prompt.cpp \
+		DomainSocket.cpp \
+		Daemon.cpp \
 		Addresses.cpp\
 		AModule.cpp \
 		ASniffer.cpp \

@@ -3,6 +3,7 @@
 #include "DnsSpoof.hh"
 #include "DnsDump.hh"
 #include "Prompt.hh"
+#include "Daemon.hh"
 
 using namespace Tins;
 
@@ -24,8 +25,16 @@ int main(int ac, char **av)
         std::cout << "Must be root." << std::endl;
         return 1;
     }
-    Prompt  pr;
+    try
+    {
+        Daemon      d(av[1]);
 
-    pr.launch();
+        d.start();
+    }
+    catch (std::runtime_error &e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+
     return 0;
 }

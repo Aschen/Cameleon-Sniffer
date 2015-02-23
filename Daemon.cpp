@@ -3,10 +3,6 @@
 Daemon::Daemon(const std::string &path)
     : _local(path, DomainSocket::SERVER), _run(false)
 {    
-    if (_local.isRunning())
-    {
-        start();
-    }
 }
 
 Daemon::~Daemon(void)
@@ -34,7 +30,6 @@ void Daemon::handleSockets(void)
     int                 fd_max;
     struct timeval      tv;
 
-    /*  Preparation et lancement de select() */
     fd_max = initSelect(&tv, &readfds, &writefds);
     if (::select(fd_max, &readfds, NULL, NULL, &tv) == -1)
     {
@@ -42,13 +37,13 @@ void Daemon::handleSockets(void)
     }
     else
     {
-        /* Si une commande est tapée en console */
+        // If something to read on stdin
         if (FD_ISSET(0, &readfds))
             eventTerminal();
-        /* Si un nouveau client essaye de se connecter */
+        // If new client connect
         if (FD_ISSET(_local.fd(), &readfds))
             eventServer();
-        /* On regarde si les clients nous envoies des infos */
+        // Check clients's socket
         eventClients(&readfds, &writefds);
     }
 
@@ -125,11 +120,10 @@ void Daemon::eventClients(fd_set *readfds, fd_set *writefds)
             try
             {
                 msg = (*it)->recvMsg();
-                std::cout << msg << std::endl;
+                _prompt.readCmdLine(msg);
             }
             catch (DomainSocket::Disconnected &e)
             {
-                std::cout << "Client " << (*it)->fd() << " disconnected." << std::endl;
                 delete (*it);
                 _clients.erase(it);
                 it = _clients.begin();
@@ -141,18 +135,4 @@ void Daemon::eventClients(fd_set *readfds, fd_set *writefds)
         }
     }
 
-}
-
-int main(int ac, char **av)
-{
-    try
-    {
-        Daemon  d(av[1]);
-    }
-    catch (std::runtime_error &e)
-    {
-        std::cout << e.what() << std::endl;
-    }
-
-    return 0;
 }
