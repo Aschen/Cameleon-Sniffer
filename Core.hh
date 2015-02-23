@@ -29,7 +29,6 @@ public:
 
 public:
     void                    send(const EthernetII &pkt);
-    // Put function in a namespace ARP:: ?
     const HWAddress<6>      arpRequest(const IPv4Address &targetIp, const IPv4Address &senderIp, const HWAddress<6> &senderMac);
     const HWAddress<6>      arpRequest(const IPv4Address &targetIp);
     void                    arpReply(const IPv4Address &senderIp, const HWAddress<6> &senderMac, const IPv4Address &targetIp, const HWAddress<6> &targetMac);

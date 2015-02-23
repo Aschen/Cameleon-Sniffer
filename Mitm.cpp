@@ -41,6 +41,7 @@ void Mitm::stop(void)
 {
     _run = false;
 
+    sleep(2);
     // Disable ip forward
     system("echo 0 > /proc/sys/net/ipv4/ip_forward");
 
