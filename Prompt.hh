@@ -10,11 +10,21 @@
 
 class Prompt // CHANGE CLASSNAME !!
 {
+public:
+    class       Stop : public std::exception
+    {
+    public:
+        Stop(void) { }
+        ~Stop(void) throw() { }
+    };
+
+private:
     typedef void    (Prompt::*Command)(std::istringstream &iss);
 
 private:
     bool                            _run;
     Core                            _core;
+    std::stringstream               _rep;
     std::map<std::string, Command>  _commands;
     std::map<std::string, AModule*> _modules;
 
@@ -25,11 +35,11 @@ public:
 
     // TODO : Read and launch commands from a file
     void                launch(void);
-    void                readCmdLine(const std::string &line);
+    const std::string   readCmdLine(const std::string &line);
 
 public:
     void                help(std::istringstream &iss);
-    void                quit(std::istringstream &iss);
+    void                exit(std::istringstream &iss);
     void                start(std::istringstream &iss);
     void                stop(std::istringstream &iss);
     void                list(std::istringstream &iss);

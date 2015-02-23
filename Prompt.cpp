@@ -4,7 +4,7 @@ Prompt::Prompt(void) : _run(false), _core("wlan0")
 {
     // Commands
     _commands["help"] = &Prompt::help;
-    _commands["quit"] = &Prompt::quit;
+    _commands["exit"] = &Prompt::exit;
     _commands["start"] = &Prompt::start;
     _commands["stop"] = &Prompt::stop;
     _commands["list"] = &Prompt::list;
@@ -37,14 +37,15 @@ void Prompt::launch(void)
     }
 }
 
-void Prompt::readCmdLine(const std::string &line)
+const std::string Prompt::readCmdLine(const std::string &line)
 {
     std::map<std::string, Command>::iterator    it;
     std::string             cmd;
     Command                 fptr;
     std::istringstream      iss(line);
 
-//    std::cout << line << std::endl;
+    _rep.str("");
+    _rep.clear();
     iss >> cmd;
     it = _commands.find(cmd);
     if (it == _commands.end())
@@ -54,6 +55,7 @@ void Prompt::readCmdLine(const std::string &line)
         fptr = (*it).second;
         (this->*fptr)(iss);
     }
+    return _rep.str();
 }
 
 
@@ -61,21 +63,21 @@ void Prompt::readCmdLine(const std::string &line)
 void Prompt::help(std::istringstream &iss)
 {
     (void)iss;
-    std::cout << "Available commands : " << std::endl;
-    std::cout << "\tstart <module> <instance name> [options] : Start module" << std::endl;
-    std::cout << "\tstop <instance name> : Stop module" << std::endl;
-    std::cout << "\tlist : Display availables modules" << std::endl;
-    std::cout << "\tps : Display started modules" << std::endl;
-    std::cout << "\thelp : Display this help" << std::endl;
-    std::cout << "\tquit : Exit" << std::endl;
+    _rep << "Available commands : " << std::endl;
+    _rep << "\tstart <module> <instance name> [options] : Start module" << std::endl;
+    _rep << "\tstop <instance name> : Stop module" << std::endl;
+    _rep << "\tlist : Display availables modules" << std::endl;
+    _rep << "\tps : Display started modules" << std::endl;
+    _rep << "\thelp : Display this help" << std::endl;
+    _rep << "\tquit : Exit" << std::endl;
 }
 
-void Prompt::quit(std::istringstream &iss)
+void Prompt::exit(std::istringstream &iss)
 {
     (void)iss;
     stopModules();
-    std::cout << "Bye :)" << std::endl;
     _run = false;
+    throw Prompt::Stop();
 }
 
 void Prompt::start(std::istringstream &iss)
@@ -115,14 +117,14 @@ void Prompt::stop(std::istringstream &iss)
     {
         it = _modules.find(name);
         if (it == _modules.end())
-            std::cout << "Module " << name << " doesn't exist !" << std::endl;
+            _rep << "Module " << name << " doesn't exist !" << std::endl;
         else
         {
             // Stop the module and delete it
             (*it).second->stop();
             delete (*it).second;
             _modules.erase(name);
-            std::cout << "Module " << name << " successfully stopped" << std::endl;
+            _rep << "Module " << name << " successfully stopped" << std::endl;
         }
     }
 }
@@ -130,15 +132,22 @@ void Prompt::stop(std::istringstream &iss)
 void Prompt::list(std::istringstream &iss)
 {
     (void)iss;
-    std::cout << "Availables modules : mitm dnsspoof dnsdump" << std::endl;
+    _rep << "Availables modules : mitm dnsspoof dnsdump" << std::endl;
 }
 
 void Prompt::ps(std::istringstream &iss)
 {
     (void)iss;
-    for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
+    if (_modules.size())
     {
-        std::cout << (*it).second->name() << " '" << (*it).first << "' Options : " << (*it).second->info() << std::endl;
+        for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
+        {
+            _rep << (*it).second->name() << " '" << (*it).first << "' Options : " << (*it).second->info() << std::endl;
+        }
+    }
+    else
+    {
+        _rep << "No module actually running." << std::endl;
     }
 }
 
@@ -146,7 +155,7 @@ void Prompt::stopModules(void)
 {
     for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
     {
-        std::cout << "Stopping module " << (*it).first << std::endl;
+        _rep << "Stopping module " << (*it).first << std::endl;
         (*it).second->stop();
     }
 }
@@ -166,7 +175,7 @@ void Prompt::startMitm(std::istringstream &iss)
     if (!name.length())
         help(iss);
     else if (!victimIp.length() || !gatewayIp.length())
-        std::cout << "Bad parameters." << std::endl << Mitm::help();
+        _rep << "Bad parameters." << std::endl << Mitm::help();
     else
     {
         it = _modules.find(name);
@@ -177,7 +186,7 @@ void Prompt::startMitm(std::istringstream &iss)
         }
         else
         {
-            std::cout << "Module " << name << " already exist !" << std::endl;
+            _rep << "Module " << name << " already exist !" << std::endl;
         }
     }
 }
@@ -193,7 +202,7 @@ void Prompt::startDnsSpoof(std::istringstream &iss)
     if (!name.length())
         help(iss);
     else if (!filename.length())
-        std::cout << "Bad parameters." << std::endl << DnsSpoof::help();
+        _rep << "Bad parameters." << std::endl << DnsSpoof::help();
     else
     {
         it = _modules.find(name);
@@ -204,7 +213,7 @@ void Prompt::startDnsSpoof(std::istringstream &iss)
         }
         else
         {
-            std::cout << "Module " << name << " already exist !" << std::endl;
+            _rep << "Module " << name << " already exist !" << std::endl;
         }
     }
 }
@@ -227,7 +236,7 @@ void Prompt::startDnsDump(std::istringstream &iss)
         }
         else
         {
-            std::cout << "Module " << name << " already exist !" << std::endl;
+            _rep << "Module " << name << " already exist !" << std::endl;
         }
     }
 }
