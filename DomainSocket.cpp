@@ -111,7 +111,7 @@ void DomainSocket::recvMsg(void)
     {
         throw std::runtime_error(strerror(errno));
     }
-    else if (len == 0) // Client disconnected
+    else if (_type == DomainSocket::SERVER_CLIENT && len == 0) // Server_Client disconnected from server
     {
         throw DomainSocket::Disconnected();
     }

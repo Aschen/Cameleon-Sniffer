@@ -69,7 +69,7 @@ void Prompt::help(std::istringstream &iss)
     _rep << "\tlist : Display availables modules" << std::endl;
     _rep << "\tps : Display started modules" << std::endl;
     _rep << "\thelp : Display this help" << std::endl;
-    _rep << "\tquit : Exit" << std::endl;
+    _rep << "\tquit : Exit";
 }
 
 void Prompt::exit(std::istringstream &iss)
@@ -117,14 +117,14 @@ void Prompt::stop(std::istringstream &iss)
     {
         it = _modules.find(name);
         if (it == _modules.end())
-            _rep << "Module " << name << " doesn't exist !" << std::endl;
+            _rep << "Module " << name << " doesn't exist !";
         else
         {
             // Stop the module and delete it
             (*it).second->stop();
             delete (*it).second;
             _modules.erase(name);
-            _rep << "Module " << name << " successfully stopped" << std::endl;
+            _rep << "Module " << name << " successfully stopped";
         }
     }
 }
@@ -132,7 +132,7 @@ void Prompt::stop(std::istringstream &iss)
 void Prompt::list(std::istringstream &iss)
 {
     (void)iss;
-    _rep << "Availables modules : mitm dnsspoof dnsdump" << std::endl;
+    _rep << "Availables modules : mitm dnsspoof dnsdump";
 }
 
 void Prompt::ps(std::istringstream &iss)
@@ -147,7 +147,7 @@ void Prompt::ps(std::istringstream &iss)
     }
     else
     {
-        _rep << "No module actually running." << std::endl;
+        _rep << "No module actually running.";
     }
 }
 
@@ -155,7 +155,7 @@ void Prompt::stopModules(void)
 {
     for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
     {
-        _rep << "Stopping module " << (*it).first << std::endl;
+        _rep << "Stopping module " << (*it).first;
         (*it).second->stop();
     }
 }
@@ -186,7 +186,7 @@ void Prompt::startMitm(std::istringstream &iss)
         }
         else
         {
-            _rep << "Module " << name << " already exist !" << std::endl;
+            _rep << "Module " << name << " already exist !";
         }
     }
 }
@@ -213,7 +213,7 @@ void Prompt::startDnsSpoof(std::istringstream &iss)
         }
         else
         {
-            _rep << "Module " << name << " already exist !" << std::endl;
+            _rep << "Module " << name << " already exist !";
         }
     }
 }
@@ -236,7 +236,7 @@ void Prompt::startDnsDump(std::istringstream &iss)
         }
         else
         {
-            _rep << "Module " << name << " already exist !" << std::endl;
+            _rep << "Module " << name << " already exist !";
         }
     }
 }

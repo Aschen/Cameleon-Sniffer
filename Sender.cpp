@@ -9,7 +9,6 @@ Sender::Sender(const std::string &path, const std::string &msg)
         {
             _local.addMsg(msg);
             _local.sendMsg();
-            std::cout << msg << " : Sended to server !" << std::endl;
             _local.recvMsg();
             std::cout << _local.getMsg() << std::endl;
         }

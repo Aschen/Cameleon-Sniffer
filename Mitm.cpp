@@ -68,6 +68,6 @@ std::string Mitm::help(void)
     std::string     rep;
 
     rep += "Start a man in the middle attack by arp poisoning.\n";
-    rep += "\tOptions : <VictimIp> <GatewayIp>\n";
+    rep += "\tOptions : <VictimIp> <GatewayIp>";
     return rep;
 }
