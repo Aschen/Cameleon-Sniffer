@@ -1,5 +1,5 @@
-#ifndef MITM_HH
-#define MITM_HH
+#ifndef MITMGLOBAL_HH
+#define MITMGLOBAL_HH
 
 #include <thread>
 #include <vector>
@@ -8,16 +8,16 @@
 
 using namespace Tins;
 
-class Mitm : public AModule
+class MitmGlobal : public AModule
 {
 private:
     bool                        _run;
     Addresses                   _gateway;
-    Addresses                   _victim;
+    std::vector<Addresses>      _victims;
 
 public:
-    Mitm(Core &core, std::ostream *out, const std::string &victimIp, const std::string &gatewayIp);
-    virtual ~Mitm(void) { }
+    MitmGlobal(Core &core, std::ostream *out, const std::vector<std::string> &victimsIp, const std::string &gatewayIp);
+    virtual ~MitmGlobal(void) { }
 
 public:
     void                        poison(void);
@@ -30,4 +30,4 @@ public:
     static std::string          help(void);
 };
 
-#endif // MITM_HH
+#endif // MITMGLOBAL_HH

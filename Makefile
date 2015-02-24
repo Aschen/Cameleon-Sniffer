@@ -16,6 +16,7 @@ SRCS_DAEMON	=	Core.cpp \
 			Launcher.cpp \
 			DomainSocket.cpp \
 			Daemon.cpp \
+			Http.cpp \
 			Addresses.cpp\
 			AModule.cpp \
 			ASniffer.cpp \
@@ -24,7 +25,7 @@ SRCS_DAEMON	=	Core.cpp \
 			DnsDump.cpp \
 			ReflectedFlood.cpp \
 			HttpPostSniffer.cpp \
-			Http.cpp \
+			MitmGlobal.cpp \
 			main.cpp
 
 SRCS_SENDER	=	DomainSocket.cpp \

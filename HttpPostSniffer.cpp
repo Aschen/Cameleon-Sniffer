@@ -11,9 +11,9 @@ std::string HttpPostSniffer::info(void)
 
     for (std::string key : _keys)
     {
-        keys += key + " && ";
+        keys += key + " ";
     }
-    return "Keys : " + keys + "  File :  " + _filename;
+    return "Keys : " + keys + " && File :  " + _filename;
 }
 
 std::string HttpPostSniffer::help(void)

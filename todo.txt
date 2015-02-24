@@ -6,9 +6,10 @@
 [ ] Create AHttpModifier for modify webpage on the fly
 [ ] Create HttpCookieSniffer for sniffing cookies from specific website
 [ ] Create PcapDumper for passiv sniffing with filter on specific port (eg: ssh)
-[ ] Improve Mitm for attack all hosts on network
+[X] Create MitmGlobal for attack all hosts on network
 [ ] Add local hostname resolving (eg: 127.0.0.1 -> gordon)
 [ ] Add live mode for modules (wrapper class (with <<overload)to output : std::ofstream and DomainSocket)
 [ ] Improve sniffer ps display (use std::cout column modificator instead of \t)
 [ ] Create HTTP PDU class (with request and respons) for libtins
+[ ] Improve arp request (don't use send_recv)
 

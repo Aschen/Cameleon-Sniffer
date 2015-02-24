@@ -15,6 +15,7 @@ Launcher::Launcher(void) : _run(false), _core("wlan0")
     _commands["startdnsspoof"] = &Launcher::startDnsSpoof;
     _commands["startdnsdump"] = &Launcher::startDnsDump;
     _commands["starthttppostsniffer"] = &Launcher::startHttpPostSniffer;
+    _commands["startmitmglobal"] = &Launcher::startMitmGlobal;
 }
 
 Launcher::~Launcher(void)
@@ -120,7 +121,7 @@ void Launcher::stop(std::istringstream &iss)
 void Launcher::list(std::istringstream &iss)
 {
     (void)iss;
-    _rep << "Availables modules : mitm dnsspoof dnsdump httppostsniffer";
+    _rep << "Availables modules : mitm mitmglobal dnsspoof dnsdump httppostsniffer";
 }
 
 void Launcher::ps(std::istringstream &iss)
@@ -251,9 +252,7 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
     iss >> key;
     if (!name.length())
         help(iss);
-    else if (!filename.length())
-        _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
-    else if (!key.length())
+    else if (!filename.length() || !key.length())
         _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
     else
     {
@@ -273,6 +272,45 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
             _modules[name] = new HttpPostSniffer(_core, "HttpPostSniffer", fd, filename, vKeys);
             _modules[name]->start();
             _rep << "HttpPostSniffer started";
+        }
+        else
+        {
+            _rep << "Module " << name << " already exist !";
+        }
+    }
+}
+
+void Launcher::startMitmGlobal(std::istringstream &iss)
+{
+    std::map<std::string, AModule*>::iterator    it;
+    std::string     name;
+    std::string     gatewayIp;
+    std::string     file;
+
+    iss >> name;
+    iss >> file;
+    iss >> gatewayIp;
+    if (!name.length())
+        help(iss);
+    else if (!gatewayIp.length() || !file.length())
+        _rep << "Bad parameters." << std::endl << MitmGlobal::help();
+    else
+    {
+        std::ifstream               fd;
+        std::vector<std::string>    victims;
+
+        fd.open(file);
+        int i = 0;
+        for (std::string line; std::getline(fd, line) && i < 40;i++)
+        {
+            victims.push_back(line);
+        }
+
+        it = _modules.find(name);
+        if (it == _modules.end())
+        {
+            _modules[name] = new MitmGlobal(_core, &_rep, victims, gatewayIp);
+            _modules[name]->start();
         }
         else
         {

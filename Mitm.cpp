@@ -26,7 +26,7 @@ void Mitm::poison(void)
         // Tell victim thats _gateway.ip() is _attackerMac
         _core.arpReply(_gateway.ip(), _core.mac(), _victim.ip(), _victim.mac());
         // Don't need to spam
-        sleep(1);
+        sleep(2);
     }
 }
 
@@ -41,7 +41,7 @@ void Mitm::stop(void)
 {
     _run = false;
 
-    sleep(2);
+    sleep(3);
     // Disable ip forward
     system("echo 0 > /proc/sys/net/ipv4/ip_forward");
 
