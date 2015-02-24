@@ -7,6 +7,7 @@
 #include "Mitm.hh"
 #include "DnsSpoof.hh"
 #include "DnsDump.hh"
+#include "HttpPostSniffer.hh"
 
 class Launcher
 {
@@ -47,6 +48,7 @@ public:
     void                startMitm(std::istringstream &iss);
     void                startDnsSpoof(std::istringstream &iss);
     void                startDnsDump(std::istringstream &iss);
+    void                startHttpPostSniffer(std::istringstream &iss);
 
 private:
     void                stopModules(void);

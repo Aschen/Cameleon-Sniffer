@@ -23,6 +23,8 @@ SRCS_DAEMON	=	Core.cpp \
 			DnsSpoof.cpp \
 			DnsDump.cpp \
 			ReflectedFlood.cpp \
+			HttpPostSniffer.cpp \
+			Http.cpp \
 			main.cpp
 
 SRCS_SENDER	=	DomainSocket.cpp \

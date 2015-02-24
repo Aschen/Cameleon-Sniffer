@@ -14,6 +14,7 @@ Launcher::Launcher(void) : _run(false), _core("wlan0")
     _commands["startmitm"] = &Launcher::startMitm;
     _commands["startdnsspoof"] = &Launcher::startDnsSpoof;
     _commands["startdnsdump"] = &Launcher::startDnsDump;
+    _commands["starthttppostsniffer"] = &Launcher::startHttpPostSniffer;
 }
 
 Launcher::~Launcher(void)
@@ -119,7 +120,7 @@ void Launcher::stop(std::istringstream &iss)
 void Launcher::list(std::istringstream &iss)
 {
     (void)iss;
-    _rep << "Availables modules : mitm dnsspoof dnsdump";
+    _rep << "Availables modules : mitm dnsspoof dnsdump httppostsniffer";
 }
 
 void Launcher::ps(std::istringstream &iss)
@@ -225,7 +226,7 @@ void Launcher::startDnsDump(std::istringstream &iss)
         {
             std::ofstream    *fd = new std::ofstream();
 
-            fd->open(file);
+            fd->open(file); // Close fd ? Where ?
             _modules[name] = new DnsDump(_core, fd, file);
             _modules[name]->start();
             _rep << "DnsDump started : file=" + file;
@@ -237,6 +238,48 @@ void Launcher::startDnsDump(std::istringstream &iss)
     }
 }
 
+void Launcher::startHttpPostSniffer(std::istringstream &iss)
+{
+    std::map<std::string, AModule*>::iterator   it;
+    std::string                                 name;
+    std::string                                 filename;
+    std::string                                 key;
+    std::vector<std::string>                    vKeys;
+
+    iss >> name;
+    iss >> filename;
+    iss >> key;
+    if (!name.length())
+        help(iss);
+    else if (!filename.length())
+        _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
+    else if (!key.length())
+        _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
+    else
+    {
+        // Push first key and then other keys
+        vKeys.push_back(key);
+        while (iss >> key)
+        {
+            vKeys.push_back(key);
+        }
+
+        it = _modules.find(name);
+        if (it == _modules.end())
+        {
+            std::ofstream    *fd = new std::ofstream();
+
+            fd->open(filename);
+            _modules[name] = new HttpPostSniffer(_core, "HttpPostSniffer", fd, filename, vKeys);
+            _modules[name]->start();
+            _rep << "HttpPostSniffer started";
+        }
+        else
+        {
+            _rep << "Module " << name << " already exist !";
+        }
+    }
+}
 
 
 

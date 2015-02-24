@@ -15,6 +15,7 @@ public:
     ASniffer(Core &core, const std::string &name, const std::string &filter, std::ostream *out);
     virtual ~ASniffer(void) { }
 
+    // Private ?
 protected:
     void                            sniff(void);
 

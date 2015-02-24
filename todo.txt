@@ -8,5 +8,5 @@
 * Create PcapDumper for passiv sniffing with filter on specific port (eg: ssh)
 * Improve Mitm for attack all hosts on network
 * Add local hostname resolving (eg: 127.0.0.1 -> gordon)
-* Add live mode for modules (involve passing socket to module /!\)
+* Add live mode for modules (wrapper class (with <<overload)to output : std::ofstream and DomainSocket)
 * Improve sniffer ps display (use std::cout column modificator instead of \t)

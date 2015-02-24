@@ -9,7 +9,7 @@
 class DnsDump : public ASniffer
 {
 private:
-    std::string                 _filename;
+    const std::string           _filename;
 
 public:
     DnsDump(Core &core, std::ostream *out, std::string &filename);
