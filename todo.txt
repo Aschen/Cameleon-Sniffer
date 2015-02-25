@@ -12,4 +12,6 @@
 [ ] Improve sniffer ps display (use std::cout column modificator instead of \t)
 [ ] Create HTTP PDU class (with request and respons) for libtins
 [ ] Improve arp request (don't use send_recv)
+[ ] Create HttpCrafter for (eg: send disconnect to epsi.fr with victim cookies) (Cameleon)
+[ ] Put all code in namespace
 
