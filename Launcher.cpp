@@ -382,7 +382,19 @@ void Launcher::startTcpKill(std::istringstream &iss)
         it = _modules.find(name);
         if (it == _modules.end())
         {
-            _modules[name] = new TcpKill(_core, &_rep, dstIp, srcIp, port);
+            if (dstIp == "0.0.0.0")
+            {
+                std::cout << srcIp << std::endl;
+                _modules[name] = new TcpKill(_core, &_rep, srcIp, port, true);
+            }
+            else if (srcIp == "0.0.0.0")
+            {
+                _modules[name] = new TcpKill(_core, &_rep, dstIp, port);
+            }
+            else
+            {
+                _modules[name] = new TcpKill(_core, &_rep, dstIp, srcIp, port);
+            }
             _modules[name]->start();
         }
         else
