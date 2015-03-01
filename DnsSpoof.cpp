@@ -27,7 +27,7 @@ void DnsSpoof::readHosts(const std::string &file)
     std::ifstream   fs(file);
     std::string     host, ip;
 
-    while (fs >> host >> ip)
+    while (fs >> ip >> host)
         _spoofedHosts[host] = ip;
 }
 
@@ -46,7 +46,7 @@ std::string DnsSpoof::help(void)
     std::string rep;
 
     rep += "Start DNS spoofing attack for domains in file.\n";
-    rep += "Host file must have the form : domain ip_adress\n";
+    rep += "Host file must have the form : ip_adress domain\n";
     rep += "\tOptions : <file>";
 
     return rep;

@@ -1,20 +1,18 @@
-#ifndef HTPPPOSTSNIFFER_HH
-#define HTPPPOSTSNIFFER_HH
+#ifndef HTTPCOOKIESNIFFER_HH
+#define HTTPCOOKIESNIFFER_HH
 
 #include "ASniffer.hh"
 #include "Http.hh"
 
-using namespace Tins;
-
-class HttpPostSniffer : public ASniffer
+class HttpCookieSniffer : public ASniffer
 {
 private:
     const std::string               _filename;
     const std::vector<std::string>  _keys;
 
 public:
-    HttpPostSniffer(Core &core, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
-    ~HttpPostSniffer(void) { }
+    HttpCookieSniffer(Core &core, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
+    ~HttpCookieSniffer(void) { }
 
     // AModule
 public:
@@ -27,4 +25,4 @@ public:
 
 };
 
-#endif // HTPPPOSTSNIFFER_HH
+#endif // HTTPCOOKIESNIFFER_HH

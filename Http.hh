@@ -13,6 +13,7 @@ private:
     std::string                                 _location;
     std::string                                 _version;
     std::map<std::string, std::string>          _headers;
+    std::map<std::string, std::string>          _cookies;
     std::map<std::string, std::string>          _data;
 
 public:
@@ -20,9 +21,11 @@ public:
 
     const std::string                           getValue(const std::string &key) const;
     const std::string                           getHeader(const std::string &key) const;
+    const std::string                           getCookie(const std::string &key) const;
 
 private:
     void                                        parseData(const std::string &buf);
+    void                                        parseCookies(const std::string &buf);
 
 public:
     const std::string                           &verb(void) const;

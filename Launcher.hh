@@ -8,7 +8,9 @@
 #include "DnsSpoof.hh"
 #include "DnsDump.hh"
 #include "HttpPostSniffer.hh"
+#include "HttpCookieSniffer.hh"
 #include "MitmGlobal.hh"
+#include "TcpKill.hh"
 
 class Launcher
 {
@@ -50,10 +52,13 @@ public:
     void                startDnsSpoof(std::istringstream &iss);
     void                startDnsDump(std::istringstream &iss);
     void                startHttpPostSniffer(std::istringstream &iss);
+    void                startHttpCookieSniffer(std::istringstream &iss);
     void                startMitmGlobal(std::istringstream &iss);
+    void                startTcpKill(std::istringstream &iss);
 
 private:
     void                stopModules(void);
+
 };
 
 #endif // Launcher_HH

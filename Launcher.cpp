@@ -15,7 +15,9 @@ Launcher::Launcher(void) : _run(false), _core("wlan0")
     _commands["startdnsspoof"] = &Launcher::startDnsSpoof;
     _commands["startdnsdump"] = &Launcher::startDnsDump;
     _commands["starthttppostsniffer"] = &Launcher::startHttpPostSniffer;
+    _commands["starthttpcookiesniffer"] = &Launcher::startHttpCookieSniffer;
     _commands["startmitmglobal"] = &Launcher::startMitmGlobal;
+    _commands["starttcpkill"] = &Launcher::startTcpKill;
 }
 
 Launcher::~Launcher(void)
@@ -121,7 +123,7 @@ void Launcher::stop(std::istringstream &iss)
 void Launcher::list(std::istringstream &iss)
 {
     (void)iss;
-    _rep << "Availables modules : mitm mitmglobal dnsspoof dnsdump httppostsniffer";
+    _rep << "Availables modules : mitm mitmglobal dnsspoof dnsdump httppostsniffer httpcookiesniffer tcpkill";
 }
 
 void Launcher::ps(std::istringstream &iss)
@@ -148,7 +150,6 @@ void Launcher::stopModules(void)
         (*it).second->stop();
     }
 }
-
 
 /* MODULES STARTER */
 void Launcher::startMitm(std::istringstream &iss)
@@ -269,9 +270,50 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
             std::ofstream    *fd = new std::ofstream();
 
             fd->open(filename);
-            _modules[name] = new HttpPostSniffer(_core, "HttpPostSniffer", fd, filename, vKeys);
+            _modules[name] = new HttpPostSniffer(_core, fd, filename, vKeys);
             _modules[name]->start();
             _rep << "HttpPostSniffer started";
+        }
+        else
+        {
+            _rep << "Module " << name << " already exist !";
+        }
+    }
+}
+
+void Launcher::startHttpCookieSniffer(std::istringstream &iss)
+{
+    std::map<std::string, AModule*>::iterator   it;
+    std::string                                 name;
+    std::string                                 filename;
+    std::string                                 key;
+    std::vector<std::string>                    vKeys;
+
+    iss >> name;
+    iss >> filename;
+    iss >> key;
+    if (!name.length())
+        help(iss);
+    else if (!filename.length() || !key.length())
+        _rep << "Bad parameters." << std::endl << HttpCookieSniffer::help() << std::endl;
+    else
+    {
+        // Push first key and then other keys (key = cookie name)
+        vKeys.push_back(key);
+        while (iss >> key)
+        {
+            vKeys.push_back(key);
+        }
+
+        it = _modules.find(name);
+        if (it == _modules.end())
+        {
+            std::ofstream    *fd = new std::ofstream();
+
+            fd->open(filename);
+            _modules[name] = new HttpCookieSniffer(_core, fd, filename, vKeys);
+            _modules[name]->start();
+            _rep << "HttpCookieSniffer started";
         }
         else
         {
@@ -310,6 +352,37 @@ void Launcher::startMitmGlobal(std::istringstream &iss)
         if (it == _modules.end())
         {
             _modules[name] = new MitmGlobal(_core, &_rep, victims, gatewayIp);
+            _modules[name]->start();
+        }
+        else
+        {
+            _rep << "Module " << name << " already exist !";
+        }
+    }
+}
+
+void Launcher::startTcpKill(std::istringstream &iss)
+{
+    std::map<std::string, AModule*>::iterator    it;
+    std::string     name;
+    std::string     dstIp;
+    std::string     srcIp;
+    std::string     port;
+
+    iss >> name;
+    iss >> dstIp;
+    iss >> srcIp;
+    iss >> port;
+    if (!name.length())
+        help(iss);
+    else if (!dstIp.length() || !port.length() || !srcIp.length())
+        _rep << "Bad parameters." << std::endl << TcpKill::help();
+    else
+    {
+        it = _modules.find(name);
+        if (it == _modules.end())
+        {
+            _modules[name] = new TcpKill(_core, &_rep, dstIp, srcIp, port);
             _modules[name]->start();
         }
         else

@@ -1,7 +1,7 @@
 #include "HttpPostSniffer.hh"
 
-HttpPostSniffer::HttpPostSniffer(Core &core, const std::string &name, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
-    : ASniffer(core, name, "tcp and dst port 80", out), _filename(filename), _keys(keys) // put dst and src port 80 for HttpModifier ?
+HttpPostSniffer::HttpPostSniffer(Core &core, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
+    : ASniffer(core, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _keys(keys) // put dst and src port 80 for HttpModifier ?
 {
 }
 
@@ -44,7 +44,8 @@ bool HttpPostSniffer::handler(PDU &pdu)
         {
             for (std::string key : _keys)
             {
-                *_out << key << " -> " << http.getValue(key) << std::endl;
+                *_out << http.getHeader("Host") << std::endl;
+                *_out << "\t" << key << " -> " << http.getValue(key) << std::endl;
             }
         }
         catch (std::out_of_range &e)

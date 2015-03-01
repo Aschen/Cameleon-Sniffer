@@ -53,6 +53,8 @@ void Mitm::stop(void)
         // Tell victim thats _gateway.ip() is _gateway.mac()
         _core.arpReply(_gateway.ip(), _gateway.mac(), _victim.ip(), _victim.mac());
     }
+    _core.arpRequest(_victim.ip());
+    _core.arpRequest(_gateway.ip());
 }
 
 std::string Mitm::info(void)

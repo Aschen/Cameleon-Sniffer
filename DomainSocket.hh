@@ -60,6 +60,8 @@ public:
     bool                        isRunning(void) const;
     int                         fd(void) const;
     const struct sockaddr_un    *socket(void) const;
+    bool                        somethingToSend(void) const;
+    bool                        somethingToRecv(void) const;
 };
 
 #endif // DOMAINSOCKET_HH

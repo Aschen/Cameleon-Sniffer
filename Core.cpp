@@ -2,14 +2,14 @@
 
 /* CONSTRUCTORS / DESTRUCTORS */
 Core::Core(void)
-    : _iface(NetworkInterface::default_interface()), _attacker(_iface.addresses().hw_addr, _iface.addresses().ip_addr), _sender(_iface), _senderRun(true)
+    : _iface(NetworkInterface::default_interface()), _attacker(_iface.addresses().hw_addr, _iface.addresses().ip_addr), _sender(_iface), _sniffer(_iface.name(), Sniffer::PROMISC), _senderRun(true)
 {
      _senderThread = std::thread(&Core::startSender, this);
      _senderThread.detach();
 }
 
 Core::Core(const std::string &interface)
-    : _iface(NetworkInterface(interface)), _attacker(_iface.addresses().hw_addr, _iface.addresses().ip_addr), _sender(_iface), _senderRun(true)
+    : _iface(NetworkInterface(interface)), _attacker(_iface.addresses().hw_addr, _iface.addresses().ip_addr), _sender(_iface), _sniffer(_iface.name(), Sniffer::PROMISC), _senderRun(true)
 {
     _senderThread = std::thread(&Core::startSender, this);
     _senderThread.detach();
@@ -61,6 +61,57 @@ void Core::arpReply(const IPv4Address &senderIp, const HWAddress<6> &senderMac, 
     EthernetII      rep = ARP::make_arp_reply(targetIp, senderIp, targetMac, senderMac);
 
     send(rep);
+}
+
+void Core::pingHosts(void)
+{
+    // Start range at 192.168.1.1
+    IPv4Range      range = IPv4Range::from_mask( _iface.addresses().ip_addr, _iface.addresses().netmask);
+
+    _sniffer.set_filter("");
+    std::thread t(&Core::sniffPing, this);
+    t.detach();
+
+    int i = 0;
+    for (IPv4Range::const_iterator it = range.begin(); it != range.end(); ++it)
+    {
+        if (i > 150)
+        {
+            IP  ip = IP(*it, _iface.addresses().ip_addr);
+            ICMP icmp = ICMP(ICMP::ECHO_REQUEST);
+            RawPDU payload = RawPDU("0123456789101234567890123456789012345678901234567");
+
+            ip / icmp / payload;
+            std::cout << "Send request to " << *it << std::endl;
+            _sender.send(ip);
+        }
+        i++;
+    }
+}
+
+bool Core::pingReply(PDU &pdu)
+{
+    // EthernetII / IP / UDP / RawPDU
+    EthernetII eth = pdu.rfind_pdu<EthernetII>();
+    IP ip = eth.rfind_pdu<IP>();
+    ICMP icmp = ip.rfind_pdu<ICMP>();
+
+    if (icmp.type() == ICMP::ECHO_REPLY)
+    {
+        std::map<std::string, IPv4Address>::iterator it = _pingList.find(ip.src_addr().to_string());
+
+        if (it == _pingList.end())
+        {
+            std::cout << "Found host " << ip.src_addr() << " up " << std::endl;
+            _pingList[ip.src_addr().to_string()] = ip.src_addr();
+        }
+    }
+    return true;
+}
+
+void Core::sniffPing(void)
+{
+    _sniffer.sniff_loop(make_sniffer_handler(this, &Core::pingReply));
 }
 
 void Core::send(const EthernetII &pkt)

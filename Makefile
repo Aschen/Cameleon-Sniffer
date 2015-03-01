@@ -8,7 +8,7 @@
 ## Started on  19/02/2014 15:26
 ##
 
-CXX		=	clang++
+CXX		=	g++
 
 CXXFLAGS	=	-Wall -W -Wextra -std=c++11
 
@@ -25,7 +25,9 @@ SRCS_DAEMON	=	Core.cpp \
 			DnsDump.cpp \
 			ReflectedFlood.cpp \
 			HttpPostSniffer.cpp \
+			HttpCookieSniffer.cpp \
 			MitmGlobal.cpp \
+			TcpKill.cpp \
 			main.cpp
 
 SRCS_SENDER	=	DomainSocket.cpp \

@@ -151,3 +151,7 @@ bool DomainSocket::isRunning(void) const { return _run; }
 int DomainSocket::fd(void) const { return _fd; }
 
 const sockaddr_un *DomainSocket::socket(void) const { return &_socket; }
+
+bool DomainSocket::somethingToSend() const { return _sendQueue.size() == 0 ? false : true; }
+
+bool DomainSocket::somethingToRecv() const { return _recvQueue.size() == 0 ? false : true; }

@@ -11,7 +11,9 @@ HTTP::HTTP(std::stringstream &ss)
     {
         if ((sep = line.find(':')) != -1)
         {
-            _headers[line.substr(0, sep)] = line.substr(sep);
+            _headers[line.substr(0, sep)] = line.substr(sep + 2);
+            if (line.substr(0, sep) == "Cookie")
+                parseCookies(line.substr(sep + 2));
         }
         else if (_verb == "POST")
         {
@@ -27,7 +29,16 @@ const std::string HTTP::getHeader(const std::string &key) const
     std::map<std::string, std::string>::const_iterator it = _headers.find(key);
 
     if (it == _headers.end())
-        throw std::out_of_range("Key" + key + "don't exist");
+        throw std::out_of_range("Header " + key + " don't exist");
+    return (*it).second;
+}
+
+const std::string HTTP::getCookie(const std::string &key) const
+{
+    std::map<std::string, std::string>::const_iterator it = _cookies.find(key);
+
+    if (it == _cookies.end())
+        throw std::out_of_range("Cookie " + key + " don't exist");
     return (*it).second;
 }
 
@@ -36,7 +47,7 @@ const std::string HTTP::getValue(const std::string &key) const
     std::map<std::string, std::string>::const_iterator it = _data.find(key);
 
     if (it == _data.end())
-        throw std::out_of_range("Key" + key + "don't exist");
+        throw std::out_of_range("Key " + key + " don't exist");
     return (*it).second;
 }
 
@@ -49,6 +60,22 @@ void HTTP::parseData(const std::string &buf)
     {
         sep = pair.find('=');
         _data[pair.substr(0, sep)] = pair.substr(sep + 1);
+    }
+}
+
+void HTTP::parseCookies(const std::string &buf)
+{
+    std::istringstream  ss(buf);
+    int                 i = 0;
+    int                 sep;
+
+    for (std::string pair; std::getline(ss, pair, ';');)
+    {
+        sep = pair.find('=');
+        if (i++ > 0)
+            _cookies[pair.substr(1, sep - 1)] = pair.substr(sep + 1);
+        else
+            _cookies[pair.substr(0, sep)] = pair.substr(sep + 1);
     }
 }
 
