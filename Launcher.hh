@@ -37,24 +37,24 @@ public:
     Launcher(void);
     ~Launcher(void);
 
-    const std::string   readCmdLine(const std::string &line);
+    const std::string               readCmdLine(const std::string &line);
 
 public:
-    void                help(std::istringstream &iss);
-    void                exit(std::istringstream &iss);
-    void                start(std::istringstream &iss);
-    void                stop(std::istringstream &iss);
-    void                list(std::istringstream &iss);
-    void                ps(std::istringstream &iss);
+    void                            help(std::istringstream &iss);
+    void                            exit(std::istringstream &iss);
+    void                            start(std::istringstream &iss);
+    void                            stop(std::istringstream &iss);
+    void                            list(std::istringstream &iss);
+    void                            ps(std::istringstream &iss);
 
 public:
-    void                startMitm(std::istringstream &iss);
-    void                startDnsSpoof(std::istringstream &iss);
-    void                startDnsDump(std::istringstream &iss);
-    void                startHttpPostSniffer(std::istringstream &iss);
-    void                startHttpCookieSniffer(std::istringstream &iss);
-    void                startMitmGlobal(std::istringstream &iss);
-    void                startTcpKill(std::istringstream &iss);
+    void                            startMitm(std::istringstream &iss);
+    void                            startDnsSpoof(std::istringstream &iss);
+    void                            startDnsDump(std::istringstream &iss);
+    void                            startHttpPostSniffer(std::istringstream &iss);
+    void                            startHttpCookieSniffer(std::istringstream &iss);
+    void                            startMitmGlobal(std::istringstream &iss);
+    void                            startTcpKill(std::istringstream &iss);
 
 private:
     void                stopModules(void);

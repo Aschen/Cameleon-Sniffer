@@ -22,7 +22,7 @@ private:
     bool                    _senderRun;
     std::thread             _senderThread;
     std::mutex              _senderMutex;
-    std::queue<EthernetII>   _pktList;
+    std::queue<EthernetII>  _pktList;
     std::map<std::string, IPv4Address>  _pingList;
 
 public:

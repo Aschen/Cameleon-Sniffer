@@ -16,10 +16,10 @@ private:
 public:
     ReflectedFlood(const std::string &target);
 
-    void        addSpoof(const std::string &spoofedAdress, unsigned int port);
-    void        dumpAdress(void);
+    void                        addSpoof(const std::string &spoofedAdress, unsigned int port);
+    void                        dumpAdress(void);
 
-    void        flood(unsigned int count);
+    void                        flood(unsigned int count);
 };
 
 #endif // REFLECTEDFLOOD_HH

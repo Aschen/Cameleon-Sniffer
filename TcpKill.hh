@@ -8,12 +8,12 @@ using namespace Tins;
 class TcpKill : public ASniffer
 {
 public:
-    typedef enum e_type
+    typedef enum    e_type
     {
         ServerToVictim = 1,
         AllToServer,
         VictimToAll
-    } TYPE;
+    }               TYPE;
 
 private:
     const IPv4Address               _dstIp;
@@ -33,7 +33,7 @@ public:
 
     // AModule
 public:
-    virtual std::string             info(void);
+    std::string                     info(void);
     static std::string              help(void);
 
     // ASniffer

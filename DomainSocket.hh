@@ -26,12 +26,12 @@ public:
     };
 
 public:
-    typedef enum e_type
+    typedef enum    e_type
     {
         SERVER          = 0,
         SERVER_CLIENT,
         CLIENT
-    } TYPE;
+    }               TYPE;
 
 private:
     bool                        _run;

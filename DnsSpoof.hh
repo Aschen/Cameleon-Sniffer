@@ -20,18 +20,18 @@ private:
 public:
     DnsSpoof(Core &core, std::ostream *out, const std::string &file, const std::string &interface);
 
-    bool                spoofQuery(PDU &pdu);
+    bool                                spoofQuery(PDU &pdu);
 
     // AModule
 public:
-    void                start(void);
-    void                stop(void);
-    std::string         info(void);
-    static std::string  help(void);
+    void                                start(void);
+    void                                stop(void);
+    std::string                         info(void);
+    static std::string                  help(void);
 
 private:
-    void                sniff(void);
-    void                readHosts(const std::string &file);
+    void                                sniff(void);
+    void                                readHosts(const std::string &file);
 };
 
 #endif // DNSSPOOF_HH
