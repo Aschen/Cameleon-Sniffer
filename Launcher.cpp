@@ -244,33 +244,63 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
 {
     std::map<std::string, AModule*>::iterator   it;
     std::string                                 name;
+    std::string                                 type;
     std::string                                 filename;
-    std::string                                 key;
-    std::vector<std::string>                    vKeys;
 
     iss >> name;
+    iss >> type;
     iss >> filename;
-    iss >> key;
     if (!name.length())
         help(iss);
-    else if (!filename.length() || !key.length())
+    else if (!type.length() || !filename.length())
         _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
     else
     {
-        // Push first key and then other keys
-        vKeys.push_back(key);
-        while (iss >> key)
-        {
-            vKeys.push_back(key);
-        }
-
         it = _modules.find(name);
         if (it == _modules.end())
         {
             std::ofstream    *fd = new std::ofstream();
 
             fd->open(filename);
-            _modules[name] = new HttpPostSniffer(_core, fd, filename, vKeys);
+            // If Type KEYS
+            if (type == "keys")
+            {
+                std::string                 key;
+                std::vector<std::string>    vKeys;
+
+                iss >> key;
+                if (!key.length())
+                    _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
+                else
+                {
+                    // Push first key and then other keys
+                    vKeys.push_back(key);
+                    while (iss >> key)
+                    {
+                        vKeys.push_back(key);
+                    }
+                    _modules[name] = new HttpPostSniffer(_core, fd, filename, vKeys);
+                }
+            }
+            else if (type == "host") // If Type HOSTNAME
+            {
+                std::string                 hostname;
+
+                iss >> hostname;
+                if (!hostname.length())
+                    _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
+                else
+                    _modules[name] = new HttpPostSniffer(_core, fd, filename, hostname);
+            }
+            else if (type == "all") // If Type ALL
+            {
+                _modules[name] = new HttpPostSniffer(_core, fd, filename);
+            }
+            else
+            {
+                _rep << "Unknown type. Try keys, host or all." << std::endl << HttpPostSniffer::help() << std::endl;
+                return ;
+            }
             _modules[name]->start();
             _rep << "HttpPostSniffer started";
         }
@@ -384,7 +414,6 @@ void Launcher::startTcpKill(std::istringstream &iss)
         {
             if (dstIp == "0.0.0.0")
             {
-                std::cout << srcIp << std::endl;
                 _modules[name] = new TcpKill(_core, &_rep, srcIp, port, true);
             }
             else if (srcIp == "0.0.0.0")

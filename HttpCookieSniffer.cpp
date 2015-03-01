@@ -33,7 +33,7 @@ bool HttpCookieSniffer::handler(PDU &pdu)
         for (std::string key : _keys)
         {
             *_out << http.getHeader("Host") << std::endl;
-            *_out << "\t" << key << " -> " << http.getCookie(key) << std::endl;
+            *_out << "\t" << key << " = " << http.getCookie(key) << std::endl;
         }
     }
     catch (std::out_of_range &e)
@@ -51,5 +51,5 @@ std::string HttpCookieSniffer::info(void)
     {
         keys += key + " ";
     }
-    return "Keys : " + keys + " && File :  " + _filename;
+    return "Keys = " + keys + ", File =  " + _filename;
 }

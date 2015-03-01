@@ -11,7 +11,13 @@ HTTP::HTTP(std::stringstream &ss)
     {
         if ((sep = line.find(':')) != -1)
         {
-            _headers[line.substr(0, sep)] = line.substr(sep + 2);
+            std::string value = line.substr(sep + 2);
+
+            // Remove annoying '\r'
+            value.pop_back();
+            _headers[line.substr(0, sep)] = value;
+
+            // Get all cookies
             if (line.substr(0, sep) == "Cookie")
                 parseCookies(line.substr(sep + 2));
         }
@@ -30,7 +36,7 @@ const std::string HTTP::getHeader(const std::string &key) const
 
     if (it == _headers.end())
         throw std::out_of_range("Header " + key + " don't exist");
-    return (*it).second;
+    return it->second;
 }
 
 const std::string HTTP::getCookie(const std::string &key) const
@@ -39,7 +45,7 @@ const std::string HTTP::getCookie(const std::string &key) const
 
     if (it == _cookies.end())
         throw std::out_of_range("Cookie " + key + " don't exist");
-    return (*it).second;
+    return it->second;
 }
 
 const std::string HTTP::getValue(const std::string &key) const
@@ -48,7 +54,7 @@ const std::string HTTP::getValue(const std::string &key) const
 
     if (it == _data.end())
         throw std::out_of_range("Key " + key + " don't exist");
-    return (*it).second;
+    return it->second;
 }
 
 void HTTP::parseData(const std::string &buf)
@@ -88,3 +94,5 @@ const std::string &HTTP::version(void) const { return _version; }
 const std::map<std::string, std::string> &HTTP::headers(void) const { return _headers; }
 
 const std::map<std::string, std::string> &HTTP::data(void) const { return _data; }
+
+const std::map<std::string, std::string> &HTTP::cookies(void) const { return _cookies; }

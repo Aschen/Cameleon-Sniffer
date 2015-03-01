@@ -33,6 +33,7 @@ public:
     const std::string                           &version(void) const;
     const std::map<std::string, std::string>    &headers(void) const;
     const std::map<std::string, std::string>    &data(void) const;
+    const std::map<std::string, std::string>    &cookies(void) const;
 };
 
 #endif // HTTP_HH

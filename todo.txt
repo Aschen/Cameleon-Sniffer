@@ -16,4 +16,4 @@
 [ ] Put all code in namespace
 [ ] Bug when stopping mitm -> victim hw_addr is 00:00...
 [ ] Bug when using mitm -> drop attacker arp table
-[ ] Improve sniffer with a display network loop (live mode)
+[ ] Improve HttpCookieSniffer to sniff cookies from a victim, a hostname or all cookies
