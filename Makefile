@@ -37,9 +37,9 @@ OBJS_DAEMON	=	$(SRCS_DAEMON:.cpp=.o)
 
 OBJS_SENDER	=	$(SRCS_SENDER:.cpp=.o)
 
-DAEMON		=	sniffer-daemon
+DAEMON		=	cameleon-daemon
 
-SENDER		=	sniffer
+SENDER		=	cameleon
 
 all:		$(DAEMON) $(SENDER)
 
@@ -48,6 +48,10 @@ $(DAEMON):	$(OBJS_DAEMON)
 
 $(SENDER):	$(OBJS_SENDER)
 		$(CXX) -o $(SENDER) $(OBJS_SENDER)
+
+install:
+		cp $(SENDER) /usr/bin/$(SENDER)	
+		cp $(DAEMON) /usr/bin/$(DAEMON)
 
 clean:
 		rm -f $(OBJS_DAEMON)

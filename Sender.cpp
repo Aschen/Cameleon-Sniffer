@@ -120,7 +120,7 @@ int main(int ac, char **av)
 
     try
     {
-        Sender      s("/etc/sniffer/sniffer.sock", cmd);
+        Sender      s("/etc/cameleon/cameleon.sock", cmd);
 
         s.start();
     }

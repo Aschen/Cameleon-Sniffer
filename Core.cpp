@@ -17,7 +17,7 @@ Core::Core(const std::string &interface)
 
 Core::~Core(void)
 {
-    _senderMutex.unlock();
+//    _senderMutex.unlock();
     _senderRun = false;
 }
 
@@ -119,10 +119,10 @@ void Core::send(const EthernetII &pkt)
     _pktList.push(pkt);
 
     // Make sure to not unlock a not locked mutex
-    if (_senderMutex.try_lock())
-        _senderMutex.unlock();
-    else
-        _senderMutex.unlock();
+//    if (_senderMutex.try_lock())
+//        _senderMutex.unlock();
+//    else
+//        _senderMutex.unlock();
 }
 
 /* PRIVATE MEMBERS */
@@ -131,7 +131,8 @@ void Core::startSender(void)
     while (_senderRun)
     {
         // Wait available packets
-        _senderMutex.lock();
+        usleep(1);
+//        _senderMutex.lock();
         while (!_pktList.empty())
         {
             _sender.send(_pktList.front(), _iface);
