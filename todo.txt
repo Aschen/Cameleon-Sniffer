@@ -9,7 +9,7 @@
 [X] Create MitmGlobal for attack all hosts on network
 [ ] Add local hostname resolving (eg: 127.0.0.1 -> gordon)
 [ ] Add live mode for modules (wrapper class (with <<overload)to output : std::ofstream and DomainSocket)
-[ ] Improve sniffer ps display (use std::cout column modificator instead of \t)
+[X] Improve sniffer ps display (use std::cout column modificator instead of \t)
 [ ] Create HTTP PDU class (with request and respons) for libtins
 [ ] Improve arp request (don't use send_recv)
 [ ] Create HttpCrafter for (eg: send disconnect to epsi.fr with victim cookies) (Cameleon)

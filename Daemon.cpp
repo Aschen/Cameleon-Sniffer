@@ -21,7 +21,14 @@ void Daemon::start(void)
     _run = true;
     while (_run)
     {
-        handleSockets();
+        try
+        {
+            handleSockets();
+        }
+        catch (std::runtime_error &e)
+        {
+
+        }
     }
 }
 
@@ -39,9 +46,9 @@ void Daemon::handleSockets(void)
     }
     else
     {
-        // If something to read on stdin
-        if (FD_ISSET(0, &readfds))
-            eventTerminal();
+//        // If something to read on stdin
+//        if (FD_ISSET(0, &readfds))
+//            eventTerminal();
         // If new client connect
         if (FD_ISSET(_local.fd(), &readfds))
             eventServer();
@@ -62,7 +69,7 @@ int Daemon::initSelect(struct timeval *tv, fd_set *readfds, fd_set *writefds)
     // Initialize bits field for select
     FD_ZERO(readfds);
     FD_SET(_local.fd(), readfds);
-    FD_SET(0, readfds);
+//    FD_SET(0, readfds);
     if (writefds != NULL)
     {
         FD_ZERO(writefds);
@@ -141,7 +148,7 @@ void Daemon::eventClients(fd_set *readfds, fd_set *writefds)
             catch (Launcher::Stop &e)
             {
                 _run = false;
-                (*it)->addMsg("Stop sniffer daemon");
+                (*it)->addMsg("Stop cameleon-daemon");
                 (*it)->sendMsg();
             }
             catch (std::runtime_error &e)

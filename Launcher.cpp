@@ -131,9 +131,10 @@ void Launcher::ps(std::istringstream &iss)
     (void)iss;
     if (_modules.size())
     {
+        _rep << std::setw(22) << std::left << "Module" << std::setw(20) << std::left << "Name" << std::setw(15) << std::left << "Options" << std::endl << std::endl;
         for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
         {
-            _rep << "[" << (*it).second->name() << "]" << "\t'" << (*it).first << "'\t: " << (*it).second->info() << std::endl;
+            _rep << std::setw(22) << std::left << (*it).second->name() << std::setw(20) << std::left << (*it).first << std::setw(15) << std::left << (*it).second->info() << std::endl;
         }
     }
     else

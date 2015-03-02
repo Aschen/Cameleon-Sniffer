@@ -8,9 +8,9 @@
 ## Started on  19/02/2014 15:26
 ##
 
-CXX		=	g++
+CXX		=	clang++
 
-CXXFLAGS	=	-Wall -W -Wextra -std=c++11 -g3
+CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -g3
 
 SRCS_DAEMON	=	Core.cpp \
 			Launcher.cpp \
