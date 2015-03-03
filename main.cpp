@@ -10,7 +10,7 @@ int main(void)
 
     try
     {
-        Daemon      d("/etc/cameleon/cameleon.sock");
+        Daemon      d("/etc/cameleon/cameleon.sock", NetworkInterface::default_interface().name());
 
         d.start();
     }

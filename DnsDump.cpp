@@ -1,25 +1,13 @@
 #include "DnsDump.hh"
 
-DnsDump::DnsDump(Core &core, std::ostream *out, std::string &filename)
-    : ASniffer(core, "DnsDump", "udp and dst port 53", out), _filename(filename)
+DnsDump::DnsDump(const NetworkInterface &iface, std::ostream *out, const std::string &filename)
+    : ASniffer(iface, "DnsDump", "udp and dst port 53", out), _filename(filename)
 {
 }
 
 DnsDump::~DnsDump(void)
 {
     static_cast<std::ofstream*>(_out)->close();
-}
-
-const std::string DnsDump::getDate()
-{
-    time_t     now = time(0);
-    struct tm  tstruct;
-    char       buf[80];
-
-    tstruct = *localtime(&now);
-    strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
-
-    return buf;
 }
 
 bool DnsDump::handler(PDU &pdu)
@@ -35,17 +23,17 @@ bool DnsDump::handler(PDU &pdu)
     {
         // Let's see if there's any query for an "A" record.
         for(const DNS::Query &query : dns.queries())
+        {
             if(query.type() == DNS::A)
-            {
                 *_out << getDate() << "\t" << ip.src_addr() << "  -->  " << query.dname() << std::endl;
-            }
+        }
     }
     return true;
 }
 
-std::string DnsDump::info(void)
+std::string DnsDump::info(void) const
 {
-    return "Dump queries in : " + _filename;
+    return "Filename = " + _filename;
 }
 
 std::string DnsDump::help(void)

@@ -25,7 +25,7 @@ private:
     std::vector<DomainSocket*>  _clients;
 
 public:
-    Daemon(const std::string &path);
+    Daemon(const std::string &path, const std::string &iface);
     ~Daemon(void);
 
     void                        start(void);

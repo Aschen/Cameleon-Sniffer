@@ -1,7 +1,7 @@
 #include "Daemon.hh"
 
-Daemon::Daemon(const std::string &path)
-    : _local(path, DomainSocket::SERVER), _run(false)
+Daemon::Daemon(const std::string &path, const std::string &iface)
+    : _local(path, DomainSocket::SERVER), _run(false), _launcher(iface)
 {
     std::string     chmod("chmod 777 " + path);
 

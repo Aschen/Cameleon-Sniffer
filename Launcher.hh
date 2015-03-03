@@ -4,7 +4,6 @@
 #include <sstream>
 #include "Sniff.hh"
 #include "AModule.hh"
-#include "Mitm.hh"
 #include "DnsSpoof.hh"
 #include "DnsDump.hh"
 #include "HttpPostSniffer.hh"
@@ -27,14 +26,13 @@ private:
 
 private:
     bool                            _run;
-    Core                            _core;
+    NetworkInterface                _iface;
     std::stringstream               _rep;
     std::map<std::string, Command>  _commands;
     std::map<std::string, AModule*> _modules;
 
 public:
-    // Add interface choice for Core creation ?
-    Launcher(void);
+    Launcher(const std::string &iface);
     ~Launcher(void);
 
     const std::string               readCmdLine(const std::string &line);
@@ -48,7 +46,6 @@ public:
     void                            ps(std::istringstream &iss);
 
 public:
-    void                            startMitm(std::istringstream &iss);
     void                            startDnsSpoof(std::istringstream &iss);
     void                            startDnsDump(std::istringstream &iss);
     void                            startHttpPostSniffer(std::istringstream &iss);
@@ -57,7 +54,7 @@ public:
     void                            startTcpKill(std::istringstream &iss);
 
 private:
-    void                stopModules(void);
+    void                            stopModules(void);
 
 };
 

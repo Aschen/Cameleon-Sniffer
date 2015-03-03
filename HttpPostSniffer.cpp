@@ -1,21 +1,21 @@
 #include "HttpPostSniffer.hh"
 
-HttpPostSniffer::HttpPostSniffer(Core &core, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
-    : ASniffer(core, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _hostname("All"), _type(HttpPostSniffer::KEYS), _keys(keys) // put dst and src port 80 for HttpModifier ?
+HttpPostSniffer::HttpPostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
+    : ASniffer(interface, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _hostname("All"), _type(HttpPostSniffer::KEYS), _keys(keys) // put dst and src port 80 for HttpModifier ?
 {
 }
 
-HttpPostSniffer::HttpPostSniffer(Core &core, std::ostream *out, const std::string &filename, const std::string &hostname)
-    : ASniffer(core, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _hostname(hostname), _type(HttpPostSniffer::HOSTNAME)
+HttpPostSniffer::HttpPostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::string &hostname)
+    : ASniffer(interface, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _hostname(hostname), _type(HttpPostSniffer::HOSTNAME)
 {
 }
 
-HttpPostSniffer::HttpPostSniffer(Core &core, std::ostream *out, const std::string &filename)
-    : ASniffer(core, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _hostname("All"), _type(HttpPostSniffer::ALL)
+HttpPostSniffer::HttpPostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename)
+    : ASniffer(interface, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _hostname("All"), _type(HttpPostSniffer::ALL)
 {
 }
 
-std::string HttpPostSniffer::info(void)
+std::string HttpPostSniffer::info(void) const
 {
     std::string     msg;
     std::string     keys;
@@ -24,24 +24,19 @@ std::string HttpPostSniffer::info(void)
     {
         msg += "Keys = ";
         for (std::string key : _keys)
-        {
             msg += key + " ";
-        }
     }
     else if (_type == HttpPostSniffer::HOSTNAME)
-    {
         msg += "Hostname = " + _hostname;
-    }
     else if (_type == HttpPostSniffer::ALL)
-    {
         msg += "Hostname = ALL";
-    }
+
     return msg + ", File = " + _filename;
 }
 
 std::string HttpPostSniffer::help(void)
 {
-    return std::string("Start HttpPostSniffer.\n") + "\tOptions : <type> <filename> [keys | hostname]";
+    return std::string("Start HttpPostSniffer.\n") + "\tOptions : <all | keys | host> <filename> [keys | hostname]";
 }
 
 bool HttpPostSniffer::handler(PDU &pdu)
@@ -55,9 +50,7 @@ bool HttpPostSniffer::handler(PDU &pdu)
     std::stringstream       ss;
 
     for (u_int8_t data : payload)
-    {
         ss << data;
-    }
 
     HTTP        http(ss);
 
@@ -73,7 +66,7 @@ bool HttpPostSniffer::handler(PDU &pdu)
     return true;
 }
 
-void HttpPostSniffer::sniffKeys(HTTP &http, Tins::IP::address_type ip)
+void HttpPostSniffer::sniffKeys(const HTTP &http, Tins::IP::address_type ip)
 {
     std::string     value;
 
@@ -92,7 +85,7 @@ void HttpPostSniffer::sniffKeys(HTTP &http, Tins::IP::address_type ip)
     }
 }
 
-void HttpPostSniffer::sniffHostname(HTTP &http, Tins::IP::address_type ip)
+void HttpPostSniffer::sniffHostname(const HTTP &http, Tins::IP::address_type ip)
 {
     try
     {
@@ -112,7 +105,7 @@ void HttpPostSniffer::sniffHostname(HTTP &http, Tins::IP::address_type ip)
     }
 }
 
-void HttpPostSniffer::sniffAll(HTTP &http, Tins::IP::address_type ip)
+void HttpPostSniffer::sniffAll(const HTTP &http, Tins::IP::address_type ip)
 {
     try
     {

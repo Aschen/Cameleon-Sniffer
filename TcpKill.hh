@@ -23,17 +23,17 @@ private:
 
 public:
     // Kill traffic from dstIp:port to srcIp
-    TcpKill(Core &core, std::ostream *out, std::string &dstIp, std::string &srcIp, std::string &port);
+    TcpKill(const NetworkInterface &iface, std::ostream *out, std::string &dstIp, std::string &srcIp, std::string &port);
     // Kill all traffic from port to srcIP
-    TcpKill(Core &core, std::ostream *out, std::string &srcIp, std::string &port, bool flag);
+    TcpKill(const NetworkInterface &iface, std::ostream *out, std::string &srcIp, std::string &port, bool flag);
     // Kill all traffic from dstIp:port
-    TcpKill(Core &core, std::ostream *out, std::string &dstIp, std::string &port);
+    TcpKill(const NetworkInterface &iface, std::ostream *out, std::string &dstIp, std::string &port);
 
     ~TcpKill(void) { }
 
     // AModule
 public:
-    std::string                     info(void);
+    std::string                     info(void) const;
     static std::string              help(void);
 
     // ASniffer

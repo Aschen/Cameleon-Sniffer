@@ -5,32 +5,31 @@
 #include <fstream>
 #include <thread>
 #include "Sniff.hh"
-#include "AModule.hh"
+#include "ASniffer.hh"
 
 
 using namespace Tins;
 
-class DnsSpoof : public AModule
+class DnsSpoof : public ASniffer
 {
 private:
-    std::string                         _file;
-    Sniffer                             _sniffer;
+    const std::string                   _file;
     std::map<std::string, std::string>  _spoofedHosts;
 
 public:
-    DnsSpoof(Core &core, std::ostream *out, const std::string &file, const std::string &interface);
-
-    bool                                spoofQuery(PDU &pdu);
+    DnsSpoof(const NetworkInterface &iface, std::ostream *out, const std::string &file);
+    ~DnsSpoof(void) { }
 
     // AModule
 public:
-    void                                start(void);
-    void                                stop(void);
-    std::string                         info(void);
+    std::string                         info(void) const;
     static std::string                  help(void);
 
+    // ASniffer
+public:
+    bool                                handler(PDU &pdu);
+
 private:
-    void                                sniff(void);
     void                                readHosts(const std::string &file);
 };
 

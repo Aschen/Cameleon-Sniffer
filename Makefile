@@ -10,17 +10,15 @@
 
 CXX		=	clang++
 
-CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -O3
+CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -g3
 
-SRCS_DAEMON	=	Core.cpp \
-			Launcher.cpp \
+SRCS_DAEMON	=	Launcher.cpp \
 			DomainSocket.cpp \
 			Daemon.cpp \
 			Http.cpp \
 			Addresses.cpp\
 			AModule.cpp \
 			ASniffer.cpp \
-			Mitm.cpp \
 			DnsSpoof.cpp \
 			DnsDump.cpp \
 			ReflectedFlood.cpp \

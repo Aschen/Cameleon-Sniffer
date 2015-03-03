@@ -1,6 +1,8 @@
 #ifndef ASNIFFER_HH
 #define ASNIFFER_HH
 
+#include <thread>
+
 #include "Sniff.hh"
 #include "AModule.hh"
 
@@ -12,7 +14,7 @@ protected:
     Sniffer                         _sniffer;
 
 public:
-    ASniffer(Core &core, const std::string &name, const std::string &filter, std::ostream *out);
+    ASniffer(const NetworkInterface &iface, const std::string &name, const std::string &filter, std::ostream *out);
     virtual ~ASniffer(void) { }
 
     // Private ?
@@ -26,7 +28,7 @@ protected:
 public:
     void                            start(void);
     void                            stop(void);
-    virtual std::string             info(void) = 0;
+    virtual std::string             info(void) const = 0;
 };
 
 #endif // ASNIFFER_HH

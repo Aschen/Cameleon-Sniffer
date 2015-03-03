@@ -12,20 +12,17 @@ private:
     const std::string           _filename;
 
 public:
-    DnsDump(Core &core, std::ostream *out, std::string &filename);
+    DnsDump(const NetworkInterface &iface, std::ostream *out, const std::string &filename);
     ~DnsDump(void);
-
-    const std::string           getDate(void);
 
     // AModule
 public:
-    std::string                 info(void);
+    std::string                 info(void) const;
     static std::string          help(void);
 
     // ASniffer
 protected:
     bool                        handler(PDU &pdu);
-
 };
 
 #endif // DNSDUMP_HH

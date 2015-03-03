@@ -1,7 +1,7 @@
 #include "HttpCookieSniffer.hh"
 
-HttpCookieSniffer::HttpCookieSniffer(Core &core, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
-    : ASniffer(core, "HttpCookieSniffer", "tcp and dst port 80", out), _filename(filename), _keys(keys)
+HttpCookieSniffer::HttpCookieSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
+    : ASniffer(interface, "HttpCookieSniffer", "tcp and dst port 80", out), _filename(filename), _keys(keys)
 {
 }
 
@@ -22,9 +22,7 @@ bool HttpCookieSniffer::handler(PDU &pdu)
     std::stringstream       ss;
 
     for (u_int8_t data : payload)
-    {
         ss << data;
-    }
 
     HTTP        http(ss);
     std::string value;
@@ -44,13 +42,12 @@ bool HttpCookieSniffer::handler(PDU &pdu)
     return true;
 }
 
-std::string HttpCookieSniffer::info(void)
+std::string HttpCookieSniffer::info(void) const
 {
     std::string     keys;
 
     for (std::string key : _keys)
-    {
         keys += key + " ";
-    }
+
     return "Keys = " + keys + ", File =  " + _filename;
 }

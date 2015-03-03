@@ -11,12 +11,12 @@ private:
     const std::vector<std::string>  _keys;
 
 public:
-    HttpCookieSniffer(Core &core, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
+    HttpCookieSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
     ~HttpCookieSniffer(void) { }
 
     // AModule
 public:
-    virtual std::string             info(void);
+    std::string                     info(void) const;
     static std::string              help(void);
 
     // ASniffer
