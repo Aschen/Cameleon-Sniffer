@@ -16,7 +16,7 @@ Launcher::Launcher(const std::string &iface)
     _commands["dnsdump"] = &Launcher::startDnsDump;
     _commands["httppostsniffer"] = &Launcher::startHttpPostSniffer;
     _commands["httpcookiesniffer"] = &Launcher::startHttpCookieSniffer;
-    _commands["mitmglobal"] = &Launcher::startMitmGlobal;
+    _commands["mitm"] = &Launcher::startMitm;
     _commands["tcpkill"] = &Launcher::startTcpKill;
 }
 
@@ -24,6 +24,9 @@ Launcher::~Launcher(void)
 {
     for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
         delete (*it).second;
+
+    // Disable ip forward
+    system("echo 0 > /proc/sys/net/ipv4/ip_forward");
 }
 
 const std::string Launcher::readCmdLine(const std::string &line)
@@ -227,7 +230,7 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
     else
     {
         it = _modules.find(name);
-        if (it == _modules.end())
+        if (it != _modules.end())
         {
             std::ofstream    *fd = new std::ofstream();
 
@@ -246,9 +249,7 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
                     // Push first key and then other keys
                     vKeys.push_back(key);
                     while (iss >> key)
-                    {
                         vKeys.push_back(key);
-                    }
                     _modules[name] = new HttpPostSniffer(_iface, fd, filename, vKeys);
                 }
             }
@@ -263,21 +264,17 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
                     _modules[name] = new HttpPostSniffer(_iface, fd, filename, hostname);
             }
             else if (type == "all") // If Type ALL
-            {
                 _modules[name] = new HttpPostSniffer(_iface, fd, filename);
-            }
             else
             {
-                _rep << "Unknown type. Try keys, host or all." << std::endl << HttpPostSniffer::help() << std::endl;
+                _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
                 return ;
             }
             _modules[name]->start();
             _rep << "HttpPostSniffer started";
         }
         else
-        {
             _rep << "Module " << name << " already exist !";
-        }
     }
 }
 
@@ -301,9 +298,7 @@ void Launcher::startHttpCookieSniffer(std::istringstream &iss)
         // Push first key and then other keys (key = cookie name)
         vKeys.push_back(key);
         while (iss >> key)
-        {
             vKeys.push_back(key);
-        }
 
         it = _modules.find(name);
         if (it == _modules.end())
@@ -316,13 +311,11 @@ void Launcher::startHttpCookieSniffer(std::istringstream &iss)
             _rep << "HttpCookieSniffer started";
         }
         else
-        {
             _rep << "Module " << name << " already exist !";
-        }
     }
 }
 
-void Launcher::startMitmGlobal(std::istringstream &iss)
+void Launcher::startMitm(std::istringstream &iss)
 {
     std::map<std::string, AModule*>::iterator    it;
     std::string     name;
@@ -335,7 +328,7 @@ void Launcher::startMitmGlobal(std::istringstream &iss)
     if (!name.length())
         help(iss);
     else if (!gatewayIp.length() || !file.length())
-        _rep << "Bad parameters." << std::endl << MitmGlobal::help();
+        _rep << "Bad parameters." << std::endl << Mitm::help();
     else
     {
         std::ifstream               fd;
@@ -344,20 +337,16 @@ void Launcher::startMitmGlobal(std::istringstream &iss)
         fd.open(file);
         int i = 0;
         for (std::string line; std::getline(fd, line) && i < 40;i++)
-        {
             victims.push_back(line);
-        }
 
         it = _modules.find(name);
         if (it == _modules.end())
         {
-            _modules[name] = new MitmGlobal(_iface, &_rep, victims, gatewayIp);
+            _modules[name] = new Mitm(_iface, &_rep, victims, gatewayIp);
             _modules[name]->start();
         }
         else
-        {
             _rep << "Module " << name << " already exist !";
-        }
     }
 }
 
@@ -383,23 +372,15 @@ void Launcher::startTcpKill(std::istringstream &iss)
         if (it == _modules.end())
         {
             if (dstIp == "0.0.0.0")
-            {
                 _modules[name] = new TcpKill(_iface, &_rep, srcIp, port, true);
-            }
             else if (srcIp == "0.0.0.0")
-            {
                 _modules[name] = new TcpKill(_iface, &_rep, dstIp, port);
-            }
             else
-            {
                 _modules[name] = new TcpKill(_iface, &_rep, dstIp, srcIp, port);
-            }
             _modules[name]->start();
         }
         else
-        {
             _rep << "Module " << name << " already exist !";
-        }
     }
 }
 

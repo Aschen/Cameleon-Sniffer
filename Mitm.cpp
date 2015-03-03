@@ -1,7 +1,7 @@
-#include "MitmGlobal.hh"
+#include "Mitm.hh"
 
-MitmGlobal::MitmGlobal(const NetworkInterface &iface, std::ostream *out, const std::vector<std::string> &victimsIp, const std::string &gatewayIp)
-    : AModule(iface, "MitmGlobal", out), _run(false)
+Mitm::Mitm(const NetworkInterface &iface, std::ostream *out, const std::vector<std::string> &victimsIp, const std::string &gatewayIp)
+    : AModule(iface, "Mitm", out), _run(false)
 {
     HWAddress<6>    victimMac;
 
@@ -27,10 +27,10 @@ MitmGlobal::MitmGlobal(const NetworkInterface &iface, std::ostream *out, const s
     // Enable ip forwarding
     system("echo 1 > /proc/sys/net/ipv4/ip_forward");
 
-    *_out << "Start MitmGlobal";
+    *_out << "Start Mitm";
 }
 
-void MitmGlobal::poison(void)
+void Mitm::poison(void)
 {
     // Start poisoning arp tables
     _run = true;
@@ -44,19 +44,16 @@ void MitmGlobal::poison(void)
     }
 }
 
-void MitmGlobal::start(void)
+void Mitm::start(void)
 {
-    std::thread     t(&MitmGlobal::poison, this);
+    std::thread     t(&Mitm::poison, this);
 
     t.detach();
 }
 
-void MitmGlobal::stop(void)
+void Mitm::stop(void)
 {
     _run = false;
-
-    // Disable ip forward
-    system("echo 0 > /proc/sys/net/ipv4/ip_forward");
 
     for (int i = 0; i < 2; i++)
     {
@@ -65,7 +62,7 @@ void MitmGlobal::stop(void)
     }
 }
 
-std::string MitmGlobal::info(void) const
+std::string Mitm::info(void) const
 {
     std::stringstream   ss;
 
@@ -74,7 +71,7 @@ std::string MitmGlobal::info(void) const
     return ss.str();
 }
 
-std::string MitmGlobal::help(void)
+std::string Mitm::help(void)
 {
     std::string     rep;
 
@@ -83,7 +80,7 @@ std::string MitmGlobal::help(void)
     return rep;
 }
 
-const HWAddress<6> MitmGlobal::arpRequest(const IPv4Address &targetIp)
+const HWAddress<6> Mitm::arpRequest(const IPv4Address &targetIp)
 {
     EthernetII      arpReq = ARP::make_arp_request(targetIp, _attacker.ip(), _attacker.mac());
     PDU             *response;
@@ -94,7 +91,7 @@ const HWAddress<6> MitmGlobal::arpRequest(const IPv4Address &targetIp)
     throw std::runtime_error("Can't send_recv");
 }
 
-void MitmGlobal::arpReply(const IPv4Address &senderIp, const HWAddress<6> &senderMac, const IPv4Address &targetIp, const HWAddress<6> &targetMac)
+void Mitm::arpReply(const IPv4Address &senderIp, const HWAddress<6> &senderMac, const IPv4Address &targetIp, const HWAddress<6> &targetMac)
 {
     EthernetII      rep = ARP::make_arp_reply(targetIp, senderIp, targetMac, senderMac);
 

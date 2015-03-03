@@ -1,5 +1,5 @@
-#ifndef MITMGLOBAL_HH
-#define MITMGLOBAL_HH
+#ifndef Mitm_HH
+#define Mitm_HH
 
 #include <thread>
 #include <vector>
@@ -8,7 +8,7 @@
 
 using namespace Tins;
 
-class MitmGlobal : public AModule
+class Mitm : public AModule
 {
 private:
     bool                        _run;
@@ -19,8 +19,8 @@ private:
     std::vector<EthernetII>     _basePackets;
 
 public:
-    MitmGlobal(const NetworkInterface &iface, std::ostream *out, const std::vector<std::string> &victimsIp, const std::string &gatewayIp);
-    virtual ~MitmGlobal(void) { }
+    Mitm(const NetworkInterface &iface, std::ostream *out, const std::vector<std::string> &victimsIp, const std::string &gatewayIp);
+    virtual ~Mitm(void) { }
 
 public:
     void                        poison(void);
@@ -37,4 +37,4 @@ private:
     void                        arpReply(const IPv4Address &senderIp, const HWAddress<6> &senderMac, const IPv4Address &targetIp, const HWAddress<6> &targetMac);
 };
 
-#endif // MITMGLOBAL_HH
+#endif // Mitm_HH

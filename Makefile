@@ -24,7 +24,7 @@ SRCS_DAEMON	=	Launcher.cpp \
 			ReflectedFlood.cpp \
 			HttpPostSniffer.cpp \
 			HttpCookieSniffer.cpp \
-			MitmGlobal.cpp \
+			Mitm.cpp \
 			TcpKill.cpp \
 			main.cpp
 

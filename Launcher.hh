@@ -8,7 +8,7 @@
 #include "DnsDump.hh"
 #include "HttpPostSniffer.hh"
 #include "HttpCookieSniffer.hh"
-#include "MitmGlobal.hh"
+#include "Mitm.hh"
 #include "TcpKill.hh"
 
 class Launcher
@@ -50,7 +50,7 @@ public:
     void                            startDnsDump(std::istringstream &iss);
     void                            startHttpPostSniffer(std::istringstream &iss);
     void                            startHttpCookieSniffer(std::istringstream &iss);
-    void                            startMitmGlobal(std::istringstream &iss);
+    void                            startMitm(std::istringstream &iss);
     void                            startTcpKill(std::istringstream &iss);
 
 private:
