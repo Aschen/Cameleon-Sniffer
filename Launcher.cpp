@@ -1,6 +1,6 @@
 #include "Launcher.hh"
 
-Launcher::Launcher(void) : _run(false), _core("wlan0")
+Launcher::Launcher(void) : _run(false)
 {
     // Commands
     _commands["help"] = &Launcher::help;

@@ -10,7 +10,7 @@
 
 CXX		=	clang++
 
-CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -g3
+CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -O3
 
 SRCS_DAEMON	=	Core.cpp \
 			Launcher.cpp \

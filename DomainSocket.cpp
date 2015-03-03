@@ -46,7 +46,7 @@ DomainSocket::DomainSocket(const std::string &path, DomainSocket::TYPE type) : _
 
 DomainSocket::DomainSocket(int fd, const sockaddr_un *socket) : _run(true), _type(DomainSocket::SERVER_CLIENT), _fd(fd)
 {
-    ::memcpy(&_socket, socket, strlen(socket->sun_path) + sizeof(socket->sun_family));
+    std::memcpy(&_socket, socket, strlen(socket->sun_path) + sizeof(socket->sun_family));
 }
 
 DomainSocket::~DomainSocket(void)

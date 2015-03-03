@@ -111,7 +111,7 @@ bool Core::pingReply(PDU &pdu)
 
 void Core::sniffPing(void)
 {
-    _sniffer.sniff_loop(make_sniffer_handler(this, &Core::pingReply));
+   // _sniffer.sniff_loop(make_sniffer_handler(this, &Core::pingReply));
 }
 
 void Core::send(const EthernetII &pkt)

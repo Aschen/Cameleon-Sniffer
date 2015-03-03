@@ -17,3 +17,5 @@
 [ ] Bug when stopping mitm -> victim hw_addr is 00:00...
 [ ] Bug when using mitm -> drop attacker arp table
 [ ] Improve HttpCookieSniffer to sniff cookies from a victim, a hostname or all cookies
+[ ] Special crafter to reload a webpage ?
+

@@ -75,12 +75,14 @@ bool HttpPostSniffer::handler(PDU &pdu)
 
 void HttpPostSniffer::sniffKeys(HTTP &http, Tins::IP::address_type ip)
 {
+    std::string     value;
+
     try
     {
-        *_out << http.getHeader("Host") << " from " << ip << std::endl;
         for (std::string key : _keys)
         {
-            *_out << "\t" << key << " = " << http.getValue(key) << std::endl;
+            value = http.getValue(key);
+            *_out << http.getHeader("Host") << " from " << ip << "\t" << key << " = " << value << std::endl;
         }
         *_out << std::endl;
     }
@@ -107,7 +109,6 @@ void HttpPostSniffer::sniffHostname(HTTP &http, Tins::IP::address_type ip)
     }
     catch (std::out_of_range &e)
     {
-        std::cout << e.what() << std::endl;
     }
 }
 

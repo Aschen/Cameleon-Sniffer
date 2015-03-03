@@ -27,13 +27,14 @@ bool HttpCookieSniffer::handler(PDU &pdu)
     }
 
     HTTP        http(ss);
+    std::string value;
 
     try
-    {
+    {        
         for (std::string key : _keys)
         {
-            *_out << http.getHeader("Host") << std::endl;
-            *_out << "\t" << key << " = " << http.getCookie(key) << std::endl;
+            value = http.getCookie(key); // Throw exception if key not exist
+            *_out << http.getHeader("Host") << "\t" << key << " = " << value << std::endl;
         }
     }
     catch (std::out_of_range &e)

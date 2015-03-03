@@ -9,23 +9,30 @@ HTTP::HTTP(std::stringstream &ss)
     ss >> _version;
     for (std::string line; std::getline(ss, line);)
     {
-        if ((sep = line.find(':')) != -1)
+        try
         {
-            std::string value = line.substr(sep + 2);
+            if ((sep = line.find(':')) != -1)
+            {
+                std::string value = line.substr(sep + 2);
 
-            // Remove annoying '\r'
-            value.pop_back();
-            _headers[line.substr(0, sep)] = value;
+                // Remove annoying '\r'
+                value.pop_back();
+                _headers[line.substr(0, sep)] = value;
 
-            // Get all cookies
-            if (line.substr(0, sep) == "Cookie")
-                parseCookies(line.substr(sep + 2));
+                // Get all cookies
+                if (line.substr(0, sep) == "Cookie")
+                    parseCookies(line.substr(sep + 2));
+            }
+            else if (_verb == "POST")
+            {
+                // If there is data on line (and not only \n)
+                if (line.length() > 1)
+                    parseData(line);
+            }
         }
-        else if (_verb == "POST")
+        catch (std::out_of_range &e)
         {
-            // If there is data on line (and not only \n)
-            if (line.length() > 1)
-                parseData(line);
+
         }
     }
 }
@@ -74,14 +81,24 @@ void HTTP::parseCookies(const std::string &buf)
     std::istringstream  ss(buf);
     int                 i = 0;
     int                 sep;
+    std::string         value;
 
     for (std::string pair; std::getline(ss, pair, ';');)
     {
-        sep = pair.find('=');
-        if (i++ > 0)
-            _cookies[pair.substr(1, sep - 1)] = pair.substr(sep + 1);
-        else
-            _cookies[pair.substr(0, sep)] = pair.substr(sep + 1);
+        try
+        {
+            sep = pair.find('=');
+            value = pair.substr(sep + 1);
+            value.pop_back();
+            if (i++ > 0)
+                _cookies[pair.substr(1, sep - 1)] = value;
+            else
+                _cookies[pair.substr(0, sep)] = value;
+        }
+        catch (std::out_of_range &e)
+        {
+
+        }
     }
 }
 
