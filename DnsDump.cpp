@@ -36,7 +36,6 @@ std::string DnsDump::info(void) const { return "Filename = " + _filename; }
 
 std::string DnsDump::help(void) { return std::string("Start DNS queries dumper.\n") + "\tOptions : <file>"; }
 
-
 const std::string DnsDump::getDate(void) const
 {
     time_t     now = time(0);

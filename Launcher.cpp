@@ -235,8 +235,7 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
             std::ofstream    *fd = new std::ofstream();
 
             fd->open(filename);
-            // If Type KEYS
-            if (type == "keys")
+            if (type == "keys")         // If Type KEYS
             {
                 std::string                 key;
                 std::vector<std::string>    vKeys;
@@ -253,7 +252,7 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
                     _modules[name] = new HttpPostSniffer(_iface, fd, filename, vKeys);
                 }
             }
-            else if (type == "host") // If Type HOSTNAME
+            else if (type == "host")    // If Type HOSTNAME
             {
                 std::string                 hostname;
 
@@ -263,7 +262,7 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
                 else
                     _modules[name] = new HttpPostSniffer(_iface, fd, filename, hostname);
             }
-            else if (type == "all") // If Type ALL
+            else if (type == "all")     // If Type ALL
                 _modules[name] = new HttpPostSniffer(_iface, fd, filename);
             else
             {
