@@ -1,5 +1,5 @@
 # Cameleon-Sniffer
-A modular network sniffer 
+A modular network sniffer written in c++
 
 I make this project on my free time to improve my understanding of networks and networks protocol.
 
