@@ -51,7 +51,7 @@ This will make the programm then create a directory /etc/cameleon for the unix s
   ```
   * Stop module
   ```
-  cameleon stop myModule
+  cameleon stop <instance_name>
   ```
   * Stop the daemon
   ```
