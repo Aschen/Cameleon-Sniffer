@@ -2,8 +2,6 @@
 
 Addresses::Addresses(const HWAddress<6> &mac, const IPv4Address &ip) : _mac(mac), _ip(ip) { }
 
-Addresses::Addresses(void) { }
-
 const HWAddress<6> Addresses::mac(void) const { return _mac; }
 
 void Addresses::mac(const HWAddress<6> newMac) { _mac = newMac; }

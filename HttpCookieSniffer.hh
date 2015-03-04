@@ -14,15 +14,15 @@ public:
     HttpCookieSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
     ~HttpCookieSniffer(void) { }
 
-    // AModule
 public:
-    std::string                     info(void) const;
     static std::string              help(void);
 
-    // ASniffer
-public:
-    bool                            handler(PDU &pdu);
 
+    // ASniffer
+private:
+    bool                            handler(PDU &pdu);
+public:
+    std::string                     info(void) const;
 };
 
 #endif // HTTPCOOKIESNIFFER_HH

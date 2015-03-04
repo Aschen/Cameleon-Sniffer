@@ -1,7 +1,7 @@
 #include "HttpPostSniffer.hh"
 
 HttpPostSniffer::HttpPostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
-    : ASniffer(interface, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _hostname("All"), _type(HttpPostSniffer::KEYS), _keys(keys) // put dst and src port 80 for HttpModifier ?
+    : ASniffer(interface, "HttpPostSniffer", "tcp and dst port 80", out), _filename(filename), _hostname("All"), _type(HttpPostSniffer::KEYS), _keys(keys)
 {
 }
 
@@ -34,10 +34,7 @@ std::string HttpPostSniffer::info(void) const
     return msg + ", File = " + _filename;
 }
 
-std::string HttpPostSniffer::help(void)
-{
-    return std::string("Start HttpPostSniffer.\n") + "\tOptions : <all | keys | host> <filename> [keys | hostname]";
-}
+std::string HttpPostSniffer::help(void) { return std::string("Start HttpPostSniffer.\n") + "\tOptions : <all | keys | host> <filename> [keys | hostname]"; }
 
 bool HttpPostSniffer::handler(PDU &pdu)
 {

@@ -5,12 +5,6 @@ HttpCookieSniffer::HttpCookieSniffer(const NetworkInterface &interface, std::ost
 {
 }
 
-
-std::string HttpCookieSniffer::help(void)
-{
-    return std::string("Start HttpCookieSniffer.\n") + "\tOptions : <filename> [keys]";
-}
-
 bool HttpCookieSniffer::handler(PDU &pdu)
 {
     // EthernetII / IP / TCP
@@ -51,3 +45,5 @@ std::string HttpCookieSniffer::info(void) const
 
     return "Keys = " + keys + ", File =  " + _filename;
 }
+
+std::string HttpCookieSniffer::help(void) { return std::string("Start HttpCookieSniffer.\n") + "\tOptions : <filename> [keys]"; }

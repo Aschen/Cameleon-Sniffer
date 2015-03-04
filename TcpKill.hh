@@ -2,6 +2,7 @@
 #define TCPKILL_HH
 
 #include "ASniffer.hh"
+#include "ASender.hh"
 
 using namespace Tins;
 
@@ -20,6 +21,7 @@ private:
     const IPv4Address               _srcIp;
     const int                       _port;
     const TYPE                      _type;
+    PacketSender                    _sender;
 
 public:
     // Kill traffic from dstIp:port to srcIp
@@ -31,10 +33,14 @@ public:
 
     ~TcpKill(void) { }
 
-    // AModule
+public:
+    static std::string              help(void);
+
+
+    // ASender
 public:
     std::string                     info(void) const;
-    static std::string              help(void);
+    const std::string               &name(void) const;
 
     // ASniffer
 public:

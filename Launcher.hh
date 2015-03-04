@@ -3,7 +3,7 @@
 
 #include <sstream>
 #include "Sniff.hh"
-#include "AModule.hh"
+#include "IModule.hh"
 #include "DnsSpoof.hh"
 #include "DnsDump.hh"
 #include "HttpPostSniffer.hh"
@@ -29,7 +29,7 @@ private:
     NetworkInterface                _iface;
     std::stringstream               _rep;
     std::map<std::string, Command>  _commands;
-    std::map<std::string, AModule*> _modules;
+    std::map<std::string, IModule*> _modules;
 
 public:
     Launcher(const std::string &iface);

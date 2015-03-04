@@ -1,7 +1,7 @@
 #include "Mitm.hh"
 
 Mitm::Mitm(const NetworkInterface &iface, std::ostream *out, const std::vector<std::string> &victimsIp, const std::string &gatewayIp)
-    : AModule(iface, "Mitm", out), _run(false)
+    : ASender(iface, "Mitm", out), _run(false)
 {
     HWAddress<6>    victimMac;
 

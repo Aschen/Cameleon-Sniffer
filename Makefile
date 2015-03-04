@@ -17,7 +17,7 @@ SRCS_DAEMON	=	Launcher.cpp \
 			Daemon.cpp \
 			Http.cpp \
 			Addresses.cpp\
-			AModule.cpp \
+			ASender.cpp \
 			ASniffer.cpp \
 			DnsSpoof.cpp \
 			DnsDump.cpp \

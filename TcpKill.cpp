@@ -27,10 +27,9 @@ std::string TcpKill::info(void) const
     return ss.str();
 }
 
-std::string TcpKill::help(void)
-{
-    return std::string("Start TcpKill.\n") + "\tOptions : <dstIp> <srcIp> <port>";
-}
+const std::string &TcpKill::name(void) const { return _name; }
+
+std::string TcpKill::help(void) { return std::string("Start TcpKill.\n") + "\tOptions : <dstIp> <srcIp> <port>"; }
 
 bool TcpKill::handler(PDU &pdu)
 {

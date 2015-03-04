@@ -15,14 +15,18 @@ public:
     DnsDump(const NetworkInterface &iface, std::ostream *out, const std::string &filename);
     ~DnsDump(void);
 
-    // AModule
+private:
+    const std::string           getDate(void) const;
+
 public:
-    std::string                 info(void) const;
     static std::string          help(void);
 
+
     // ASniffer
-protected:
+private:
     bool                        handler(PDU &pdu);
+public:
+    std::string                 info(void) const;
 };
 
 #endif // DNSDUMP_HH

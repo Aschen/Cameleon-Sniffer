@@ -1,9 +1,9 @@
 #include "DnsSpoof.hh"
 
 DnsSpoof::DnsSpoof(const NetworkInterface &iface, std::ostream *out, const std::string &file)
-    : ASniffer(iface, "DnsSpoof", "udp and dst port 53", out)
+    : ASniffer(iface, "DnsSpoof", "udp and dst port 53", out), _filename(file)
 {
-    readHosts(file);
+    readHosts(_filename);
 }
 
 void DnsSpoof::readHosts(const std::string &file)
@@ -15,10 +15,7 @@ void DnsSpoof::readHosts(const std::string &file)
         _spoofedHosts[host] = ip;
 }
 
-std::string DnsSpoof::info(void) const
-{
-    return "Hostfile = " + _file;
-}
+std::string DnsSpoof::info(void) const { return "Hostfile = " + _filename; }
 
 std::string DnsSpoof::help(void)
 {

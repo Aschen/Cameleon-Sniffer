@@ -13,7 +13,7 @@ private:
 
 public:
     Addresses(const HWAddress<6> &mac, const IPv4Address &ip);
-    Addresses(void);
+    Addresses(void) { }
 
     const HWAddress<6>  mac(void) const;
     void                mac(const HWAddress<6> newMac);

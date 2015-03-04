@@ -7,6 +7,7 @@ DnsDump::DnsDump(const NetworkInterface &iface, std::ostream *out, const std::st
 
 DnsDump::~DnsDump(void)
 {
+    // Reinterpret cast ?
     static_cast<std::ofstream*>(_out)->close();
 }
 
@@ -31,12 +32,19 @@ bool DnsDump::handler(PDU &pdu)
     return true;
 }
 
-std::string DnsDump::info(void) const
-{
-    return "Filename = " + _filename;
-}
+std::string DnsDump::info(void) const { return "Filename = " + _filename; }
 
-std::string DnsDump::help(void)
+std::string DnsDump::help(void) { return std::string("Start DNS queries dumper.\n") + "\tOptions : <file>"; }
+
+
+const std::string DnsDump::getDate(void) const
 {
-    return std::string("Start DNS queries dumper.\n") + "\tOptions : <file>";
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
+
+    return buf;
 }

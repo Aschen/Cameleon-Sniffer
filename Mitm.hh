@@ -1,14 +1,14 @@
 #ifndef Mitm_HH
 #define Mitm_HH
 
-#include <thread>
 #include <vector>
+#include <thread>
 #include "Sniff.hh"
-#include "AModule.hh"
+#include "ASender.hh"
 
 using namespace Tins;
 
-class Mitm : public AModule
+class Mitm : public ASender
 {
 private:
     bool                        _run;
@@ -24,13 +24,14 @@ public:
 
 public:
     void                        poison(void);
+    static std::string          help(void);
 
-    // AModule
+
+    // ASender
 public:
     void                        start(void);
     void                        stop(void);
     std::string                 info(void) const;
-    static std::string          help(void);
 
 private:
     const HWAddress<6>          arpRequest(const IPv4Address &targetIp);

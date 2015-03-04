@@ -1,12 +1,13 @@
-#ifndef AMODULE_HH
-#define AMODULE_HH
+#ifndef ASENDER_HH
+#define ASENDER_HH
 
 #include <tins/packet_sender.h>
 #include "Sniff.hh"
+#include "IModule.hh"
 
 using namespace Tins;
 
-class AModule
+class ASender : public IModule
 {
 protected:
     NetworkInterface            _iface;
@@ -15,19 +16,15 @@ protected:
     PacketSender                _sender;
 
 public:
-    AModule(const NetworkInterface &iface, const std::string &name, std::ostream *out);
-    virtual ~AModule(void) { }
+    ASender(const NetworkInterface &iface, const std::string &name, std::ostream *out);
+    virtual ~ASender(void) { }
 
-public:
-    const std::string           &name(void) const;
-
+    // IModule
 public:
     virtual void                start(void) = 0;
     virtual void                stop(void) = 0;
     virtual std::string         info(void) const = 0;
-
-protected:
-    const std::string           getDate(void) const;
+    virtual const std::string   &name(void) const;
 };
 
-#endif // AMODULE_HH
+#endif // ASENDER_HH

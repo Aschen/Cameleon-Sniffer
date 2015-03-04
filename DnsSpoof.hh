@@ -3,7 +3,6 @@
 
 #include <ostream>
 #include <fstream>
-#include <thread>
 #include "Sniff.hh"
 #include "ASniffer.hh"
 
@@ -13,24 +12,26 @@ using namespace Tins;
 class DnsSpoof : public ASniffer
 {
 private:
-    const std::string                   _file;
+    const std::string                   _filename;
+    PacketSender                        _sender;
     std::map<std::string, std::string>  _spoofedHosts;
 
 public:
     DnsSpoof(const NetworkInterface &iface, std::ostream *out, const std::string &file);
     ~DnsSpoof(void) { }
 
-    // AModule
-public:
-    std::string                         info(void) const;
-    static std::string                  help(void);
-
-    // ASniffer
-public:
-    bool                                handler(PDU &pdu);
-
 private:
     void                                readHosts(const std::string &file);
+
+public:
+    static std::string                  help(void);
+
+
+    // ASniffer
+private:
+    bool                                handler(PDU &pdu);
+public:
+    std::string                         info(void) const;
 };
 
 #endif // DNSSPOOF_HH

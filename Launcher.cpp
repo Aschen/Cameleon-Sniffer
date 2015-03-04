@@ -22,7 +22,7 @@ Launcher::Launcher(const std::string &iface)
 
 Launcher::~Launcher(void)
 {
-    for (std::map<std::string, AModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
+    for (std::map<std::string, IModule*>::iterator   it = _modules.begin(); it != _modules.end(); ++it)
         delete (*it).second;
 
     // Disable ip forward
@@ -99,7 +99,7 @@ void Launcher::start(std::istringstream &iss)
 
 void Launcher::stop(std::istringstream &iss)
 {
-    std::map<std::string, AModule*>::iterator    it;
+    std::map<std::string, IModule*>::iterator    it;
     std::string     name;
 
     iss >> name;
@@ -135,7 +135,7 @@ void Launcher::ps(std::istringstream &iss)
     if (_modules.size())
     {
         _rep << std::setw(22) << std::left << "Module" << std::setw(20) << std::left << "Name" << std::setw(15) << std::left << "Options" << std::endl << std::endl;
-        for (std::pair<std::string, AModule*> pair : _modules)
+        for (std::pair<std::string, IModule*> pair : _modules)
             _rep << std::setw(22) << std::left << pair.second->name() << std::setw(20) << std::left << pair.first << std::setw(15) << std::left << pair.second->info() << std::endl;
     }
     else
@@ -146,7 +146,7 @@ void Launcher::ps(std::istringstream &iss)
 
 void Launcher::stopModules(void)
 {
-    for (std::pair<std::string, AModule*> pair : _modules)
+    for (std::pair<std::string, IModule*> pair : _modules)
     {
         _rep << "Stopping module " << pair.first;
         pair.second->stop();
@@ -156,7 +156,7 @@ void Launcher::stopModules(void)
 /* MODULES STARTER */
 void Launcher::startDnsSpoof(std::istringstream &iss)
 {
-    std::map<std::string, AModule*>::iterator    it;
+    std::map<std::string, IModule*>::iterator    it;
     std::string     name;
     std::string     hostfile;
 
@@ -184,7 +184,7 @@ void Launcher::startDnsSpoof(std::istringstream &iss)
 
 void Launcher::startDnsDump(std::istringstream &iss)
 {
-    std::map<std::string, AModule*>::iterator    it;
+    std::map<std::string, IModule*>::iterator    it;
     std::string     name;
     std::string     file;
 
@@ -215,7 +215,7 @@ void Launcher::startDnsDump(std::istringstream &iss)
 
 void Launcher::startHttpPostSniffer(std::istringstream &iss)
 {
-    std::map<std::string, AModule*>::iterator   it;
+    std::map<std::string, IModule*>::iterator   it;
     std::string                                 name;
     std::string                                 type;
     std::string                                 filename;
@@ -280,7 +280,7 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
 
 void Launcher::startHttpCookieSniffer(std::istringstream &iss)
 {
-    std::map<std::string, AModule*>::iterator   it;
+    std::map<std::string, IModule*>::iterator   it;
     std::string                                 name;
     std::string                                 filename;
     std::string                                 key;
@@ -317,7 +317,7 @@ void Launcher::startHttpCookieSniffer(std::istringstream &iss)
 
 void Launcher::startMitm(std::istringstream &iss)
 {
-    std::map<std::string, AModule*>::iterator    it;
+    std::map<std::string, IModule*>::iterator    it;
     std::string     name;
     std::string     gatewayIp;
     std::string     file;
@@ -352,7 +352,7 @@ void Launcher::startMitm(std::istringstream &iss)
 
 void Launcher::startTcpKill(std::istringstream &iss)
 {
-    std::map<std::string, AModule*>::iterator    it;
+    std::map<std::string, IModule*>::iterator    it;
     std::string     name;
     std::string     dstIp;
     std::string     srcIp;

@@ -32,20 +32,20 @@ public:
 
     ~HttpPostSniffer(void) { }
 
-
-    // AModule
-public:
-    virtual std::string             info(void) const;
-    static std::string              help(void);
-
-    // ASniffer
-public:
-    bool                            handler(PDU &pdu);
-
 private:
     void                            sniffKeys(const HTTP &http, IP::address_type ip);
     void                            sniffHostname(const HTTP &http, IP::address_type ip);
     void                            sniffAll(const HTTP &http, IP::address_type ip);
+
+
+public:
+    static std::string              help(void);
+
+    // ASniffer
+private:
+    bool                            handler(PDU &pdu);
+public:
+    std::string                     info(void) const;
 };
 
 #endif // HTPPPOSTSNIFFER_HH
