@@ -44,6 +44,7 @@ $(SENDER):	$(OBJS_SENDER)
 		$(CXX) -o $(SENDER) $(OBJS_SENDER)
 
 install:
+		mkdir /etc/cameleon
 		cp $(SENDER) /usr/bin/$(SENDER)	
 		cp $(DAEMON) /usr/bin/$(DAEMON)
 
