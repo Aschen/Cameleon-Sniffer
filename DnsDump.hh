@@ -2,8 +2,6 @@
 #define DNSDUMP_HH
 
 #include <time.h>
-
-#include "Sniff.hh"
 #include "ASniffer.hh"
 
 class DnsDump : public ASniffer

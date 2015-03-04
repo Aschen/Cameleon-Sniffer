@@ -1,7 +1,7 @@
 #ifndef ADDRESSES_HH
 #define ADDRESSES_HH
 
-#include "Sniff.hh"
+#include <tins/tins.h>
 
 using namespace Tins;
 

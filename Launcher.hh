@@ -1,13 +1,12 @@
 #ifndef LAUNCHER_HH
 #define LAUNCHER_HH
 
-#include <sstream>
-#include "Sniff.hh"
+#include <tins/tins.h>
 #include "IModule.hh"
 #include "DnsSpoof.hh"
 #include "DnsDump.hh"
-#include "HttpPostSniffer.hh"
-#include "HttpCookieSniffer.hh"
+#include "PostSniffer.hh"
+#include "CookieSniffer.hh"
 #include "Mitm.hh"
 #include "TcpKill.hh"
 
@@ -48,8 +47,8 @@ public:
 public:
     void                            startDnsSpoof(std::istringstream &iss);
     void                            startDnsDump(std::istringstream &iss);
-    void                            startHttpPostSniffer(std::istringstream &iss);
-    void                            startHttpCookieSniffer(std::istringstream &iss);
+    void                            startPostSniffer(std::istringstream &iss);
+    void                            startCookieSniffer(std::istringstream &iss);
     void                            startMitm(std::istringstream &iss);
     void                            startTcpKill(std::istringstream &iss);
 

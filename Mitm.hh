@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <thread>
-#include "Sniff.hh"
+#include <unistd.h>
+#include "Addresses.hh"
 #include "ASender.hh"
 
 using namespace Tins;

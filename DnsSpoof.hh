@@ -1,11 +1,7 @@
 #ifndef DNSSPOOF_HH
 #define DNSSPOOF_HH
 
-#include <ostream>
-#include <fstream>
-#include "Sniff.hh"
 #include "ASniffer.hh"
-
 
 using namespace Tins;
 

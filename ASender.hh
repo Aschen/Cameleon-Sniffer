@@ -1,8 +1,7 @@
 #ifndef ASENDER_HH
 #define ASENDER_HH
 
-#include <tins/packet_sender.h>
-#include "Sniff.hh"
+#include <tins/tins.h>
 #include "IModule.hh"
 
 using namespace Tins;

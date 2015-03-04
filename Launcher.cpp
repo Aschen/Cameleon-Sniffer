@@ -14,8 +14,8 @@ Launcher::Launcher(const std::string &iface)
     // Modules
     _commands["dnsspoof"] = &Launcher::startDnsSpoof;
     _commands["dnsdump"] = &Launcher::startDnsDump;
-    _commands["httppostsniffer"] = &Launcher::startHttpPostSniffer;
-    _commands["httpcookiesniffer"] = &Launcher::startHttpCookieSniffer;
+    _commands["postsniffer"] = &Launcher::startPostSniffer;
+    _commands["cookiesniffer"] = &Launcher::startCookieSniffer;
     _commands["mitm"] = &Launcher::startMitm;
     _commands["tcpkill"] = &Launcher::startTcpKill;
 }
@@ -52,6 +52,12 @@ const std::string Launcher::readCmdLine(const std::string &line)
 
 
 /* COMMANDS */
+void Launcher::list(std::istringstream &iss)
+{
+    (void)iss;
+    _rep << "Availables modules : mitm dnsspoof dnsdump postsniffer cookiesniffer tcpkill";
+}
+
 void Launcher::help(std::istringstream &iss)
 {
     (void)iss;
@@ -119,14 +125,6 @@ void Launcher::stop(std::istringstream &iss)
             _rep << "Module " << name << " successfully stopped";
         }
     }
-}
-
-void Launcher::list(std::istringstream &iss)
-{
-    (void)iss;
-    _rep << "Availables modules : ";
-    for (std::pair<std::string, Command> pair : _commands)
-        _rep << pair.first << " ";
 }
 
 void Launcher::ps(std::istringstream &iss)
@@ -213,7 +211,7 @@ void Launcher::startDnsDump(std::istringstream &iss)
     }
 }
 
-void Launcher::startHttpPostSniffer(std::istringstream &iss)
+void Launcher::startPostSniffer(std::istringstream &iss)
 {
     std::map<std::string, IModule*>::iterator   it;
     std::string                                 name;
@@ -226,7 +224,7 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
     if (!name.length())
         help(iss);
     else if (!type.length() || !filename.length())
-        _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
+        _rep << "Bad parameters." << std::endl << PostSniffer::help() << std::endl;
     else
     {
         it = _modules.find(name);
@@ -242,14 +240,14 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
 
                 iss >> key;
                 if (!key.length())
-                    _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
+                    _rep << "Bad parameters." << std::endl << PostSniffer::help() << std::endl;
                 else
                 {
                     // Push first key and then other keys
                     vKeys.push_back(key);
                     while (iss >> key)
                         vKeys.push_back(key);
-                    _modules[name] = new HttpPostSniffer(_iface, fd, filename, vKeys);
+                    _modules[name] = new PostSniffer(_iface, fd, filename, vKeys);
                 }
             }
             else if (type == "host")    // If Type HOSTNAME
@@ -258,26 +256,26 @@ void Launcher::startHttpPostSniffer(std::istringstream &iss)
 
                 iss >> hostname;
                 if (!hostname.length())
-                    _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
+                    _rep << "Bad parameters." << std::endl << PostSniffer::help() << std::endl;
                 else
-                    _modules[name] = new HttpPostSniffer(_iface, fd, filename, hostname);
+                    _modules[name] = new PostSniffer(_iface, fd, filename, hostname);
             }
             else if (type == "all")     // If Type ALL
-                _modules[name] = new HttpPostSniffer(_iface, fd, filename);
+                _modules[name] = new PostSniffer(_iface, fd, filename);
             else
             {
-                _rep << "Bad parameters." << std::endl << HttpPostSniffer::help() << std::endl;
+                _rep << "Bad parameters." << std::endl << PostSniffer::help() << std::endl;
                 return ;
             }
             _modules[name]->start();
-            _rep << "HttpPostSniffer started";
+            _rep << "PostSniffer started";
         }
         else
             _rep << "Module " << name << " already exist !";
     }
 }
 
-void Launcher::startHttpCookieSniffer(std::istringstream &iss)
+void Launcher::startCookieSniffer(std::istringstream &iss)
 {
     std::map<std::string, IModule*>::iterator   it;
     std::string                                 name;
@@ -291,7 +289,7 @@ void Launcher::startHttpCookieSniffer(std::istringstream &iss)
     if (!name.length())
         help(iss);
     else if (!filename.length() || !key.length())
-        _rep << "Bad parameters." << std::endl << HttpCookieSniffer::help() << std::endl;
+        _rep << "Bad parameters." << std::endl << CookieSniffer::help() << std::endl;
     else
     {
         // Push first key and then other keys (key = cookie name)
@@ -305,9 +303,9 @@ void Launcher::startHttpCookieSniffer(std::istringstream &iss)
             std::ofstream    *fd = new std::ofstream();
 
             fd->open(filename);
-            _modules[name] = new HttpCookieSniffer(_iface, fd, filename, vKeys);
+            _modules[name] = new CookieSniffer(_iface, fd, filename, vKeys);
             _modules[name]->start();
-            _rep << "HttpCookieSniffer started";
+            _rep << "CookieSniffer started";
         }
         else
             _rep << "Module " << name << " already exist !";

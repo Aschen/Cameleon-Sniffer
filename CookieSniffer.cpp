@@ -1,11 +1,11 @@
-#include "HttpCookieSniffer.hh"
+#include "CookieSniffer.hh"
 
-HttpCookieSniffer::HttpCookieSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
-    : ASniffer(interface, "HttpCookieSniffer", "tcp and dst port 80", out), _filename(filename), _keys(keys)
+CookieSniffer::CookieSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys)
+    : ASniffer(interface, "CookieSniffer", "tcp and dst port 80", out), _filename(filename), _keys(keys)
 {
 }
 
-bool HttpCookieSniffer::handler(PDU &pdu)
+bool CookieSniffer::handler(PDU &pdu)
 {
     // EthernetII / IP / TCP
     EthernetII eth = pdu.rfind_pdu<EthernetII>();
@@ -36,7 +36,7 @@ bool HttpCookieSniffer::handler(PDU &pdu)
     return true;
 }
 
-std::string HttpCookieSniffer::info(void) const
+std::string CookieSniffer::info(void) const
 {
     std::string     keys;
 
@@ -46,4 +46,4 @@ std::string HttpCookieSniffer::info(void) const
     return "Keys = " + keys + ", File =  " + _filename;
 }
 
-std::string HttpCookieSniffer::help(void) { return std::string("Start HttpCookieSniffer.\n") + "\tOptions : <filename> [keys]"; }
+std::string CookieSniffer::help(void) { return std::string("Start CookieSniffer.\n") + "\tOptions : <filename> [keys]"; }

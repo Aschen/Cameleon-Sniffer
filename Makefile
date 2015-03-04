@@ -1,12 +1,9 @@
 ##
-## Makefile for  in /home/maret_a/Projets/AbstractVM/cpp_abstractvm/sources
+## Makefile for  Cameleon Sniffer
 ## 
-## Made by Adrien Maret
-## Login   <maret_a@epitech.net>
+## Made by Aschen
+## Login   maret_a
 ## 
-## 
-## Started on  19/02/2014 15:26
-##
 
 CXX		=	clang++
 
@@ -21,9 +18,8 @@ SRCS_DAEMON	=	Launcher.cpp \
 			ASniffer.cpp \
 			DnsSpoof.cpp \
 			DnsDump.cpp \
-			ReflectedFlood.cpp \
-			HttpPostSniffer.cpp \
-			HttpCookieSniffer.cpp \
+			PostSniffer.cpp \
+			CookieSniffer.cpp \
 			Mitm.cpp \
 			TcpKill.cpp \
 			main.cpp

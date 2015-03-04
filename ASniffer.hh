@@ -1,9 +1,8 @@
 #ifndef ASNIFFER_HH
 #define ASNIFFER_HH
 
+#include <tins/tins.h>
 #include <thread>
-
-#include "Sniff.hh"
 #include "IModule.hh"
 
 using namespace Tins;

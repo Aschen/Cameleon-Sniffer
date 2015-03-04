@@ -1,18 +1,18 @@
-#ifndef HTTPCOOKIESNIFFER_HH
-#define HTTPCOOKIESNIFFER_HH
+#ifndef COOKIESNIFFER_HH
+#define COOKIESNIFFER_HH
 
 #include "ASniffer.hh"
 #include "Http.hh"
 
-class HttpCookieSniffer : public ASniffer
+class CookieSniffer : public ASniffer
 {
 private:
     const std::string               _filename;
     const std::vector<std::string>  _keys;
 
 public:
-    HttpCookieSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
-    ~HttpCookieSniffer(void) { }
+    CookieSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
+    ~CookieSniffer(void) { }
 
 public:
     static std::string              help(void);
@@ -25,4 +25,4 @@ public:
     std::string                     info(void) const;
 };
 
-#endif // HTTPCOOKIESNIFFER_HH
+#endif // COOKIESNIFFER_HH

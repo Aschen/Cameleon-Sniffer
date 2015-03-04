@@ -1,12 +1,12 @@
-#ifndef HTPPPOSTSNIFFER_HH
-#define HTPPPOSTSNIFFER_HH
+#ifndef POSTSNIFFER_HH
+#define POSTSNIFFER_HH
 
 #include "ASniffer.hh"
 #include "Http.hh"
 
 using namespace Tins;
 
-class HttpPostSniffer : public ASniffer
+class PostSniffer : public ASniffer
 {
 public:
     typedef enum    e_type
@@ -24,13 +24,13 @@ private:
 
 public:
     // Sniff only matchins keys
-    HttpPostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
+    PostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::vector<std::string> &keys);
     // Sniff all POST traffic to host
-    HttpPostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::string &hostname);
+    PostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename, const std::string &hostname);
     // Sniff all POST traffic to all host
-    HttpPostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename);
+    PostSniffer(const NetworkInterface &interface, std::ostream *out, const std::string &filename);
 
-    ~HttpPostSniffer(void) { }
+    ~PostSniffer(void) { }
 
 private:
     void                            sniffKeys(const HTTP &http, IP::address_type ip);
@@ -48,4 +48,4 @@ public:
     std::string                     info(void) const;
 };
 
-#endif // HTPPPOSTSNIFFER_HH
+#endif // POSTSNIFFER_HH

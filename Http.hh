@@ -2,7 +2,10 @@
 #define HTTP_HH
 
 #include <vector>
-#include "Sniff.hh"
+#include <map>
+#include <string>
+#include <sstream>
+#include <stdexcept>
 
 typedef std::pair<std::string, std::string> StringPair;
 
