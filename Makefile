@@ -5,6 +5,7 @@
 ## Login   maret_a
 ## 
 
+
 CXX		=	clang++
 
 CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -g3
