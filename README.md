@@ -35,27 +35,27 @@ This will make the programm then create a directory /etc/cameleon for the unix s
 
   * First run the daemon root privilege
   ```
-  > sudo cameleon-daemon
+  sudo cameleon-daemon
   ```
   * Then you can send command to the daemon. See help
   ```
-  > cameleon help
+  cameleon help
   ```
   * Start module 
   ```
-  > cameleon start <module_name> <instance_name> [options]
+  cameleon start <module_name> <instance_name> [options]
   ```
   * Display running modules
   ```
-  > cameleon ps
+  cameleon ps
   ```
   * Stop module
   ```
-  > cameleon stop myModule
+  cameleon stop myModule
   ```
   * Stop the daemon
   ```
-  > cameleon exit
+  cameleon exit
   ```
 
 Filename must by provided with ABSOLUTE path.
