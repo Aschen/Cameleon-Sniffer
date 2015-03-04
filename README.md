@@ -123,3 +123,30 @@ Capture the specified cookies.
 > cameleon start cookiesniffer cookies /path/to/file/cookies.txt session_id __utm 
 ```
 
+### TcpKill
+
+Reset tcp connections on a specific port. This will send reset packet for EACH tcp packet sent.
+
+You can use wildcard address : 0.0.0.0
+
+```
+> cameleon start tcpkill <instance_name> <dst_ip> <src_ip> <port>
+```
+
+Kill all https connections from 192.168.1.2 to 8.8.8.8
+```
+> cameleon start tcpkill sslkill 8.8.8.8 192.168.1.2 443
+```
+
+Kill all ftp connections to 192.168.1.42 
+```
+> cameleon start tcpkill allftp 192.168.1.42 0.0.0.0 21
+```
+
+Kill all http connection from 192.168.1.2
+```
+> cameleon start tcpkill 0.0.0.0 192.168.1.2 80
+```
+
+
+
