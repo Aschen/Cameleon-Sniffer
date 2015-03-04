@@ -37,17 +37,13 @@ This will make the programm then create a directory /etc/cameleon for the unix s
   ```
   > sudo cameleon-daemon
   ```
-  * Then you can send command to the daemon
+  * Then you can send command to the daemon. See help
   ```
   > cameleon help
   ```
-  * Start module DnsDump
+  * Start module 
   ```
-  > cameleon start dnsdump myModule /path/to/file/queries.txt
-  ```
-  * Start module PostSniffer
-  ```
-  > cameleon start postsniffer sniff all /path/to/file/posts.txt
+  > cameleon start <module_name> <instance_name> [options]
   ```
   * Display running modules
   ```
