@@ -10,7 +10,7 @@ int main(void)
 
     try
     {
-        Daemon      d("/etc/cameleon/cameleon.sock", "eth0");
+        Daemon      d("/etc/cameleon/cameleon.sock", "wlan0");
 
         d.start();
     }

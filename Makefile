@@ -23,6 +23,7 @@ SRCS_DAEMON	=	Launcher.cpp \
 			CookieSniffer.cpp \
 			Mitm.cpp \
 			TcpKill.cpp \
+			SurfWatcher.cpp \
 			main.cpp
 
 SRCS_SENDER	=	DomainSocket.cpp \

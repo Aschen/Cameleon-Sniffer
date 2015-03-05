@@ -18,7 +18,6 @@ PostSniffer::PostSniffer(const NetworkInterface &interface, std::ostream *out, c
 std::string PostSniffer::info(void) const
 {
     std::string     msg;
-    std::string     keys;
 
     if (_type == PostSniffer::KEYS)
     {
@@ -63,7 +62,7 @@ bool PostSniffer::handler(PDU &pdu)
     return true;
 }
 
-void PostSniffer::sniffKeys(const HTTP &http, Tins::IP::address_type ip)
+void PostSniffer::sniffKeys(const HTTP &http, Tins::IP::address_type ip) const
 {
     std::string     value;
 
@@ -76,45 +75,36 @@ void PostSniffer::sniffKeys(const HTTP &http, Tins::IP::address_type ip)
         }
         *_out << std::endl;
     }
-    catch (std::out_of_range &e)
-    {
-        // Key not present
-    }
+    catch (std::out_of_range &e) { }
 }
 
-void PostSniffer::sniffHostname(const HTTP &http, Tins::IP::address_type ip)
+void PostSniffer::sniffHostname(const HTTP &http, Tins::IP::address_type ip) const
 {
     try
     {
-        if (_hostname == http.getHeader("Host"))
+        if (_hostname == http.getHeader("Host") && !http.data().size())
         {
             *_out << _hostname << " from " << ip << std::endl;
             // Dump all post data
             for (std::pair<std::string, std::string> data : http.data())
-            {
                 *_out << "\t" << data.first << " = " << data.second << std::endl;
-            }
             *_out << std::endl;
         }
     }
-    catch (std::out_of_range &e)
-    {
-    }
+    catch (std::out_of_range &e) { }
 }
 
-void PostSniffer::sniffAll(const HTTP &http, Tins::IP::address_type ip)
+void PostSniffer::sniffAll(const HTTP &http, Tins::IP::address_type ip) const
 {
     try
     {
+        if (!http.data().size())
+            return ;
         *_out << http.getHeader("Host") << " from " << ip <<  std::endl;
         // Dump all post data
         for (std::pair<std::string, std::string> data : http.data())
-        {
             *_out << "\t" << data.first << " = " << data.second << std::endl;
-        }
         *_out << std::endl;
     }
-    catch (std::out_of_range &e)
-    {
-    }
+    catch (std::out_of_range &e) { }
 }

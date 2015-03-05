@@ -33,9 +33,9 @@ public:
     ~PostSniffer(void) { }
 
 private:
-    void                            sniffKeys(const HTTP &http, IP::address_type ip);
-    void                            sniffHostname(const HTTP &http, IP::address_type ip);
-    void                            sniffAll(const HTTP &http, IP::address_type ip);
+    void                            sniffKeys(const HTTP &http, IP::address_type ip) const;
+    void                            sniffHostname(const HTTP &http, IP::address_type ip) const;
+    void                            sniffAll(const HTTP &http, IP::address_type ip) const;
 
 
 public:

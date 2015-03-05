@@ -18,6 +18,7 @@ Launcher::Launcher(const std::string &iface)
     _commands["startcookiesniffer"] = &Launcher::startCookieSniffer;
     _commands["startmitm"] = &Launcher::startMitm;
     _commands["starttcpkill"] = &Launcher::startTcpKill;
+    _commands["startsurfwatcher"] = &Launcher::startSurfWatcher;
 }
 
 Launcher::~Launcher(void)
@@ -266,7 +267,9 @@ void Launcher::startPostSniffer(std::istringstream &iss)
                     _modules[name] = new PostSniffer(_iface, fd, filename, hostname);
             }
             else if (type == "all")     // If Type ALL
+            {
                 _modules[name] = new PostSniffer(_iface, fd, filename);
+            }
             else
             {
                 _rep << "Bad parameters." << std::endl << PostSniffer::help() << std::endl;
@@ -285,30 +288,60 @@ void Launcher::startCookieSniffer(std::istringstream &iss)
     std::map<std::string, IModule*>::iterator   it;
     std::string                                 name;
     std::string                                 filename;
-    std::string                                 key;
-    std::vector<std::string>                    vKeys;
+    std::string                                 type;
 
     iss >> name;
+    iss >> type;
     iss >> filename;
-    iss >> key;
     if (!name.length())
         help(iss);
-    else if (!filename.length() || !key.length())
+    else if (!filename.length() || !type.length())
         _rep << "Bad parameters." << std::endl << CookieSniffer::help() << std::endl;
     else
     {
-        // Push first key and then other keys (key = cookie name)
-        vKeys.push_back(key);
-        while (iss >> key)
-            vKeys.push_back(key);
-
         it = _modules.find(name);
         if (it == _modules.end())
         {
             std::ofstream    *fd = new std::ofstream();
 
             fd->open(filename);
-            _modules[name] = new CookieSniffer(_iface, fd, filename, vKeys);
+            if (type == "keys")
+            {
+                std::string                 key;
+                std::vector<std::string>    vKeys;
+
+                iss >> key;
+                if (!key.length())
+                    _rep << "Bad parameters." << std::endl << CookieSniffer::help() << std::endl;
+                else
+                {
+                    // Push first key and then other keys (key = cookie name)
+                    vKeys.push_back(key);
+                    while (iss >> key)
+                        vKeys.push_back(key);
+                    _modules[name] = new CookieSniffer(_iface, fd, filename, vKeys);
+                }
+
+            }
+            else if (type == "host")
+            {
+                std::string                 hostname;
+
+                iss >> hostname;
+                if (!hostname.length())
+                    _rep << "Bad parameters." << std::endl << CookieSniffer::help() << std::endl;
+                else
+                    _modules[name] = new CookieSniffer(_iface, fd, filename, hostname);
+            }
+            else if (type == "all")
+            {
+                _modules[name] = new CookieSniffer(_iface, fd, filename);
+            }
+            else
+            {
+                _rep << "Bad parameters." << std::endl << CookieSniffer::help() << std::endl;
+                return ;
+            }
             _modules[name]->start();
             _rep << "CookieSniffer started";
         }
@@ -380,6 +413,65 @@ void Launcher::startTcpKill(std::istringstream &iss)
             else
                 _modules[name] = new TcpKill(_iface, &_rep, dstIp, srcIp, port);
             _modules[name]->start();
+        }
+        else
+            _rep << "Module " << name << " already exist !";
+    }
+}
+
+void Launcher::startSurfWatcher(std::istringstream &iss)
+{
+    std::map<std::string, IModule*>::iterator   it;
+    std::string                                 name;
+    std::string                                 filename;
+    std::string                                 type;
+
+    iss >> name;
+    iss >> type;
+    iss >> filename;
+    if (!name.length())
+        help(iss);
+    else if (!filename.length() || !type.length())
+        _rep << "Bad parameters." << std::endl << SurfWatcher::help() << std::endl;
+    else
+    {
+        it = _modules.find(name);
+        if (it == _modules.end())
+        {
+            std::ofstream       *fd = new std::ofstream();
+
+            fd->open(filename);
+            if (type == "all")
+            {
+                _modules[name] = new SurfWatcher(_iface, fd, filename);
+            }
+            else if (type == "ip")
+            {
+                std::string     ip;
+
+                iss >> ip;
+                if (!ip.length())
+                    _rep << "Bad parameters." << std::endl << SurfWatcher::help() << std::endl;
+                else
+                    _modules[name] = new SurfWatcher(_iface, fd, filename, IPv4Address(ip));
+            }
+            else if (type == "host")
+            {
+                std::string     hostname;
+
+                iss >> hostname;
+                if (!hostname.length())
+                    _rep << "Bad parameters." << std::endl << SurfWatcher::help() << std::endl;
+                else
+                    _modules[name] = new SurfWatcher(_iface, fd, filename, hostname);
+            }
+            else
+            {
+                _rep << "Bad parameters." << std::endl << SurfWatcher::help() << std::endl;
+                return ;
+            }
+            _modules[name]->start();
+            _rep << "SurfWatcher started";
         }
         else
             _rep << "Module " << name << " already exist !";

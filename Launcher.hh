@@ -9,6 +9,8 @@
 #include "CookieSniffer.hh"
 #include "Mitm.hh"
 #include "TcpKill.hh"
+#include "SurfWatcher.hh"
+
 
 class Launcher
 {
@@ -51,6 +53,7 @@ public:
     void                            startCookieSniffer(std::istringstream &iss);
     void                            startMitm(std::istringstream &iss);
     void                            startTcpKill(std::istringstream &iss);
+    void                            startSurfWatcher(std::istringstream &iss);
 
 private:
     void                            stopModules(void);
