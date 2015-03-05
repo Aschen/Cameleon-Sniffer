@@ -6,7 +6,7 @@ I make this project on my free time to improve my understanding of networks and 
 I'm not responsible of what you do with this software. Use it only for testing purpose on your local network.
 
 
-## How it work
+## How it work
 
 
 There is a programm running in background (cameleon-daemon) and a programm to send command to the daemon (cameleon).
@@ -119,8 +119,20 @@ Or only request who contains the specified keys.
 
 Capture the specified cookies.
 
+You can capture all cookies.
+
 ```
-> cameleon start cookiesniffer cookies /path/to/file/cookies.txt session_id __utm 
+> cameleon start cookiesniffer allcookies all /path/to/file/cookies.txt
+```
+
+Or only cookies to a specific hostname.
+```
+> cameleon start cookiesniffer hostcookies host /path/to/file/cookies.txt yoursite.fr
+```
+
+Or only cookies who match specified keys.
+```
+> cameleon start cookiesniffer keyscookies keys /path/to/file/cookies.txt _session __utm
 ```
 
 ### TcpKill
@@ -148,5 +160,22 @@ Kill all http connection from 192.168.1.2
 > cameleon start tcpkill 0.0.0.0 192.168.1.2 80
 ```
 
+### SurfWatcher
 
+Watch visited urls.
+
+You can watch all urls visited.
+```
+> cameleon start surfwatcher allurl all /path/to/file/url.txt
+```
+
+Or only urls visited by a specific ip.
+```
+> cameleon start surfwatcher fromip ip /path/to/file/url.txt 192.168.1.2
+```
+
+Or only visits to a specific host.
+```
+> cameleon start surfwatcher urlhost host /path/to/file/url.txt yoursite.fr
+```
 
