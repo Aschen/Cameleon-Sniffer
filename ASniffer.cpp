@@ -1,7 +1,7 @@
 #include "ASniffer.hh"
 
 ASniffer::ASniffer(const NetworkInterface &iface, const std::string &name, const std::string &filter, std::ostream *out)
-    : _sniffer(_iface.name(), Sniffer::PROMISC, filter), _iface(iface), _name(name), _out(out)
+    : _sniffer(iface.name(), Sniffer::PROMISC, filter), _iface(iface), _name(name), _out(out)
 {
 }
 

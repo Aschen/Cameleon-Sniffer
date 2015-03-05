@@ -3,7 +3,7 @@
 Daemon::Daemon(const std::string &path, const std::string &iface)
     : _local(path, DomainSocket::SERVER), _run(false), _launcher(iface)
 {
-    std::string     chmod("chmod 777 " + path);
+    std::string     chmod("chmod 766 " + path);
 
     system(chmod.c_str());
 }
@@ -11,9 +11,7 @@ Daemon::Daemon(const std::string &path, const std::string &iface)
 Daemon::~Daemon(void)
 {
     for (DomainSocket* client : _clients)
-    {
         delete client;
-    }
 }
 
 void Daemon::start(void)
@@ -21,14 +19,8 @@ void Daemon::start(void)
     _run = true;
     while (_run)
     {
-        try
-        {
-            handleSockets();
-        }
-        catch (std::runtime_error &e)
-        {
-
-        }
+        try { handleSockets(); }
+        catch (std::runtime_error &e) { _run = false; }
     }
 }
 
@@ -92,9 +84,7 @@ void Daemon::eventTerminal(void)
 
     std::cin >> msg;
     if (msg == "exit")
-    {
         _run = false;
-    }
 }
 
 void Daemon::eventServer(void)
@@ -119,16 +109,10 @@ void Daemon::eventClients(fd_set *readfds, fd_set *writefds)
     for (std::vector<DomainSocket*>::iterator it = _clients.begin(); it < _clients.end(); ++it)
     {
         // Something to write on client socket
-        if (FD_ISSET((*it)->fd(), writefds))
+        if (FD_ISSET((*it)->fd(), writefds) && (*it)->somethingToSend())
         {
-            try
-            {
-                (*it)->sendMsg();
-            }
-            catch (std::runtime_error &e)
-            {
-                // No message to send
-            }
+            try { (*it)->sendMsg(); }
+            catch (std::runtime_error &e) { }
         }
         // Something to read on client socket
         if (FD_ISSET((*it)->fd(), readfds))

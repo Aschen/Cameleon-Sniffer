@@ -6,7 +6,6 @@
 class IModule
 {
 public:
-    // Ugly as fuck
     virtual ~IModule(void) { }
     virtual void                start(void) = 0;
     virtual void                stop(void) = 0;

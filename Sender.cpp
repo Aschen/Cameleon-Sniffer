@@ -17,7 +17,8 @@ void Sender::start(void)
         _run = true;
         while (_run)
         {
-            handleSockets();
+            try { handleSockets(); }
+            catch (std::runtime_error &e) { _run = false; }
         }
     }
 }
@@ -91,14 +92,8 @@ void Sender::eventSocketWrite(void)
 {
     if (_local.somethingToSend())
     {
-        try
-        {
-            _local.sendMsg();
-        }
-        catch (std::runtime_error &e)
-        {
-            std::cout << e.what() << std::endl;
-        }
+        try { _local.sendMsg(); }
+        catch (std::runtime_error &e) { std::cout << e.what() << std::endl; }
     }
 }
 

@@ -6,7 +6,7 @@
 ## 
 
 
-CXX		=	clang++
+CXX		=	g++
 
 CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -g3
 

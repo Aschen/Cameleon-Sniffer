@@ -5,19 +5,19 @@ Launcher::Launcher(const std::string &iface)
 {
     // Commands
     _commands["help"] = &Launcher::help;
-    _commands["exit"] = &Launcher::exit;
+    _commands["quit"] = &Launcher::quit;
     _commands["start"] = &Launcher::start;
     _commands["stop"] = &Launcher::stop;
     _commands["list"] = &Launcher::list;
     _commands["ps"] = &Launcher::ps;
 
     // Modules
-    _commands["dnsspoof"] = &Launcher::startDnsSpoof;
-    _commands["dnsdump"] = &Launcher::startDnsDump;
-    _commands["postsniffer"] = &Launcher::startPostSniffer;
-    _commands["cookiesniffer"] = &Launcher::startCookieSniffer;
-    _commands["mitm"] = &Launcher::startMitm;
-    _commands["tcpkill"] = &Launcher::startTcpKill;
+    _commands["startdnsspoof"] = &Launcher::startDnsSpoof;
+    _commands["startdnsdump"] = &Launcher::startDnsDump;
+    _commands["startpostsniffer"] = &Launcher::startPostSniffer;
+    _commands["startcookiesniffer"] = &Launcher::startCookieSniffer;
+    _commands["startmitm"] = &Launcher::startMitm;
+    _commands["starttcpkill"] = &Launcher::startTcpKill;
 }
 
 Launcher::~Launcher(void)
@@ -55,7 +55,12 @@ const std::string Launcher::readCmdLine(const std::string &line)
 void Launcher::list(std::istringstream &iss)
 {
     (void)iss;
-    _rep << "Availables modules : mitm dnsspoof dnsdump postsniffer cookiesniffer tcpkill";
+    _rep << "Availables modules : ";
+    for (std::pair<std::string, Command> cmd : _commands)
+    {
+        try { _rep << cmd.first.substr(5) << " "; }
+        catch(std::out_of_range &e) { }
+    }
 }
 
 void Launcher::help(std::istringstream &iss)
@@ -67,10 +72,10 @@ void Launcher::help(std::istringstream &iss)
     _rep << "\tlist : Display availables modules" << std::endl;
     _rep << "\tps : Display started modules" << std::endl;
     _rep << "\thelp : Display this help" << std::endl;
-    _rep << "\tquit : Exit";
+    _rep << "\tquit : Stop the daemon";
 }
 
-void Launcher::exit(std::istringstream &iss)
+void Launcher::quit(std::istringstream &iss)
 {
     (void)iss;
     stopModules();
@@ -87,7 +92,7 @@ void Launcher::start(std::istringstream &iss)
     iss >> module;
     if (module.length())
     {
-        it = _commands.find(module);
+        it = _commands.find("start" + module);
         if (it == _commands.end())
         {
             list(iss);
@@ -228,7 +233,7 @@ void Launcher::startPostSniffer(std::istringstream &iss)
     else
     {
         it = _modules.find(name);
-        if (it != _modules.end())
+        if (it == _modules.end())
         {
             std::ofstream    *fd = new std::ofstream();
 

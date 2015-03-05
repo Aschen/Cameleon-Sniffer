@@ -38,7 +38,7 @@ public:
 
 public:
     void                            help(std::istringstream &iss);
-    void                            exit(std::istringstream &iss);
+    void                            quit(std::istringstream &iss);
     void                            start(std::istringstream &iss);
     void                            stop(std::istringstream &iss);
     void                            list(std::istringstream &iss);
