@@ -9,7 +9,7 @@ I'm not responsible of what you do with this software. Use it only for testing p
 ## How it work
 
 
-There is a programm running in background (cameleon-daemon) and a programm to send command to the daemon (cameleon).
+There is a program running in background (cameleon-daemon) and a program to send command to the daemon (cameleon).
 
 I was inspired by Docker for there daemon system. The client communicate with the daemon via Unix domain socket.
 
@@ -33,7 +33,7 @@ This will make the programm then create a directory /etc/cameleon for the unix s
 
 ## Usage
 
-  * First run the daemon root privilege
+  * First run the daemon with root privilege
   ```
   sudo cameleon-daemon
   ```
