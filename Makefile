@@ -8,26 +8,26 @@
 
 CXX		=	g++
 
-CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -g3
+CXXFLAGS	=	-Wall -W -Wextra -pedantic -std=c++11 -Icore/include -Imodules/include -g3
 
-SRCS_DAEMON	=	Launcher.cpp \
-			DomainSocket.cpp \
-			Daemon.cpp \
-			Http.cpp \
-			Addresses.cpp\
-			ASender.cpp \
-			ASniffer.cpp \
-			DnsSpoof.cpp \
-			DnsDump.cpp \
-			PostSniffer.cpp \
-			CookieSniffer.cpp \
-			Mitm.cpp \
-			TcpKill.cpp \
-			SurfWatcher.cpp \
-			main.cpp
+SRCS_DAEMON	=	core/Launcher.cpp \
+			core/DomainSocket.cpp \
+			core/Daemon.cpp \
+			core/Http.cpp \
+			core/Addresses.cpp\
+			modules/ASender.cpp \
+			modules/ASniffer.cpp \
+			modules/DnsSpoof.cpp \
+			modules/DnsDump.cpp \
+			modules/PostSniffer.cpp \
+			modules/CookieSniffer.cpp \
+			modules/Mitm.cpp \
+			modules/TcpKill.cpp \
+			modules/SurfWatcher.cpp \
+			core/main.cpp
 
-SRCS_SENDER	=	DomainSocket.cpp \
-			Sender.cpp
+SRCS_SENDER	=	core/DomainSocket.cpp \
+			core/Sender.cpp
 
 OBJS_DAEMON	=	$(SRCS_DAEMON:.cpp=.o)
 

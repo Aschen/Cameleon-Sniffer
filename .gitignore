@@ -1,0 +1,14 @@
+# qt creator files
+*.config
+*.creator*
+*.includes
+*.files
+
+# bin files
+*.o
+cameleon
+cameleon-daemon
+
+# temp files
+*#*
+*~
