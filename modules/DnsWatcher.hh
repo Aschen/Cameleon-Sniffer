@@ -30,12 +30,12 @@ public:
     virtual ~DnsWatcher();
 
     // AModule interface
-public:
-    void            start();
-    void            stop();
-
 protected:
     bool            handler(Tins::PDU &pdu);
+
+public slots:
+    void            start();
+    void            stop();
 };
 
 #endif // DNSWATCHER_HH

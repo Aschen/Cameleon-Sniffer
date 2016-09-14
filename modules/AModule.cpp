@@ -1,9 +1,14 @@
 #include "AModule.hh"
 
+AModule::AModule()
+{
+}
+
 AModule::AModule(const QString & type, const QString & name)
     : m_type(type),
       m_name(name)
 {
+    this->setObjectName(name + " (" + type + ")");
 }
 
 AModule::~AModule()
@@ -20,8 +25,9 @@ const QString &AModule::name() const
     return m_name;
 }
 
-void AModule::hello()
+bool AModule::handler(Tins::PDU &pdu)
 {
-    qDebug() << "This is broken";
-}
+    Q_UNUSED(pdu)
 
+    return true;
+}

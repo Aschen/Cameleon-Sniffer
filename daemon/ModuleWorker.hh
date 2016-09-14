@@ -1,32 +1,22 @@
-#ifndef MODULEWORKER_H
-# define MODULEWORKER_H
-
-# include <QMutexLocker>
-# include <QMap>
-# include <QSharedPointer>
+#ifndef MODULEWORKER_HH
+# define MODULEWORKER_HH
 
 # include "AbstractWorker.hpp"
 # include "modules/AModule.hh"
-# include "Debug.hh"
 
-class ModuleWorker : public AbstractWorker<QObject>
+class ModuleWorker : public AbstractWorker<AModule>
 {
-    Q_OBJECT
-
 private:
-    QMutex                                  m_mutex;
-    QMap<QString, QSharedPointer<AModule>>  m_modules;
+    AModule*        m_module;
 
 public:
     ModuleWorker();
 
-    bool            addModule(AModule * module);
-    bool            removeModule(const QString & name);
-    bool            containsModule(const QString & name);
+    void            setModule(AModule * module);
 
 public slots:
     void            start() Q_DECL_OVERRIDE;
     void            stop() Q_DECL_OVERRIDE;
 };
 
-#endif // MODULEWORKER_H
+#endif // MODULEWORKER_HH

@@ -50,26 +50,20 @@ OBJECTS_DIR   = tmp/
 
 SOURCES       = main.cpp \
 		network/BaseSocket.cpp \
-		daemon/ModuleWorker.cpp \
 		modules/AModule.cpp \
-		modules/Dummy.cpp \
 		daemon/Core.cpp \
-		daemon/ModuleWorkerPool.cpp \
 		modules/DnsWatcher.cpp \
-		modules/ASniffer.cpp tmp/moc_BaseSocket.cpp \
-		tmp/moc_ModuleWorker.cpp \
+		daemon/ModuleWorker.cpp \
+		daemon/ModuleWorkerPool.cpp tmp/moc_BaseSocket.cpp \
 		tmp/moc_AModule.cpp
 OBJECTS       = tmp/main.o \
 		tmp/BaseSocket.o \
-		tmp/ModuleWorker.o \
 		tmp/AModule.o \
-		tmp/Dummy.o \
 		tmp/Core.o \
-		tmp/ModuleWorkerPool.o \
 		tmp/DnsWatcher.o \
-		tmp/ASniffer.o \
+		tmp/ModuleWorker.o \
+		tmp/ModuleWorkerPool.o \
 		tmp/moc_BaseSocket.o \
-		tmp/moc_ModuleWorker.o \
 		tmp/moc_AModule.o
 DIST          = ../../apps/QT/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../apps/QT/5.5/gcc_64/mkspecs/common/unix.conf \
@@ -207,24 +201,20 @@ DIST          = ../../apps/QT/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../apps/QT/5.5/gcc_64/mkspecs/features/lex.prf \
 		Cameleon-sniffer.pro Debug.hh \
 		network/BaseSocket.hh \
+		modules/AModule.hh \
+		daemon/Core.hh \
+		modules/DnsWatcher.hh \
+		modules/ModuleFactory.hpp \
 		daemon/AbstractWorker.hpp \
 		daemon/WorkerFactory.hpp \
 		daemon/ModuleWorker.hh \
-		modules/AModule.hh \
-		modules/Dummy.hh \
-		daemon/Core.hh \
-		daemon/ModuleWorkerPool.hh \
-		modules/DnsWatcher.hh \
-		modules/ModuleFactory.hpp \
-		modules/ASniffer.hh main.cpp \
+		daemon/ModuleWorkerPool.hh main.cpp \
 		network/BaseSocket.cpp \
-		daemon/ModuleWorker.cpp \
 		modules/AModule.cpp \
-		modules/Dummy.cpp \
 		daemon/Core.cpp \
-		daemon/ModuleWorkerPool.cpp \
 		modules/DnsWatcher.cpp \
-		modules/ASniffer.cpp
+		daemon/ModuleWorker.cpp \
+		daemon/ModuleWorkerPool.cpp
 QMAKE_TARGET  = cameleon-daemon
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = cameleon-daemon
@@ -546,8 +536,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents Debug.hh network/BaseSocket.hh daemon/AbstractWorker.hpp daemon/WorkerFactory.hpp daemon/ModuleWorker.hh modules/AModule.hh modules/Dummy.hh daemon/Core.hh daemon/ModuleWorkerPool.hh modules/DnsWatcher.hh modules/ModuleFactory.hpp modules/ASniffer.hh $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp network/BaseSocket.cpp daemon/ModuleWorker.cpp modules/AModule.cpp modules/Dummy.cpp daemon/Core.cpp daemon/ModuleWorkerPool.cpp modules/DnsWatcher.cpp modules/ASniffer.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Debug.hh network/BaseSocket.hh modules/AModule.hh daemon/Core.hh modules/DnsWatcher.hh modules/ModuleFactory.hpp daemon/AbstractWorker.hpp daemon/WorkerFactory.hpp daemon/ModuleWorker.hh daemon/ModuleWorkerPool.hh $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp network/BaseSocket.cpp modules/AModule.cpp daemon/Core.cpp modules/DnsWatcher.cpp daemon/ModuleWorker.cpp daemon/ModuleWorkerPool.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -570,9 +560,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: tmp/moc_BaseSocket.cpp tmp/moc_ModuleWorker.cpp tmp/moc_AModule.cpp
+compiler_moc_header_make_all: tmp/moc_BaseSocket.cpp tmp/moc_AModule.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) tmp/moc_BaseSocket.cpp tmp/moc_ModuleWorker.cpp tmp/moc_AModule.cpp
+	-$(DEL_FILE) tmp/moc_BaseSocket.cpp tmp/moc_AModule.cpp
 tmp/moc_BaseSocket.cpp: ../../apps/QT/5.5/gcc_64/include/QtNetwork/QTcpSocket \
 		../../apps/QT/5.5/gcc_64/include/QtNetwork/qtcpsocket.h \
 		../../apps/QT/5.5/gcc_64/include/QtNetwork/qabstractsocket.h \
@@ -647,85 +637,6 @@ tmp/moc_BaseSocket.cpp: ../../apps/QT/5.5/gcc_64/include/QtNetwork/QTcpSocket \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QByteArray \
 		network/BaseSocket.hh
 	/home/aschen/data/apps/QT/5.5/gcc_64/bin/moc $(DEFINES) -I/home/aschen/data/apps/QT/5.5/gcc_64/mkspecs/linux-g++ -I/home/aschen/data/projets/Cameleon-Sniffer -I/home/aschen/data/apps/QT/5.5/gcc_64/include -I/home/aschen/data/apps/QT/5.5/gcc_64/include/QtNetwork -I/home/aschen/data/apps/QT/5.5/gcc_64/include/QtTest -I/home/aschen/data/apps/QT/5.5/gcc_64/include/QtCore network/BaseSocket.hh -o tmp/moc_BaseSocket.cpp
-
-tmp/moc_ModuleWorker.cpp: ../../apps/QT/5.5/gcc_64/include/QtCore/QMutexLocker \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmutex.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qglobal.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qconfig.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qfeatures.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsystemdetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qprocessordetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcompilerdetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtypeinfo.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtypetraits.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsysinfo.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlogging.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qflags.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbasicatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qgenericatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_cxx11.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_gcc.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_msvc.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv7.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv6.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv5.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_ia64.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_mips.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_x86.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_unix.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qglobalstatic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnumeric.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QMap \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qrefcount.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qarraydata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearraylist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qchar.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qregexp.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringmatcher.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcoreevent.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qscopedpointer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmetatype.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvarlengtharray.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qisenum.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QSharedPointer \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		daemon/AbstractWorker.hpp \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
-		modules/AModule.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
-		Debug.hh \
-		daemon/ModuleWorker.hh
-	/home/aschen/data/apps/QT/5.5/gcc_64/bin/moc $(DEFINES) -I/home/aschen/data/apps/QT/5.5/gcc_64/mkspecs/linux-g++ -I/home/aschen/data/projets/Cameleon-Sniffer -I/home/aschen/data/apps/QT/5.5/gcc_64/include -I/home/aschen/data/apps/QT/5.5/gcc_64/include/QtNetwork -I/home/aschen/data/apps/QT/5.5/gcc_64/include/QtTest -I/home/aschen/data/apps/QT/5.5/gcc_64/include/QtCore daemon/ModuleWorker.hh -o tmp/moc_ModuleWorker.cpp
 
 tmp/moc_AModule.cpp: ../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
@@ -867,13 +778,6 @@ tmp/main.o: main.cpp ../../apps/QT/5.5/gcc_64/include/QtCore/QCoreApplication \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qeventloop.h \
 		daemon/Core.hh \
 		daemon/ModuleWorkerPool.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QVector \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h \
-		daemon/ModuleWorker.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QMutexLocker \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QMap \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
@@ -884,29 +788,28 @@ tmp/main.o: main.cpp ../../apps/QT/5.5/gcc_64/include/QtCore/QCoreApplication \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QSharedPointer \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		daemon/AbstractWorker.hpp \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
 		modules/AModule.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
-		Debug.hh \
-		modules/Dummy.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QTimer \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtimer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbasictimer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QStringList \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
+		daemon/ModuleWorker.hh \
+		daemon/AbstractWorker.hpp \
 		modules/ModuleFactory.hpp \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QHash \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QStringList \
 		modules/DnsWatcher.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QFile \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qfile.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qfiledevice.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QTextStream
+		../../apps/QT/5.5/gcc_64/include/QtCore/QTextStream \
+		Debug.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/main.o main.cpp
 
 tmp/BaseSocket.o: network/BaseSocket.cpp network/BaseSocket.hh \
@@ -986,85 +889,6 @@ tmp/BaseSocket.o: network/BaseSocket.cpp network/BaseSocket.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/BaseSocket.o network/BaseSocket.cpp
 
-tmp/ModuleWorker.o: daemon/ModuleWorker.cpp daemon/ModuleWorker.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QMutexLocker \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmutex.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qglobal.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qconfig.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qfeatures.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsystemdetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qprocessordetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcompilerdetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtypeinfo.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtypetraits.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsysinfo.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlogging.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qflags.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbasicatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qgenericatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_cxx11.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_gcc.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_msvc.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv7.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv6.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv5.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_ia64.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_mips.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_x86.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_unix.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qglobalstatic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnumeric.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QMap \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qrefcount.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qarraydata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearraylist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qchar.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qregexp.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringmatcher.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcoreevent.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qscopedpointer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmetatype.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvarlengtharray.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qisenum.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QSharedPointer \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		daemon/AbstractWorker.hpp \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
-		modules/AModule.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
-		Debug.hh
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/ModuleWorker.o daemon/ModuleWorker.cpp
-
 tmp/AModule.o: modules/AModule.cpp modules/AModule.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
@@ -1136,91 +960,11 @@ tmp/AModule.o: modules/AModule.cpp modules/AModule.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/AModule.o modules/AModule.cpp
 
-tmp/Dummy.o: modules/Dummy.cpp modules/Dummy.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QTimer \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtimer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qglobal.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qconfig.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qfeatures.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsystemdetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qprocessordetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcompilerdetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtypeinfo.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtypetraits.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsysinfo.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlogging.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qflags.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbasicatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qgenericatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_cxx11.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_gcc.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_msvc.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv7.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv6.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv5.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_ia64.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_mips.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_x86.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_unix.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qglobalstatic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmutex.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnumeric.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbasictimer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qchar.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qrefcount.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qarraydata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearraylist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qregexp.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringmatcher.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcoreevent.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qscopedpointer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmetatype.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvarlengtharray.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qisenum.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QStringList \
-		modules/AModule.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QTextStream \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h \
-		Debug.hh
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/Dummy.o modules/Dummy.cpp
-
 tmp/Core.o: daemon/Core.cpp daemon/Core.hh \
 		daemon/ModuleWorkerPool.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QVector \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QMap \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qglobal.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qconfig.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qfeatures.h \
@@ -1249,91 +993,8 @@ tmp/Core.o: daemon/Core.cpp daemon/Core.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qglobalstatic.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qmutex.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qnumeric.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qrefcount.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qarraydata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearraylist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qchar.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qregexp.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringmatcher.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcoreevent.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qscopedpointer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmetatype.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvarlengtharray.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qisenum.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject_impl.h \
-		daemon/ModuleWorker.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QMutexLocker \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QMap \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QSharedPointer \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		daemon/AbstractWorker.hpp \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
-		modules/AModule.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
-		Debug.hh
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/Core.o daemon/Core.cpp
-
-tmp/ModuleWorkerPool.o: daemon/ModuleWorkerPool.cpp daemon/ModuleWorkerPool.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QVector \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qglobal.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qconfig.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qfeatures.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsystemdetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qprocessordetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcompilerdetection.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtypeinfo.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtypetraits.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qsysinfo.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlogging.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qflags.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbasicatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qgenericatomic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_cxx11.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_gcc.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_msvc.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv7.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv6.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv5.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_ia64.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_mips.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_x86.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_unix.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qglobalstatic.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmutex.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnumeric.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qrefcount.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qarraydata.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearraylist.h \
@@ -1345,9 +1006,11 @@ tmp/ModuleWorkerPool.o: daemon/ModuleWorkerPool.cpp daemon/ModuleWorkerPool.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qstringlist.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qregexp.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qstringmatcher.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
@@ -1358,31 +1021,26 @@ tmp/ModuleWorkerPool.o: daemon/ModuleWorkerPool.cpp daemon/ModuleWorkerPool.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qisenum.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qobject_impl.h \
-		daemon/ModuleWorker.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QMutexLocker \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QMap \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QSharedPointer \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		daemon/AbstractWorker.hpp \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
 		modules/AModule.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
+		daemon/ModuleWorker.hh \
+		daemon/AbstractWorker.hpp \
 		Debug.hh \
-		daemon/WorkerFactory.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/ModuleWorkerPool.o daemon/ModuleWorkerPool.cpp
+		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/Core.o daemon/Core.cpp
 
 tmp/DnsWatcher.o: modules/DnsWatcher.cpp modules/DnsWatcher.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QFile \
@@ -1458,15 +1116,16 @@ tmp/DnsWatcher.o: modules/DnsWatcher.cpp modules/DnsWatcher.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h \
 		Debug.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/DnsWatcher.o modules/DnsWatcher.cpp
 
-tmp/ASniffer.o: modules/ASniffer.cpp modules/ASniffer.hh \
-		modules/AModule.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
+tmp/ModuleWorker.o: daemon/ModuleWorker.cpp daemon/ModuleWorker.hh \
+		daemon/AbstractWorker.hpp \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qglobal.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qconfig.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qfeatures.h \
@@ -1495,20 +1154,27 @@ tmp/ASniffer.o: modules/ASniffer.cpp modules/ASniffer.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qglobalstatic.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qmutex.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qnumeric.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qchar.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qrefcount.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qarraydata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearraylist.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qstringlist.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qregexp.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qstringmatcher.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcoreevent.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qscopedpointer.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qmetatype.h \
@@ -1516,28 +1182,102 @@ tmp/ASniffer.o: modules/ASniffer.cpp modules/ASniffer.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qisenum.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qobject_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/ASniffer.o modules/ASniffer.cpp
+		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
+		modules/AModule.hh \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QString
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/ModuleWorker.o daemon/ModuleWorker.cpp
+
+tmp/ModuleWorkerPool.o: daemon/ModuleWorkerPool.cpp daemon/ModuleWorkerPool.hh \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QMap \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qmap.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qglobal.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qconfig.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qfeatures.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qsystemdetection.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qprocessordetection.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qtypeinfo.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qtypetraits.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qsysinfo.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qlogging.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qflags.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qbasicatomic.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qgenericatomic.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_mips.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_x86.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qatomic_unix.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qglobalstatic.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qmutex.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qnumeric.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qrefcount.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qarraydata.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearraylist.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qchar.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qstringlist.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qregexp.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qstringmatcher.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qpair.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qdebug.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qhash.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qtextstream.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qiodevice.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qcoreevent.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qscopedpointer.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qmetatype.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qisenum.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobject_impl.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QSharedPointer \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		modules/AModule.hh \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
+		daemon/ModuleWorker.hh \
+		daemon/AbstractWorker.hpp \
+		daemon/WorkerFactory.hpp \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h \
+		Debug.hh
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/ModuleWorkerPool.o daemon/ModuleWorkerPool.cpp
 
 tmp/moc_BaseSocket.o: tmp/moc_BaseSocket.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/moc_BaseSocket.o tmp/moc_BaseSocket.cpp
-
-tmp/moc_ModuleWorker.o: tmp/moc_ModuleWorker.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/moc_ModuleWorker.o tmp/moc_ModuleWorker.cpp
 
 tmp/moc_AModule.o: tmp/moc_AModule.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/moc_AModule.o tmp/moc_AModule.cpp

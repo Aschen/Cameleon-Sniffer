@@ -16,11 +16,11 @@ protected:
     const QString           m_name;
 
 public:
+    AModule();
     AModule(const QString & type, const QString & name);
     virtual ~AModule();
 
-public:
-
+public slots:
     virtual void            start() = 0;
     virtual void            stop() = 0;
 
@@ -28,10 +28,7 @@ public:
     const QString&          name() const;
 
 protected:
-    virtual bool            handler(Tins::PDU & pdu) = 0;
-
-private slots:
-    virtual void            hello();
+    virtual bool            handler(Tins::PDU & pdu);
 };
 
 #endif // AMODULE_HH

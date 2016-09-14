@@ -4,24 +4,25 @@
 # include <QThread>
 
 # include "AbstractWorker.hpp"
+# include "modules/AModule.hh"
 
 template < typename WorkerClass >
 class WorkerFactory
 {
 public:
-    static WorkerClass * create(QObject * parent, const QString & name = QString());
+    static WorkerClass * create(QObject * parent, AModule * module = nullptr);
     static void go(WorkerClass * worker);
 };
 
 template < class WorkerClass >
-WorkerClass * WorkerFactory < WorkerClass > ::create(QObject * parent, const QString & name)
+WorkerClass * WorkerFactory < WorkerClass > ::create(QObject * parent, AModule * module)
 {
     // Create the thread where the worker will live
     QThread * thread = new QThread(parent);
 
     // Set the worker name on its thread
-    if ( ! name.isEmpty())
-        thread->setObjectName(name);
+    if (module)
+        thread->setObjectName(module->objectName());
 
     // Create the worker
     WorkerClass * worker = new WorkerClass;
@@ -41,6 +42,9 @@ WorkerClass * WorkerFactory < WorkerClass > ::create(QObject * parent, const QSt
 
     // When the thread is started, call the worker abstract method start()
     worker->connect(thread, SIGNAL(started()), SLOT(start()));
+
+    // Set the module to the worker
+    worker->setModule(module);
 
     return worker;
 }

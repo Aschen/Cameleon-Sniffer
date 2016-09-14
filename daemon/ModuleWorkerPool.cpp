@@ -1,45 +1,41 @@
 #include "ModuleWorkerPool.hh"
 
 #include "WorkerFactory.hpp"
+#include "Debug.hh"
 
-ModuleWorkerPool::ModuleWorkerPool(quint32 size)
-    : m_size(size),
-      m_index(0),
-      m_workers(m_size)
+ModuleWorkerPool::ModuleWorkerPool()
 {
-    // Create and start workers
-    for (quint32 i = 0; i < m_size; ++i)
+
+}
+
+bool ModuleWorkerPool::addModule(AModule * module)
+{
+    if (m_workers.contains(module->name()))
     {
-        ModuleWorker*   worker =
-                WorkerFactory<ModuleWorker>::create(nullptr, QString("Module Worker %1").arg(i + 1));
-
-        m_workers[i] = worker;
-
-        WorkerFactory<ModuleWorker>::go(worker);
+        DEBUG("ModuleWorkerPool::addModule() : Module" << module->name() << "already exist", true);
+        return false;
     }
+
+    ModuleWorker*       worker = WorkerFactory<ModuleWorker>::create(nullptr, module);
+
+    m_workers[module->name()] = QSharedPointer<ModuleWorker>(worker);
+
+    WorkerFactory<ModuleWorker>::go(worker);
+
+    return true;
 }
 
-ModuleWorkerPool::~ModuleWorkerPool()
+bool ModuleWorkerPool::removeModule(const QString & name)
 {
-    for (ModuleWorker* worker : m_workers)
+    if ( ! m_workers.contains(name))
     {
-        worker->deleteLater();
+        DEBUG("ModuleWorkerPool::addModule() : Module" << name << "does not exist", true);
+        return false;
     }
+
+    m_workers[name]->stop();
+    m_workers.remove(name);
+
+    return true;
 }
 
-ModuleWorker *ModuleWorkerPool::get()
-{
-    ModuleWorker*   worker = m_workers[m_index];
-
-    m_index++;
-
-    if (m_index >= m_size)
-        m_index = 0;
-
-    return worker;
-}
-
-const QVector<ModuleWorker *> &ModuleWorkerPool::workers() const
-{
-    return m_workers;
-}

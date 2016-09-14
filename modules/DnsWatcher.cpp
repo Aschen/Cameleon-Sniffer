@@ -54,23 +54,6 @@ DnsWatcher::~DnsWatcher()
     DEBUG("DnsWatcher::~DnsWatcher()", true);
 }
 
-void DnsWatcher::start()
-{
-    if ( ! m_logFile.open(QIODevice::WriteOnly))
-    {
-        DEBUG("DnsWatcher::start() : Can't open" << m_logFile.fileName(), true);
-        return;
-    }
-    DEBUG(this->thread()->objectName(), true);
-    m_sniffer.sniff_loop(Tins::make_sniffer_handler(this, &DnsWatcher::handler));
-    DEBUG(this->thread()->objectName(), true);
-}
-
-void DnsWatcher::stop()
-{
-    DEBUG("DnsWatcher::DnsWatcher() : stop", true);
-}
-
 bool DnsWatcher::handler(Tins::PDU & pdu)
 {
     // EthernetII / IP / UDP / RawPDU
@@ -78,7 +61,7 @@ bool DnsWatcher::handler(Tins::PDU & pdu)
     Tins::IP ip = eth.rfind_pdu<Tins::IP>();
     Tins::UDP udp = ip.rfind_pdu<Tins::UDP>();
     Tins::DNS dns = udp.rfind_pdu<Tins::RawPDU>().to<Tins::DNS>();
-    DEBUG("PACKET", true);
+
     // Is it a DNS query?
     if(dns.type() == Tins::DNS::QUERY)
     {
@@ -95,3 +78,22 @@ bool DnsWatcher::handler(Tins::PDU & pdu)
     return true;
 }
 
+void DnsWatcher::start()
+{
+    DEBUG("DnsWatcher::start() : Name:" << m_name, true);
+    if ( ! m_logFile.open(QIODevice::ReadWrite))
+    {
+        DEBUG("DnsWatcher::start() : Can't open file", true);
+        return;
+    }
+
+    m_sniffer.sniff_loop(Tins::make_sniffer_handler(this, &DnsWatcher::handler));
+
+    DEBUG("DnsWatcher::start() : after sniff_loop()" << m_name, true);
+}
+
+void DnsWatcher::stop()
+{
+    DEBUG("DnsWatcher::stop()", true);
+    m_sniffer.stop_sniff();
+}

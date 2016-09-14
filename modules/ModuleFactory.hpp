@@ -5,7 +5,6 @@
 # include <QStringList>
 
 # include "AModule.hh"
-# include "Dummy.hh"
 # include "DnsWatcher.hh"
 # include "Debug.hh"
 
@@ -35,12 +34,7 @@ AModule * ModuleFactory::create(const QStringList & args)
     const QString&  moduleName = args[1];
     QStringList     moduleArgs = args.mid(2);
 
-    if (moduleType == "Dummy")
-    {
-        module = Dummy::create(moduleName, moduleArgs);
-        usage = Dummy::help();
-    }
-    else if (moduleType == "DnsWatcher")
+    if (moduleType == "DnsWatcher")
     {
         module = DnsWatcher::create(moduleName, moduleArgs);
         usage = DnsWatcher::help();

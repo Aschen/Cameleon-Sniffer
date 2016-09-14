@@ -1,12 +1,12 @@
 #ifndef CORE_HH
 # define CORE_HH
 
-# include "ModuleWorkerPool.hh"
+# include "daemon/ModuleWorkerPool.hh"
 
 class Core
 {
 private:
-    ModuleWorkerPool        m_workerPool;
+    ModuleWorkerPool              m_workerPool;
 
 public:
     Core();

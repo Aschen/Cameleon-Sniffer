@@ -1,26 +1,22 @@
 #ifndef MODULEWORKERPOOL_HH
 # define MODULEWORKERPOOL_HH
 
-# include <QVector>
-# include <QThread>
+# include <QMap>
+# include <QSharedPointer>
 
+# include "modules/AModule.hh"
 # include "ModuleWorker.hh"
 
 class ModuleWorkerPool
 {
 private:
-    quint32                         m_size;
-    quint32                         m_index;
-    QVector<ModuleWorker*>          m_workers;
+    QMap<QString, QSharedPointer<ModuleWorker>> m_workers;
 
 public:
-    ModuleWorkerPool(quint32 size = QThread::idealThreadCount() - 1);
-    ~ModuleWorkerPool();
+    ModuleWorkerPool();
 
-    ModuleWorker*                   get();
-    bool                            stopModule(const QString & name);
-
-    const QVector<ModuleWorker*>&   workers() const;
+    bool        addModule(AModule * module);
+    bool        removeModule(const QString & name);
 };
 
-#endif // MODULEWORKERPOOL_HH
+#endif // MODULEPOOL_HH

@@ -1,5 +1,5 @@
-#ifndef ABSTRACTWORKER_H
-# define ABSTRACTWORKER_H
+#ifndef ABSTRACTWORKER_HPP
+# define ABSTRACTWORKER_HPP
 
 # include <QDebug>
 
@@ -14,4 +14,4 @@ public slots:
     }
 };
 
-#endif // ABSTRACTWORKER_H
+#endif // ABSTRACTWORKER_HPP

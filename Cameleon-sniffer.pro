@@ -20,25 +20,21 @@ TEMPLATE = app
 SOURCES += \
     main.cpp \
     network/BaseSocket.cpp \
-    daemon/ModuleWorker.cpp \
     modules/AModule.cpp \
-    modules/Dummy.cpp \
     daemon/Core.cpp \
-    daemon/ModuleWorkerPool.cpp \
     modules/DnsWatcher.cpp \
-    modules/ASniffer.cpp
+    daemon/ModuleWorker.cpp \
+    daemon/ModuleWorkerPool.cpp
 
 HEADERS += \
     Debug.hh \
     network/BaseSocket.hh \
+    modules/AModule.hh \
+    daemon/Core.hh \
+    modules/DnsWatcher.hh \
+    modules/ModuleFactory.hpp \
     daemon/AbstractWorker.hpp \
     daemon/WorkerFactory.hpp \
     daemon/ModuleWorker.hh \
-    modules/AModule.hh \
-    modules/Dummy.hh \
-    daemon/Core.hh \
-    daemon/ModuleWorkerPool.hh \
-    modules/DnsWatcher.hh \
-    modules/ModuleFactory.hpp \
-    modules/ASniffer.hh
+    daemon/ModuleWorkerPool.hh
 
