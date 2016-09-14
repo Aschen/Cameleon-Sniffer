@@ -1,16 +1,14 @@
-QT += core network testlib
+QT += core network
 QT -= gui
 
 QMAKE_CXX   =   clang++
 QMAKE_CC    =   clang
 
-TARGET = cameleon-daemon
+TARGET = cameleon-client
 
 CONFIG += console
 CONFIG += C++11
 CONFIG -= app_bundle
-
-LIBS += -ltins
 
 unix:MOC_DIR = tmp/
 unix:OBJECTS_DIR = tmp/
@@ -19,9 +17,12 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
-    network/BaseSocket.cpp
+    ../network/BaseSocket.cpp \
+    Sender.cpp
 
 HEADERS += \
-    network/BaseSocket.hh \
+    ../network/BaseSocket.hh \
+    Sender.hh \
+    Debug.hh \
     Debug.hh
 

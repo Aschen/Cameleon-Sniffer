@@ -3,12 +3,16 @@
 *.creator*
 *.includes
 *.files
+*.pro.*
 
 # bin files
 *.o
 cameleon
 cameleon-daemon
+cameleon-client
 
 # temp files
 *#*
 *~
+tmp/*
+*moc*
