@@ -19,9 +19,21 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
-    network/BaseSocket.cpp
+    network/BaseSocket.cpp \
+    daemon/ModuleWorker.cpp \
+    modules/AModule.cpp \
+    modules/Dummy.cpp \
+    daemon/Core.cpp \
+    daemon/ModuleWorkerPool.cpp
 
 HEADERS += \
+    Debug.hh \
     network/BaseSocket.hh \
-    Debug.hh
+    daemon/AbstractWorker.hpp \
+    daemon/WorkerFactory.hpp \
+    daemon/ModuleWorker.hh \
+    modules/AModule.hh \
+    modules/Dummy.hh \
+    daemon/Core.hh \
+    daemon/ModuleWorkerPool.hh
 
