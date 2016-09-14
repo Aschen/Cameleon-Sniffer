@@ -18,6 +18,7 @@ public:
     ~ModuleWorkerPool();
 
     ModuleWorker*                   get();
+    bool                            stopModule(const QString & name);
 
     const QVector<ModuleWorker*>&   workers() const;
 };

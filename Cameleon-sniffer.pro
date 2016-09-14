@@ -24,7 +24,9 @@ SOURCES += \
     modules/AModule.cpp \
     modules/Dummy.cpp \
     daemon/Core.cpp \
-    daemon/ModuleWorkerPool.cpp
+    daemon/ModuleWorkerPool.cpp \
+    modules/DnsWatcher.cpp \
+    modules/ASniffer.cpp
 
 HEADERS += \
     Debug.hh \
@@ -35,5 +37,8 @@ HEADERS += \
     modules/AModule.hh \
     modules/Dummy.hh \
     daemon/Core.hh \
-    daemon/ModuleWorkerPool.hh
+    daemon/ModuleWorkerPool.hh \
+    modules/DnsWatcher.hh \
+    modules/ModuleFactory.hpp \
+    modules/ASniffer.hh
 

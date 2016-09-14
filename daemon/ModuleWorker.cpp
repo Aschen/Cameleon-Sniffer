@@ -23,6 +23,28 @@ bool ModuleWorker::addModule(AModule * module)
     return true;
 }
 
+bool ModuleWorker::removeModule(const QString & name)
+{
+    QMutexLocker    locker(&m_mutex);
+
+    if ( ! m_modules.contains(name))
+    {
+        DEBUG("ModuleWorker::removeModule() : Unknown module" << name, true);
+        return false;
+    }
+
+    m_modules.remove(name);
+
+    return true;
+}
+
+bool ModuleWorker::containsModule(const QString & name)
+{
+    QMutexLocker    locker(&m_mutex);
+
+    return m_modules.contains(name);
+}
+
 void ModuleWorker::start()
 {
     DEBUG("ModuleWorker::start()", true);

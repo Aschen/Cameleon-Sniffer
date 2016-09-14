@@ -3,6 +3,7 @@
 
 # include <QObject>
 # include <QString>
+# include <QDebug>
 
 # include <tins/pdu.h>
 
@@ -16,6 +17,7 @@ protected:
 
 public:
     AModule(const QString & type, const QString & name);
+    virtual ~AModule();
 
 public:
 
@@ -29,7 +31,7 @@ protected:
     virtual bool            handler(Tins::PDU & pdu) = 0;
 
 private slots:
-    virtual void            hello() = 0;
+    virtual void            hello();
 };
 
 #endif // AMODULE_HH

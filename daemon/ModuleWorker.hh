@@ -21,6 +21,8 @@ public:
     ModuleWorker();
 
     bool            addModule(AModule * module);
+    bool            removeModule(const QString & name);
+    bool            containsModule(const QString & name);
 
 public slots:
     void            start() Q_DECL_OVERRIDE;

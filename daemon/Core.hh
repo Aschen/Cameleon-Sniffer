@@ -12,6 +12,7 @@ public:
     Core();
 
     bool                    addModule(AModule * module);
+    bool                    removeModule(const QString & name);
 };
 
 #endif // CORE_HH
