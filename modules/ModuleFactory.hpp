@@ -11,8 +11,8 @@
 class ModuleFactory
 {
 public:
-    static AModule*         create(const QStringList & args);
-    static QStringList      help();
+    static AModule*             create(const QStringList & args);
+    static const QStringList    help;
 };
 
 /**
@@ -37,12 +37,12 @@ AModule * ModuleFactory::create(const QStringList & args)
     if (moduleType == "DnsWatcher")
     {
         module = DnsWatcher::create(moduleName, moduleArgs);
-        usage = DnsWatcher::help();
+        usage = DnsWatcher::help;
     }
     else
     {
         DEBUG("ModuleFactory::create() : Unknown module type" << moduleType, true);
-        usage = ModuleFactory::help();
+        usage = ModuleFactory::help;
     }
 
     // Display help if arguments were not correct to create the module
@@ -55,15 +55,9 @@ AModule * ModuleFactory::create(const QStringList & args)
     return module;
 }
 
-QStringList ModuleFactory::help()
-{
-    QStringList messages;
-
-    messages << "Usage :";
-    messages << "\t cameleon start <module type> <module name> [args..]";
-
-    return messages;
-}
+const QStringList ModuleFactory::help = { "Usage :",
+                                          "\t cameleon start <module type> <module name> [args..]"
+                                        };
 
 #endif // MODULEFACTORY_HPP
 

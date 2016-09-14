@@ -19,16 +19,6 @@ DnsWatcher *DnsWatcher::create(const QString &name, const QStringList &args)
 
 }
 
-QStringList DnsWatcher::help()
-{
-    QStringList message;
-
-    message << "DnsWatcher module usage :";
-    message << "\t cameleon start DnsWatcher <module name> <filepath>";
-
-    return message;
-}
-
 Tins::SnifferConfiguration DnsWatcher::snifferConfiguration()
 {
     Tins::SnifferConfiguration  config;
@@ -38,6 +28,10 @@ Tins::SnifferConfiguration DnsWatcher::snifferConfiguration()
 
     return config;
 }
+
+const QStringList DnsWatcher::help = { "DnsWatcher module usage :",
+                                       "\t cameleon start DnsWatcher <module name> <filepath>"
+                                     };
 
 /* Class DnsWatcher **********************************************************/
 

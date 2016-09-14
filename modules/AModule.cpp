@@ -8,7 +8,7 @@ AModule::AModule(const QString & type, const QString & name)
     : m_type(type),
       m_name(name)
 {
-    this->setObjectName(name + " (" + type + ")");
+    this->setObjectName(name + "(" + type + ")");
 }
 
 AModule::~AModule()

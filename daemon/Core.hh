@@ -6,7 +6,7 @@
 class Core
 {
 private:
-    ModuleWorkerPool              m_workerPool;
+    ModuleWorkerPool        m_workerPool;
 
 public:
     Core();
