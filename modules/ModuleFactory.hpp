@@ -7,6 +7,7 @@
 # include "AModule.hh"
 # include "Mitm.hh"
 # include "DnsWatcher.hh"
+# include "DnsSpoof.hh"
 # include "daemon/Command.hh"
 # include "Debug.hh"
 
@@ -37,6 +38,11 @@ CreatedModule ModuleFactory::create(const StartModuleArgs & startModuleArgs)
     {
         createdModule.module = Mitm::create(startModuleArgs);
         createdModule.usage = Mitm::USAGE.join("\n");
+    }
+    else if (startModuleArgs.type == "DnsSpoof")
+    {
+        createdModule.module = DnsSpoof::create(startModuleArgs);
+        createdModule.usage = DnsSpoof::USAGE.join("\n");
     }
     else
     {

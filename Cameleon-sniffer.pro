@@ -29,7 +29,8 @@ SOURCES += \
     daemon/ModuleWorkerPool.cpp \
     modules/Mitm.cpp \
     network/Server.cpp \
-    network/SocketWorker.cpp
+    network/SocketWorker.cpp \
+    modules/DnsSpoof.cpp
 
 HEADERS += \
     Debug.hh \
@@ -46,5 +47,6 @@ HEADERS += \
     network/Server.hh \
     network/SocketWorker.hh \
     daemon/Command.hh \
-    modules/NetworkAddresses.hh
+    modules/NetworkAddresses.hh \
+    modules/DnsSpoof.hh
 

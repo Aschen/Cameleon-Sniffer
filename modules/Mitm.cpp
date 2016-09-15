@@ -31,7 +31,7 @@ const uint32_t Mitm::ARP_TIMEOUT = 4;
 
 Mitm::Mitm(const StartModuleArgs & startModuleArgs, const Config & config)
     : AModule("Mitm", startModuleArgs.name, startModuleArgs.iface),
-      m_packetSender(startModuleArgs.iface.toStdString(), Mitm::ARP_TIMEOUT)
+      m_packetSender(m_iface.toStdString(), Mitm::ARP_TIMEOUT)
 {
     DEBUG("Mitm::Mitm()", false);
     Tins::NetworkInterface  attackerIface(m_iface.toStdString());

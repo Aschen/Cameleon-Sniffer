@@ -76,7 +76,7 @@ bool DnsWatcher::handler(Tins::PDU & pdu)
 void DnsWatcher::start()
 {
     DEBUG("DnsWatcher::start() : Name:" << m_name, true);
-    if ( ! m_logFile.open(QQIODevice::WriteOnly | QIODevice::Append))
+    if ( ! m_logFile.open(QIODevice::WriteOnly | QIODevice::Append))
     {
         DEBUG("DnsWatcher::start() : Can't open file", true);
         return;
