@@ -2,6 +2,7 @@
 # define MITM_HH
 
 # include <QVector>
+# include <QTimer>
 
 # include <tins/tins.h>
 
@@ -17,10 +18,13 @@ class Mitm : public AModule
         QString     gatewayIP;
     };
 
+    Q_OBJECT
+
 public:
     static Mitm*  create(const StartModuleArgs &startModuleArgs);
     static Tins::SnifferConfiguration   snifferConfiguration();
-    static const QStringList  help;
+    static const QStringList  USAGE;
+    static const uint32_t ARP_TIMEOUT;
 
 
 private:
@@ -30,6 +34,7 @@ private:
     NetworkAddresses            m_victim;
     QVector<Tins::EthernetII>   m_originalPackets;
     QVector<Tins::EthernetII>   m_poisonPackets;
+    QTimer                      m_timer;
 
 public:
     Mitm(const StartModuleArgs & startModuleArgs, const Config & config);
@@ -40,6 +45,13 @@ private:
     const Tins::HWAddress<6>    arpRequest(const Tins::IPv4Address & targetIp);
     void                        createOriginalPackets();
     void                        createPoisonPackets();
+
+private slots:
+    void                        poison();
+
+signals:
+    void                        startTimer(int);
+    void                        stopTimer();
 
     // AModule interface
 public slots:

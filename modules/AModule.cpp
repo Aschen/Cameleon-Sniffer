@@ -13,13 +13,13 @@ AModule::AModule(const QString & type, const QString & name, const QString & ifa
       m_name(name),
       m_iface(iface)
 {
-    DEBUG("AModule::AModule()", true);
+    DEBUG("AModule::AModule()", false);
     this->setObjectName(name + "(" + type + ")");
 }
 
 AModule::~AModule()
 {
-    DEBUG("AModule::~AModule()", true);
+    DEBUG("AModule::~AModule()", false);
 }
 
 const QString &AModule::type() const

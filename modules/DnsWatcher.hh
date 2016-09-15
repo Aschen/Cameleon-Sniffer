@@ -19,7 +19,7 @@ class DnsWatcher : public AModule
 public:
     static DnsWatcher*  create(const StartModuleArgs & startModuleArgs);
     static Tins::SnifferConfiguration   snifferConfiguration();
-    static const QStringList  help;
+    static const QStringList  USAGE;
 
 private:
     QFile           m_logFile;

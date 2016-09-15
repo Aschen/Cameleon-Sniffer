@@ -29,7 +29,7 @@ Tins::SnifferConfiguration DnsWatcher::snifferConfiguration()
     return config;
 }
 
-const QStringList DnsWatcher::help = { "DnsWatcher module usage :",
+const QStringList DnsWatcher::USAGE = { "DnsWatcher module usage :",
                                        "\t cameleon start DnsWatcher <module name> <filepath>"
                                      };
 
@@ -41,12 +41,12 @@ DnsWatcher::DnsWatcher(const StartModuleArgs & startModuleArgs, const Config & c
       m_sniffer(m_iface.toStdString(), DnsWatcher::snifferConfiguration()),
       m_out(&m_logFile)
 {
-    DEBUG("DnsWatcher::DnsWatcher() :" << this->objectName(), true);
+    DEBUG("DnsWatcher::DnsWatcher() :" << this->objectName(), false);
 }
 
 DnsWatcher::~DnsWatcher()
 {
-    DEBUG("DnsWatcher::~DnsWatcher() :" << this->objectName(), true);
+    DEBUG("DnsWatcher::~DnsWatcher() :" << this->objectName(), false);
 }
 
 bool DnsWatcher::handler(Tins::PDU & pdu)
@@ -76,7 +76,7 @@ bool DnsWatcher::handler(Tins::PDU & pdu)
 void DnsWatcher::start()
 {
     DEBUG("DnsWatcher::start() : Name:" << m_name, true);
-    if ( ! m_logFile.open(QIODevice::ReadWrite))
+    if ( ! m_logFile.open(QQIODevice::WriteOnly | QIODevice::Append))
     {
         DEBUG("DnsWatcher::start() : Can't open file", true);
         return;

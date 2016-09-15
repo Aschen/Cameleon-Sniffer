@@ -33,13 +33,14 @@ bool ModuleWorkerPool::removeModule(const QString & name)
 {
     if ( ! m_workers.contains(name))
     {
-        DEBUG("ModuleWorkerPool::addModule() : Module" << name << "does not exist", true);
+        DEBUG("ModuleWorkerPool::addModule() : Module" << name << "does not exist", false);
         return false;
     }
 
     m_workers[name]->stop();
 
-    DEBUG("Now remove", true);
+    // Wait for libpcap to stop
+    QThread::currentThread()->sleep(3);
 
     m_workers.remove(name);
 

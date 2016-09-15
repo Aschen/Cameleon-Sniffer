@@ -6,17 +6,6 @@
 template < class ParentObject >
 class AbstractWorker : public ParentObject
 {
-public:
-    AbstractWorker()
-    {
-        DEBUG("AbstractWorker::AbstractWorker()", true);
-    }
-
-    ~AbstractWorker()
-    {
-        DEBUG("AbstractWorker::~AbstractWorker()", true);
-    }
-
 public slots:
     virtual void start() = 0;
     virtual void stop()

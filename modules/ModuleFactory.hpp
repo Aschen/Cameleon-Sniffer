@@ -31,12 +31,12 @@ CreatedModule ModuleFactory::create(const StartModuleArgs & startModuleArgs)
     if (startModuleArgs.type == "DnsWatcher")
     {
         createdModule.module = DnsWatcher::create(startModuleArgs);
-        createdModule.usage = DnsWatcher::help.join("\n");
+        createdModule.usage = DnsWatcher::USAGE.join("\n");
     }
     else if (startModuleArgs.type == "Mitm")
     {
         createdModule.module = Mitm::create(startModuleArgs);
-        createdModule.usage = Mitm::help.join("\n");
+        createdModule.usage = Mitm::USAGE.join("\n");
     }
     else
     {
