@@ -27,8 +27,8 @@ private:
     QTextStream     m_out;
 
 public:
-    DnsWatcher(const StartModuleArgs & startModuleArgs, Config & config);
-    virtual ~DnsWatcher();
+    DnsWatcher(const StartModuleArgs & startModuleArgs, const Config & config);
+    ~DnsWatcher();
 
     // AModule interface
 protected:

@@ -5,10 +5,12 @@
 ModuleWorker::ModuleWorker()
     : m_module(nullptr)
 {
+    DEBUG("ModuleWorker::ModuleWorker()", true);
 }
 
 ModuleWorker::~ModuleWorker()
 {
+    DEBUG("ModuleWorker::~ModuleWorker()", true);
 }
 
 void ModuleWorker::setModule(AModule * module)

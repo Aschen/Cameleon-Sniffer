@@ -6,7 +6,7 @@
 
 DnsWatcher *DnsWatcher::create(const StartModuleArgs & startModuleArgs)
 {
-    if (startModuleArgs.options.size() < 1)
+    if (startModuleArgs.options.size() < 1 || startModuleArgs.options[0].size() == 0)
     {
         return nullptr;
     }
@@ -35,12 +35,13 @@ const QStringList DnsWatcher::help = { "DnsWatcher module usage :",
 
 /* Class DnsWatcher **********************************************************/
 
-DnsWatcher::DnsWatcher(const StartModuleArgs & startModuleArgs, Config & config)
+DnsWatcher::DnsWatcher(const StartModuleArgs & startModuleArgs, const Config & config)
     : AModule("DnsWatcher", startModuleArgs.name, startModuleArgs.iface),
       m_logFile(config.filepath),
-      m_sniffer("wlo1", DnsWatcher::snifferConfiguration()),
+      m_sniffer(m_iface.toStdString(), DnsWatcher::snifferConfiguration()),
       m_out(&m_logFile)
 {
+    DEBUG("DnsWatcher::DnsWatcher() :" << this->objectName(), true);
 }
 
 DnsWatcher::~DnsWatcher()
@@ -59,7 +60,6 @@ bool DnsWatcher::handler(Tins::PDU & pdu)
     // Is it a DNS query?
     if(dns.type() == Tins::DNS::QUERY)
     {
-
         // Let's see if there's any query for an "A" record.
         for(const Tins::DNS::query &query : dns.queries())
         {

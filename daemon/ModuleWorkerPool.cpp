@@ -1,5 +1,7 @@
 #include "ModuleWorkerPool.hh"
 
+#include <QThread>
+
 #include "WorkerFactory.hpp"
 #include "Debug.hh"
 
@@ -31,11 +33,14 @@ bool ModuleWorkerPool::removeModule(const QString & name)
 {
     if ( ! m_workers.contains(name))
     {
-        DEBUG("ModuleWorkerPool::addModule() : Module" << name << "does not exist", false);
+        DEBUG("ModuleWorkerPool::addModule() : Module" << name << "does not exist", true);
         return false;
     }
 
     m_workers[name]->stop();
+
+    DEBUG("Now remove", true);
+
     m_workers.remove(name);
 
     return true;

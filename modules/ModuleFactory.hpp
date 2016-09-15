@@ -5,6 +5,7 @@
 # include <QStringList>
 
 # include "AModule.hh"
+# include "Mitm.hh"
 # include "DnsWatcher.hh"
 # include "daemon/Command.hh"
 # include "Debug.hh"
@@ -31,6 +32,11 @@ CreatedModule ModuleFactory::create(const StartModuleArgs & startModuleArgs)
     {
         createdModule.module = DnsWatcher::create(startModuleArgs);
         createdModule.usage = DnsWatcher::help.join("\n");
+    }
+    else if (startModuleArgs.type == "Mitm")
+    {
+        createdModule.module = Mitm::create(startModuleArgs);
+        createdModule.usage = Mitm::help.join("\n");
     }
     else
     {

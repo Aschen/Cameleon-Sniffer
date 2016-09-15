@@ -1399,9 +1399,10 @@ tmp/DnsWatcher.o: modules/DnsWatcher.cpp modules/DnsWatcher.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
+		daemon/Command.hh \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
 		modules/AModule.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QString \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QDebug \
 		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h \
@@ -1638,7 +1639,11 @@ tmp/Mitm.o: modules/Mitm.cpp modules/Mitm.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
-		modules/NetworkAddresses.hh
+		modules/NetworkAddresses.hh \
+		daemon/Command.hh \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QThread \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qthread.h \
+		Debug.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/Mitm.o modules/Mitm.cpp
 
 tmp/Server.o: network/Server.cpp network/Server.hh \

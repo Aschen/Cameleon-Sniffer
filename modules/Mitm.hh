@@ -7,6 +7,7 @@
 
 # include "AModule.hh"
 # include "NetworkAddresses.hh"
+# include "daemon/Command.hh"
 
 class Mitm : public AModule
 {
@@ -17,11 +18,13 @@ class Mitm : public AModule
     };
 
 public:
-    static Mitm*  create(const QString & name, const QStringList & args);
+    static Mitm*  create(const StartModuleArgs &startModuleArgs);
     static Tins::SnifferConfiguration   snifferConfiguration();
     static const QStringList  help;
 
+
 private:
+    Tins::PacketSender          m_packetSender;
     NetworkAddresses            m_attacker;
     NetworkAddresses            m_gateway;
     NetworkAddresses            m_victim;
@@ -29,7 +32,19 @@ private:
     QVector<Tins::EthernetII>   m_poisonPackets;
 
 public:
-    Mitm(const QString & name, const QString & victimIP, const QString & gatewayIP);
+    Mitm(const StartModuleArgs & startModuleArgs, const Config & config);
+    ~Mitm();
+
+
+private:
+    const Tins::HWAddress<6>    arpRequest(const Tins::IPv4Address & targetIp);
+    void                        createOriginalPackets();
+    void                        createPoisonPackets();
+
+    // AModule interface
+public slots:
+    void                start();
+    void                stop();
 };
 
 #endif // MITM_HH
