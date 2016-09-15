@@ -224,7 +224,8 @@ DIST          = ../../apps/QT/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		modules/Mitm.hh \
 		network/Server.hh \
 		network/SocketWorker.hh \
-		daemon/Command.hh main.cpp \
+		daemon/Command.hh \
+		modules/NetworkAddresses.hh main.cpp \
 		network/BaseSocket.cpp \
 		modules/AModule.cpp \
 		daemon/Core.cpp \
@@ -555,7 +556,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents Debug.hh network/BaseSocket.hh modules/AModule.hh daemon/Core.hh modules/DnsWatcher.hh modules/ModuleFactory.hpp daemon/AbstractWorker.hpp daemon/WorkerFactory.hpp daemon/ModuleWorker.hh daemon/ModuleWorkerPool.hh modules/Mitm.hh network/Server.hh network/SocketWorker.hh daemon/Command.hh $(DISTDIR)/
+	$(COPY_FILE) --parents Debug.hh network/BaseSocket.hh modules/AModule.hh daemon/Core.hh modules/DnsWatcher.hh modules/ModuleFactory.hpp daemon/AbstractWorker.hpp daemon/WorkerFactory.hpp daemon/ModuleWorker.hh daemon/ModuleWorkerPool.hh modules/Mitm.hh network/Server.hh network/SocketWorker.hh daemon/Command.hh modules/NetworkAddresses.hh $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp network/BaseSocket.cpp modules/AModule.cpp daemon/Core.cpp modules/DnsWatcher.cpp daemon/ModuleWorker.cpp daemon/ModuleWorkerPool.cpp modules/Mitm.cpp network/Server.cpp network/SocketWorker.cpp $(DISTDIR)/
 
 
@@ -1567,11 +1568,9 @@ tmp/ModuleWorkerPool.o: daemon/ModuleWorkerPool.cpp daemon/ModuleWorkerPool.hh \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/ModuleWorkerPool.o daemon/ModuleWorkerPool.cpp
 
 tmp/Mitm.o: modules/Mitm.cpp modules/Mitm.hh \
-		modules/AModule.hh \
-		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QVector \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qglobal.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qconfig.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qfeatures.h \
@@ -1600,20 +1599,25 @@ tmp/Mitm.o: modules/Mitm.cpp modules/Mitm.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qglobalstatic.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qmutex.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qnumeric.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qchar.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qrefcount.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qarraydata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qlist.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qalgorithms.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qiterator.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearraylist.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qbytearray.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qnamespace.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qstring.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qchar.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qstringbuilder.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qstringlist.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qregexp.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qstringmatcher.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
+		modules/AModule.hh \
+		../../apps/QT/5.5/gcc_64/include/QtCore/QObject \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobject.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs.h \
+		../../apps/QT/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qcoreevent.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qscopedpointer.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qmetatype.h \
@@ -1632,10 +1636,9 @@ tmp/Mitm.o: modules/Mitm.cpp modules/Mitm.hh \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qlocale.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qvariant.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qshareddata.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qvector.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qpoint.h \
 		../../apps/QT/5.5/gcc_64/include/QtCore/qset.h \
-		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h
+		../../apps/QT/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
+		modules/NetworkAddresses.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tmp/Mitm.o modules/Mitm.cpp
 
 tmp/Server.o: network/Server.cpp network/Server.hh \

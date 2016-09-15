@@ -45,5 +45,6 @@ HEADERS += \
     modules/Mitm.hh \
     network/Server.hh \
     network/SocketWorker.hh \
-    daemon/Command.hh
+    daemon/Command.hh \
+    modules/NetworkAddresses.hh
 

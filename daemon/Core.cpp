@@ -13,6 +13,7 @@ Core::Core()
 
 void Core::startDaemon()
 {
+    DEBUG("Start Cameleon-Sniffer on interface" << m_iface, true);
     m_server->start();
 }
 
@@ -54,6 +55,16 @@ void Core::commandDispatcher(const QVariant & data)
     }
 }
 
+const QString &Core::iface() const
+{
+    return m_iface;
+}
+
+void Core::iface(const QString &newInterface)
+{
+    m_iface = newInterface;
+}
+
 void Core::startModule(const QStringList & input)
 {
     if (input.size() < 2)
@@ -64,6 +75,7 @@ void Core::startModule(const QStringList & input)
 
     StartModuleArgs     startModuleArgs;
 
+    startModuleArgs.iface = m_iface;
     startModuleArgs.type = input[0];
     startModuleArgs.name = input[1];
     startModuleArgs.options = input.mid(2);

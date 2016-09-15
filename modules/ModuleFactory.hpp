@@ -29,7 +29,7 @@ CreatedModule ModuleFactory::create(const StartModuleArgs & startModuleArgs)
 
     if (startModuleArgs.type == "DnsWatcher")
     {
-        createdModule.module = DnsWatcher::create(startModuleArgs.name, startModuleArgs.options);
+        createdModule.module = DnsWatcher::create(startModuleArgs);
         createdModule.usage = DnsWatcher::help.join("\n");
     }
     else

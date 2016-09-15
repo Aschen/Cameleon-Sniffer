@@ -13,6 +13,7 @@ typedef struct  s_created_module
 
 typedef struct  s_start_module_args
 {
+    QString     iface;
     QString     type;
     QString     name;
     QStringList options;

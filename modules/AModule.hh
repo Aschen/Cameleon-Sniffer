@@ -14,10 +14,11 @@ class AModule : public QObject
 protected:
     const QString           m_type;
     const QString           m_name;
+    const QString           m_iface;
 
 public:
     AModule();
-    AModule(const QString & type, const QString & name);
+    AModule(const QString & type, const QString & name, const QString & iface);
     virtual ~AModule();
 
 public slots:
@@ -26,6 +27,7 @@ public slots:
 
     const QString&          type() const;
     const QString&          name() const;
+    const QString&          iface() const;
 
 protected:
     QString                 currentDateTime();

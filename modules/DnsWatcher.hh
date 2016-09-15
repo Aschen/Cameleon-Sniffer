@@ -6,6 +6,7 @@
 
 # include <tins/tins.h>
 
+# include "daemon/Command.hh"
 # include "AModule.hh"
 
 class DnsWatcher : public AModule
@@ -16,7 +17,7 @@ class DnsWatcher : public AModule
     };
 
 public:
-    static DnsWatcher*  create(const QString & name, const QStringList & args);
+    static DnsWatcher*  create(const StartModuleArgs & startModuleArgs);
     static Tins::SnifferConfiguration   snifferConfiguration();
     static const QStringList  help;
 
@@ -26,7 +27,7 @@ private:
     QTextStream     m_out;
 
 public:
-    DnsWatcher(const QString & name, Config & config);
+    DnsWatcher(const StartModuleArgs & startModuleArgs, Config & config);
     virtual ~DnsWatcher();
 
     // AModule interface

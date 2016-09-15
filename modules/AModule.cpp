@@ -8,9 +8,10 @@ AModule::AModule()
 {
 }
 
-AModule::AModule(const QString & type, const QString & name)
+AModule::AModule(const QString & type, const QString & name, const QString & iface)
     : m_type(type),
-      m_name(name)
+      m_name(name),
+      m_iface(iface)
 {
     this->setObjectName(name + "(" + type + ")");
 }
@@ -27,6 +28,11 @@ const QString &AModule::type() const
 const QString &AModule::name() const
 {
     return m_name;
+}
+
+const QString &AModule::iface() const
+{
+    return m_iface;
 }
 
 QString AModule::currentDateTime()

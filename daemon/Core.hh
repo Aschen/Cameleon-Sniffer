@@ -11,6 +11,7 @@ class Core
 private:
     ModuleWorkerPool        m_workerPool;
     QSharedPointer<Server>  m_server;
+    QString                 m_iface;
 
 public:
     Core();
@@ -21,6 +22,9 @@ public:
     bool                    removeModule(const QString & name);
 
     void                    commandDispatcher(const QVariant & data);
+
+    const QString           &iface() const;
+    void                    iface(const QString & newInterface);
 
 private:
     void                    startModule(const QStringList & input);

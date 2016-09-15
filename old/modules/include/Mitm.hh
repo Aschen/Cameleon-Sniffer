@@ -20,7 +20,9 @@ private:
     std::vector<EthernetII>     _basePackets;
 
 public:
-    Mitm(const NetworkInterface &iface, std::ostream *out, const std::vector<std::string> &victimsIp, const std::string &gatewayIp);
+    Mitm(const NetworkInterface &iface, std::ostream *out,
+      const std::vector<std::string> &victimsIp,
+      const std::string &gatewayIp);
     virtual ~Mitm(void) { }
 
 public:

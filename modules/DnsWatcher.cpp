@@ -4,18 +4,18 @@
 
 #include "Debug.hh"
 
-DnsWatcher *DnsWatcher::create(const QString &name, const QStringList &args)
+DnsWatcher *DnsWatcher::create(const StartModuleArgs & startModuleArgs)
 {
-    if (args.size() < 1)
+    if (startModuleArgs.options.size() < 1)
     {
         return nullptr;
     }
 
     DnsWatcher::Config  config;
 
-    config.filepath = args[0];
+    config.filepath = startModuleArgs.options[0];
 
-    return new DnsWatcher(name, config);
+    return new DnsWatcher(startModuleArgs, config);
 
 }
 
@@ -35,8 +35,8 @@ const QStringList DnsWatcher::help = { "DnsWatcher module usage :",
 
 /* Class DnsWatcher **********************************************************/
 
-DnsWatcher::DnsWatcher(const QString & name, Config & config)
-    : AModule("DnsWatcher", name),
+DnsWatcher::DnsWatcher(const StartModuleArgs & startModuleArgs, Config & config)
+    : AModule("DnsWatcher", startModuleArgs.name, startModuleArgs.iface),
       m_logFile(config.filepath),
       m_sniffer("wlo1", DnsWatcher::snifferConfiguration()),
       m_out(&m_logFile)
