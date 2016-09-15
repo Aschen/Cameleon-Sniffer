@@ -28,8 +28,8 @@ void Sender::init()
 {
     DEBUG("Sender::Sender()", false);
 
-    connect(m_socket,   SIGNAL(message(qint32, const QVariant&)),
-            this,       SLOT(messageReceived(qint32, const QVariant&)));
+    connect(m_socket,   SIGNAL(messageReceived(qint32, const QVariant&)),
+            this,       SLOT(receiveMessage(qint32, const QVariant&)));
     connect(m_socket,   SIGNAL(error(QAbstractSocket::SocketError)),
             this,       SLOT(socketError(QAbstractSocket::SocketError)));
     connect(m_socket,   SIGNAL(connected()),
@@ -119,11 +119,16 @@ void Sender::port(quint16 port)
     m_port = port;
 }
 
-void Sender::messageReceived(qint32 socketFd, const QVariant & msg)
+void Sender::receiveMessage(qint32 socketFd, const QVariant & msg)
 {
-    DEBUG("Sender::receiveMessage() :" << msg, true);
+    Q_UNUSED(socketFd)
+    DEBUG("Sender::receiveMessage() :" << msg, false);
 
-    emit transfertMessage(socketFd, msg);
+    QTextStream     out(stdout);
+
+    out << msg.toString() << "\n";
+    out.flush();
+    QCoreApplication::quit();
 }
 
 void Sender::socketError(QAbstractSocket::SocketError socketError)
@@ -159,8 +164,6 @@ void Sender::sendWaitingMessages()
     DEBUG("Sender::sendWaitingMessages() : Send waiting messages", false);
     for (const QVariant & message : m_messages)
         send(message);
-
-    QCoreApplication::quit();
 }
 
 

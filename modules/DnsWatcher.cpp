@@ -83,12 +83,10 @@ void DnsWatcher::start()
     }
 
     m_sniffer.sniff_loop(Tins::make_sniffer_handler(this, &DnsWatcher::handler));
-
-    DEBUG("DnsWatcher::start() : after sniff_loop()", true);
 }
 
 void DnsWatcher::stop()
 {
-    DEBUG("DnsWatcher::stop()", true);
+    DEBUG("DnsWatcher::stop()", false);
     m_sniffer.stop_sniff();
 }

@@ -10,19 +10,19 @@ template < typename WorkerClass >
 class WorkerFactory
 {
 public:
-    static WorkerClass * create(QObject * parent, AModule * module = nullptr);
+    static WorkerClass * create(QObject * parent, const QString & name);
     static void go(WorkerClass * worker);
 };
 
 template < class WorkerClass >
-WorkerClass * WorkerFactory < WorkerClass > ::create(QObject * parent, AModule * module)
+WorkerClass * WorkerFactory < WorkerClass > ::create(QObject * parent, const QString & name)
 {
     // Create the thread where the worker will live
     QThread * thread = new QThread(parent);
 
     // Set the worker name on its thread
-    if (module)
-        thread->setObjectName(module->objectName());
+    if (name.size() != 0)
+        thread->setObjectName(name);
 
     // Create the worker
     WorkerClass * worker = new WorkerClass;
@@ -42,9 +42,6 @@ WorkerClass * WorkerFactory < WorkerClass > ::create(QObject * parent, AModule *
 
     // When the thread is started, call the worker abstract method start()
     worker->connect(thread, SIGNAL(started()), SLOT(start()));
-
-    // Set the module to the worker
-    worker->setModule(module);
 
     return worker;
 }

@@ -39,7 +39,7 @@ public:
     qint32          fd() const;
 
 signals:
-    void            message(qint32 socketFd, const QVariant & data);
+    void            messageReceived(qint32 socketFd, const QVariant & data);
     void            clientDisconnected(qint32 socketFd);
 
 public slots:

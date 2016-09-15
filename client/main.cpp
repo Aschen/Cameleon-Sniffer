@@ -1,5 +1,7 @@
 #include <QCoreApplication>
+#include <QStringList>
 #include "Sender.hh"
+
 
 int main(int argc, char *argv[])
 {
@@ -16,12 +18,12 @@ int main(int argc, char *argv[])
     if ( ! sender.start())
         return 1;
 
-    QString     message;
+    QStringList     message;
 
     for (int i = 1; i < argc; ++i)
-        message += argv[i];
+      message << argv[i];
 
-    sender.send(message);
+    sender.send(message.join(" "));
 
     return a.exec();
 }

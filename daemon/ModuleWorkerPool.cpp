@@ -12,13 +12,15 @@ bool ModuleWorkerPool::addModule(AModule * module)
 {
     if (m_workers.contains(module->name()))
     {
-        DEBUG("ModuleWorkerPool::addModule() : Module" << module->name() << "already exist", true);
+        DEBUG("ModuleWorkerPool::addModule() : Module" << module->name() << "already exist", false);
         return false;
     }
 
-    ModuleWorker*       worker = WorkerFactory<ModuleWorker>::create(nullptr, module);
+    ModuleWorker*       worker = WorkerFactory<ModuleWorker>::create(nullptr, module->objectName());
 
     m_workers[module->name()] = QSharedPointer<ModuleWorker>(worker);
+
+    worker->setModule(module);
 
     WorkerFactory<ModuleWorker>::go(worker);
 
@@ -29,7 +31,7 @@ bool ModuleWorkerPool::removeModule(const QString & name)
 {
     if ( ! m_workers.contains(name))
     {
-        DEBUG("ModuleWorkerPool::addModule() : Module" << name << "does not exist", true);
+        DEBUG("ModuleWorkerPool::addModule() : Module" << name << "does not exist", false);
         return false;
     }
 

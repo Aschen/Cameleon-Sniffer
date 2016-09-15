@@ -81,7 +81,7 @@ void BaseSocket::readMessage()
 
         variantDs >> variant;
 
-        emit message(m_socketFd, variant);
+        emit messageReceived(m_socketFd, variant);
 
         ds >> bufferSize;
 

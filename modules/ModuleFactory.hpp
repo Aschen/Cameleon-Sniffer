@@ -6,12 +6,13 @@
 
 # include "AModule.hh"
 # include "DnsWatcher.hh"
+# include "daemon/Command.hh"
 # include "Debug.hh"
 
 class ModuleFactory
 {
 public:
-    static AModule*             create(const QStringList & args);
+    static CreatedModule        create(const StartModuleArgs & startModuleArgs);
     static const QStringList    help;
 };
 
@@ -20,39 +21,24 @@ public:
  * @param args <module type> <module name> [module args..]
  * @return AModule
  */
-AModule * ModuleFactory::create(const QStringList & args)
+CreatedModule ModuleFactory::create(const StartModuleArgs & startModuleArgs)
 {
-    if (args.size() < 2)
-    {
-        DEBUG("ModuleFactory::create() : 0 arguments provided", true);
-        return nullptr;
-    }
+    CreatedModule   createdModule;
 
-    AModule*        module = nullptr;
-    QStringList     usage;
-    const QString&  moduleType = args[0];
-    const QString&  moduleName = args[1];
-    QStringList     moduleArgs = args.mid(2);
+    createdModule.module = nullptr;
 
-    if (moduleType == "DnsWatcher")
+    if (startModuleArgs.type == "DnsWatcher")
     {
-        module = DnsWatcher::create(moduleName, moduleArgs);
-        usage = DnsWatcher::help;
+        createdModule.module = DnsWatcher::create(startModuleArgs.name, startModuleArgs.options);
+        createdModule.usage = DnsWatcher::help.join("\n");
     }
     else
     {
-        DEBUG("ModuleFactory::create() : Unknown module type" << moduleType, true);
-        usage = ModuleFactory::help;
+        DEBUG("ModuleFactory::create() : Unknown module type" << startModuleArgs.type, true);
+        createdModule.usage = ModuleFactory::help.join("\n");
     }
 
-    // Display help if arguments were not correct to create the module
-    if ( ! module)
-    {
-        for (const QString & line : usage)
-            DEBUG(line, true);
-    }
-
-    return module;
+    return createdModule;
 }
 
 const QStringList ModuleFactory::help = { "Usage :",

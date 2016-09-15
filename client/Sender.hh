@@ -40,7 +40,7 @@ signals:
     void                transfertMessage(qint32 socketFd, const QVariant & msg);
 
 public slots:
-    void                messageReceived(qint32 socketFd, const QVariant & msg);
+    void                receiveMessage(qint32 socketFd, const QVariant & msg);
 
 private slots:
     void                socketError(QAbstractSocket::SocketError socketError);
