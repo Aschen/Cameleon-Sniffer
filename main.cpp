@@ -11,7 +11,7 @@ int main(int ac, char **av)
 
     core.addModule(ModuleFactory::create({"DnsWatcher", "spy2", "dns_out2.txt"}));
 
-    core.removeModule("spy2");
+    core.removeModule("spy");
 
     return app.exec();
 }

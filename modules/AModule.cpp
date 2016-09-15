@@ -1,5 +1,9 @@
 #include "AModule.hh"
 
+#include <time.h>
+
+#include "Debug.hh"
+
 AModule::AModule()
 {
 }
@@ -23,6 +27,18 @@ const QString &AModule::type() const
 const QString &AModule::name() const
 {
     return m_name;
+}
+
+QString AModule::currentDateTime()
+{
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
+
+    return buf;
 }
 
 bool AModule::handler(Tins::PDU &pdu)

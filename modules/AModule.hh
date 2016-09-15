@@ -28,6 +28,9 @@ public slots:
     const QString&          name() const;
 
 protected:
+    QString                 currentDateTime();
+
+protected:
     virtual bool            handler(Tins::PDU & pdu);
 };
 

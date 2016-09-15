@@ -1,28 +1,28 @@
 #include "ModuleWorker.hh"
 
+#include "Debug.hh"
+
 ModuleWorker::ModuleWorker()
     : m_module(nullptr)
 {
 }
 
+ModuleWorker::~ModuleWorker()
+{
+}
+
 void ModuleWorker::setModule(AModule * module)
 {
-    m_module = module;
+    m_module = QSharedPointer<AModule>(module);
 }
 
 void ModuleWorker::start()
 {
-    if (m_module)
-    {
-        m_module->start();
-    }
+    m_module->start();
 }
 
 void ModuleWorker::stop()
 {
-    if (m_module)
-    {
-        m_module->stop();
-    }
+    m_module->stop();
 }
 

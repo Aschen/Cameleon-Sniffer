@@ -45,7 +45,7 @@ DnsWatcher::DnsWatcher(const QString & name, Config & config)
 
 DnsWatcher::~DnsWatcher()
 {
-    DEBUG("DnsWatcher::~DnsWatcher()", true);
+    DEBUG("DnsWatcher::~DnsWatcher() :" << this->objectName(), true);
 }
 
 bool DnsWatcher::handler(Tins::PDU & pdu)
@@ -59,12 +59,13 @@ bool DnsWatcher::handler(Tins::PDU & pdu)
     // Is it a DNS query?
     if(dns.type() == Tins::DNS::QUERY)
     {
+
         // Let's see if there's any query for an "A" record.
-        for(const Tins::DNS::Query &query : dns.queries())
+        for(const Tins::DNS::query &query : dns.queries())
         {
-            if(query.type() == Tins::DNS::A)
+            if(query.query_type() == Tins::DNS::A)
             {
-                m_out << "\t" << QString::fromStdString(ip.src_addr().to_string()) << "  -->  " << QString::fromStdString(query.dname()) << "\n";
+                m_out << currentDateTime() << "\t" << QString::fromStdString(ip.src_addr().to_string()) << "  -->  " << QString::fromStdString(query.dname()) << "\n";
                 m_out.flush();
             }
         }
@@ -83,7 +84,7 @@ void DnsWatcher::start()
 
     m_sniffer.sniff_loop(Tins::make_sniffer_handler(this, &DnsWatcher::handler));
 
-    DEBUG("DnsWatcher::start() : after sniff_loop()" << m_name, true);
+    DEBUG("DnsWatcher::start() : after sniff_loop()", true);
 }
 
 void DnsWatcher::stop()
